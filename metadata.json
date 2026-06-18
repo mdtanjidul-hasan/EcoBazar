@@ -1,0 +1,6 @@
+{
+  "name": "EcoBazar Jewelry and Gadgets Store",
+  "description": "Premium e-commerce platform for jewelry and gadgets with user, delivery, and admin dashboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
