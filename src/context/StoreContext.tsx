@@ -46,6 +46,22 @@ interface StoreContextType {
   updateProduct: (product: Product) => void;
   updateOrderStatus: (orderId: string, status: Order['status'], deliveryMan?: string, deliveryDate?: string) => void;
   deleteOrder: (orderId: string) => void;
+  
+  // Search state
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+
+  // Premium Extra states
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+  lang: 'EN' | 'AR' | 'FR' | 'ES';
+  setLang: (lang: 'EN' | 'AR' | 'FR' | 'ES') => void;
+  currency: 'BDT' | 'USD' | 'GBP' | 'EUR' | 'AUD';
+  setCurrency: (curr: 'BDT' | 'USD' | 'GBP' | 'EUR' | 'AUD') => void;
+  formatPrice: (bdtPrice: number) => string;
+  compareList: Product[];
+  addToCompare: (product: Product) => void;
+  removeFromCompare: (productId: string) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -71,7 +87,20 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [products, setProducts] = useState<Product[]>(() => {
     const saved = localStorage.getItem('eb_products');
-    return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+    const list = saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+    return list.map((p: Product) => {
+      let cat = p.category;
+      if (cat === 'Earrings' || cat === 'Jewelry Set' || cat === 'Kids Jewelry Sets' || cat === 'Jewellery' || cat === 'Jewelry') {
+        cat = 'Fashion Accessories';
+      } else if (cat === 'Mini Fan' || cat === 'Gadget') {
+        cat = 'Smart Gadgets';
+      } else if (cat === 'Beauty') {
+        cat = 'Beauty & Personal Care';
+      } else if (cat === 'Fitness') {
+        cat = 'Fitness Products';
+      }
+      return { ...p, category: cat };
+    });
   });
 
   const [blogs, setBlogs] = useState<Blog[]>(() => {
@@ -103,7 +132,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             title: "Earring's Point 3-in-1 Combo Set – Pearl, Crystal & Butterfly Drop",
             price: 100,
             quantity: 2,
-            image: "https://i.ibb.co.com/0RS6Bnr4/image-113.jpg"
+            image: "https://i.ibb.co/0RS6Bnr4/image-113.jpg"
           }
         ],
         total: 200,
@@ -146,6 +175,78 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Premium Extra states
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('eb_theme') as 'light' | 'dark') || 'light';
+  });
+
+  const [lang, setLangState] = useState<'EN' | 'AR' | 'FR' | 'ES'>(() => {
+    return (localStorage.getItem('eb_lang') as 'EN' | 'AR' | 'FR' | 'ES') || 'EN';
+  });
+
+  const [currency, setCurrencyState] = useState<'BDT' | 'USD' | 'GBP' | 'EUR' | 'AUD'>(() => {
+    return (localStorage.getItem('eb_currency') as 'BDT' | 'USD' | 'GBP' | 'EUR' | 'AUD') || 'BDT';
+  });
+
+  const [compareList, setCompareList] = useState<Product[]>([]);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const next = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem('eb_theme', next);
+      return next;
+    });
+  };
+
+  const setLang = (newLang: 'EN' | 'AR' | 'FR' | 'ES') => {
+    setLangState(newLang);
+    localStorage.setItem('eb_lang', newLang);
+  };
+
+  const setCurrency = (curr: 'BDT' | 'USD' | 'GBP' | 'EUR' | 'AUD') => {
+    setCurrencyState(curr);
+    localStorage.setItem('eb_currency', curr);
+  };
+
+  const formatPrice = (bdtPrice: number): string => {
+    if (currency === 'USD') {
+      return '$' + (bdtPrice / 120).toFixed(2);
+    }
+    if (currency === 'GBP') {
+      return '£' + (bdtPrice / 150).toFixed(2);
+    }
+    if (currency === 'EUR') {
+      return '€' + (bdtPrice / 130).toFixed(2);
+    }
+    if (currency === 'AUD') {
+      return 'A$' + (bdtPrice / 80).toFixed(2);
+    }
+    return '৳' + bdtPrice.toLocaleString();
+  };
+
+  const addToCompare = (product: Product) => {
+    setCompareList(prev => {
+      if (prev.some(p => p._id === product._id)) return prev;
+      if (prev.length >= 3) {
+        return prev;
+      }
+      return [...prev, product];
+    });
+  };
+
+  const removeFromCompare = (productId: string) => {
+    setCompareList(prev => prev.filter(p => p._id !== productId));
+  };
 
   // Sync to LocalStorage
   useEffect(() => {
@@ -262,6 +363,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
       return [...prev, { product, quantity }];
     });
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('cart-item-added'));
+      window.dispatchEvent(new CustomEvent('set-cart-drawer-state', { detail: true }));
+    }, 50);
   };
 
   const removeFromCart = (productId: string) => {
@@ -429,7 +534,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       products, blogs, cart, wishlist, orders, reviews,
       addToCart, removeFromCart, updateCartQuantity, clearCart,
       addToWishlist, removeFromWishlist, createOrder, addReview, addComment,
-      addProduct, deleteProduct, updateProduct, updateOrderStatus, deleteOrder
+      addProduct, deleteProduct, updateProduct, updateOrderStatus, deleteOrder,
+      searchQuery, setSearchQuery,
+      theme, toggleTheme, lang, setLang, currency, setCurrency, formatPrice, compareList, addToCompare, removeFromCompare
     }}>
       {children}
     </StoreContext.Provider>

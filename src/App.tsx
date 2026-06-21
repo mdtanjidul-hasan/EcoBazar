@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StoreProvider } from './context/StoreContext';
 import { useRouter } from './hooks/useRouter';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { CartDrawer } from './components/CartDrawer';
 
 // Views
 import { HomeView } from './views/HomeView';
@@ -21,6 +22,16 @@ import { DashboardView } from './views/DashboardView';
 function AppContent() {
   const router = useRouter();
   const { currentPath, navigate, getParam } = router;
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Synchronize dynamic open/close event signals
+  useEffect(() => {
+    const handleSetState = (e: any) => {
+      setIsCartOpen(e.detail);
+    };
+    window.addEventListener('set-cart-drawer-state', handleSetState);
+    return () => window.removeEventListener('set-cart-drawer-state', handleSetState);
+  }, []);
 
   // Render view depending on the matching hash route path
   const renderActiveView = () => {
@@ -90,6 +101,9 @@ function AppContent() {
 
       {/* Footer Bottom Block */}
       <Footer navigate={navigate} />
+
+      {/* Luxury Cart Drawer Overlay */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} navigate={navigate} />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "EcoBazar Jewelry and Gadgets Store",
-  "description": "Premium e-commerce platform for jewelry and gadgets with user, delivery, and admin dashboards.",
+  "description": "Automated global dropshipping e-commerce platform featuring integrated supplier syncs, dynamic pricing strategies, and an AI-powered omnichannel social ad copy generator.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -7,10 +7,17 @@ interface CartViewProps {
 }
 
 export const CartView: React.FC<CartViewProps> = ({ navigate }) => {
-  const { cart, removeFromCart, updateCartQuantity } = useStore();
+  const { cart, removeFromCart, updateCartQuantity, currency } = useStore();
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartTotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+
+  const convertPrice = (bdtPrice: number) => {
+    if (currency === 'USD') {
+      return '$' + (bdtPrice / 120).toFixed(2);
+    }
+    return '৳' + bdtPrice.toLocaleString();
+  };
 
   if (cart.length === 0) {
     return (
@@ -70,7 +77,7 @@ export const CartView: React.FC<CartViewProps> = ({ navigate }) => {
                       {item.product.title}
                     </h3>
                     <p className="text-xs text-[#008D7F] font-bold">
-                      ৳{item.product.price.toLocaleString()} / item
+                      {convertPrice(item.product.price)} / item
                     </p>
                   </div>
                 </div>
@@ -99,7 +106,7 @@ export const CartView: React.FC<CartViewProps> = ({ navigate }) => {
                   {/* Subtotal */}
                   <div className="text-right sm:min-w-[80px]">
                     <p className="font-display font-black text-sm text-gray-800">
-                      ৳{(item.product.price * item.quantity).toLocaleString()}
+                      {convertPrice(item.product.price * item.quantity)}
                     </p>
                   </div>
 
@@ -133,7 +140,7 @@ export const CartView: React.FC<CartViewProps> = ({ navigate }) => {
             
             <div className="flex justify-between">
               <span>Cart Subtotal</span>
-              <span className="text-gray-800 font-bold">৳{cartTotal.toLocaleString()}</span>
+              <span className="text-gray-800 font-bold">{convertPrice(cartTotal)}</span>
             </div>
 
             <div className="flex justify-between">
@@ -141,7 +148,7 @@ export const CartView: React.FC<CartViewProps> = ({ navigate }) => {
               {cartTotal >= 1000 ? (
                 <span className="text-emerald-600 font-black">FREE</span>
               ) : (
-                <span className="text-gray-800 font-bold">৳120</span>
+                <span className="text-gray-800 font-bold">{convertPrice(120)}</span>
               )}
             </div>
             
@@ -150,7 +157,7 @@ export const CartView: React.FC<CartViewProps> = ({ navigate }) => {
             <div className="flex justify-between text-sm">
               <span className="text-gray-800 font-black">Total Invoiced</span>
               <span className="text-[#008D7F] font-black font-display text-base">
-                ৳{(cartTotal + (cartTotal >= 1000 ? 0 : 120)).toLocaleString()}
+                {convertPrice(cartTotal + (cartTotal >= 1000 ? 0 : 120))}
               </span>
             </div>
           </div>
