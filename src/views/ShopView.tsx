@@ -492,6 +492,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                       <img
                         src={p.gallery[0] || 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300'}
                         alt={p.title}
+                        referrerPolicy="no-referrer"
                         className="w-full h-full object-cover group-hover:scale-102 transition duration-500"
                       />
                     </div>
@@ -592,7 +593,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                 </button>
 
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-gray-150 shrink-0">
-                  <img src={cp.gallery[0]} alt={cp.title} className="w-full h-full object-cover" />
+                  <img src={cp.gallery[0]} alt={cp.title} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                 </div>
 
                 <div className="space-y-1.5 min-w-0 flex-1">
@@ -678,7 +679,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                         </button>
 
                         <div className="h-28 rounded-2xl overflow-hidden bg-slate-50 border border-gray-100/80">
-                          <img src={cp.gallery[0]} alt={cp.title} className="w-full h-full object-cover" />
+                          <img src={cp.gallery[0]} alt={cp.title} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                         </div>
 
                         <h4 className="font-display font-extrabold text-[#008D7F] text-[13px] line-clamp-2 leading-snug">

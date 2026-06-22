@@ -1,6 +1,6 @@
 {
   "name": "EcoBazar Jewelry and Gadgets Store",
-  "description": "Automated global dropshipping e-commerce platform featuring integrated supplier syncs, dynamic pricing strategies, and an AI-powered omnichannel social ad copy generator.",
+  "description": "Dropshipping store featuring integrated supplier syncs, pricing, and AI social copy generation.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

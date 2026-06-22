@@ -4,6 +4,9 @@ import { useRouter } from './hooks/useRouter';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { NewsletterModal } from './components/NewsletterModal';
+import { motion, AnimatePresence } from 'motion/react';
 
 // Views
 import { HomeView } from './views/HomeView';
@@ -14,6 +17,9 @@ import { CheckoutView } from './views/CheckoutView';
 import { BlogListView } from './views/BlogListView';
 import { BlogDetailView } from './views/BlogDetailView';
 import { AboutView } from './views/AboutView';
+import { CompareView } from './views/CompareView';
+import { OrderTrackingView } from './views/OrderTrackingView';
+import { WishlistView } from './views/WishlistView';
 import { ContactView } from './views/ContactView';
 import { ThankYouView } from './views/ThankYouView';
 import { AuthView } from './views/AuthView';
@@ -69,6 +75,18 @@ function AppContent() {
       return <AboutView navigate={navigate} />;
     }
 
+    if (currentPath === '/compare') {
+      return <CompareView navigate={navigate} />;
+    }
+
+    if (currentPath === '/track') {
+      return <OrderTrackingView navigate={navigate} />;
+    }
+
+    if (currentPath === '/wishlist') {
+      return <WishlistView navigate={navigate} />;
+    }
+
     if (currentPath === '/contact') {
       return <ContactView />;
     }
@@ -96,7 +114,20 @@ function AppContent() {
 
       {/* Main Container Stage */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
-        {renderActiveView()}
+        <ErrorBoundary>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPath}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.20, ease: "easeInOut" }}
+              className="w-full h-full"
+            >
+              {renderActiveView()}
+            </motion.div>
+          </AnimatePresence>
+        </ErrorBoundary>
       </main>
 
       {/* Footer Bottom Block */}
@@ -104,6 +135,9 @@ function AppContent() {
 
       {/* Luxury Cart Drawer Overlay */}
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} navigate={navigate} />
+
+      {/* Exit-Intent Newsletter Subscription Modal */}
+      <NewsletterModal />
     </div>
   );
 }

@@ -215,12 +215,12 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
 
   // Categories grid to support 6 standard luxury items
   const luxeCategories = [
-    { title: 'Smart Gadgets', count: products.filter(p => p.category === 'Smart Gadgets').length, desc: 'Innovative futuristic utilities & micro-fans', image: 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=400&h=400&fit=crop' },
-    { title: 'Fashion Accessories', count: products.filter(p => p.category === 'Fashion Accessories').length, desc: 'Luxury earrings, sets & designer jewelry', image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop' },
-    { title: 'Home & Kitchen', count: products.filter(p => p.category === 'Home & Kitchen').length, desc: 'Sleek wood storage decor & travel thermal flasks', image: 'https://images.unsplash.com/photo-1591129841117-3adfd313e34f?w=400&h=400&fit=crop' },
-    { title: 'Beauty & Personal Care', count: products.filter(p => p.category === 'Beauty & Personal Care').length, desc: 'LED vanity mirrors & quartz rollers', image: 'https://images.unsplash.com/photo-1616627547584-bf28cee262db?w=400&h=400&fit=crop' },
-    { title: 'Pet Products', count: products.filter(p => p.category === 'Pet Products').length, desc: 'Memory foam beds & smart automatic feeders', image: 'https://images.unsplash.com/photo-1541599540903-216a46cc1cf0?w=400&h=400&fit=crop' },
-    { title: 'Fitness Products', count: products.filter(p => p.category === 'Fitness Products').length, desc: 'Recovery massage guns & alignment mats', image: 'https://images.unsplash.com/photo-1614926857083-2bc5bcd72584?w=400&h=400&fit=crop' }
+    { title: 'Smart Gadgets', count: products.filter(p => p.category === 'Smart Gadgets').length, desc: 'Innovative futuristic utilities & micro-fans', image: 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=500&auto=format&fit=crop&q=80' },
+    { title: 'Fashion Accessories', count: products.filter(p => p.category === 'Fashion Accessories').length, desc: 'Luxury earrings, sets & designer jewelry', image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&auto=format&fit=crop&q=80' },
+    { title: 'Home & Kitchen', count: products.filter(p => p.category === 'Home & Kitchen').length, desc: 'Sleek wood storage decor & travel thermal flasks', image: 'https://images.unsplash.com/photo-1591129841117-3adfd313e34f?w=500&auto=format&fit=crop&q=80' },
+    { title: 'Beauty & Personal Care', count: products.filter(p => p.category === 'Beauty & Personal Care').length, desc: 'LED vanity mirrors & quartz rollers', image: 'https://images.unsplash.com/photo-1616627547584-bf28cee262db?w=500&auto=format&fit=crop&q=80' },
+    { title: 'Pet Products', count: products.filter(p => p.category === 'Pet Products').length, desc: 'Memory foam beds & smart automatic feeders', image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=500&auto=format&fit=crop&q=80' },
+    { title: 'Fitness Products', count: products.filter(p => p.category === 'Fitness Products').length, desc: 'Recovery massage guns & alignment mats', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&auto=format&fit=crop&q=80' }
   ];
 
   // Recently Viewed Collection
@@ -318,6 +318,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
               <img
                 src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=85"
                 alt="Luxury Lifestyle EcoBazar Collection"
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent"></div>
@@ -398,6 +399,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
                 <img
                   src={cat.image}
                   alt={cat.title}
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 
@@ -476,6 +478,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
                   <img
                     src={p.gallery[0]}
                     alt={p.title}
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   
@@ -691,6 +694,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
                 <img
                   src={b.image}
                   alt={b.title}
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-102 transition duration-500"
                 />
               </div>
@@ -752,13 +756,14 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
                   <img
                     src={quickViewProduct.gallery[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600'}
                     alt={quickViewProduct.title}
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="flex gap-2">
                   {quickViewProduct.gallery.slice(0, 3).map((img, i) => (
                     <div key={i} className="w-16 h-16 rounded-lg overflow-hidden bg-slate-50 border border-slate-100">
-                      <img src={img} alt="thumbnail" className="w-full h-full object-cover" />
+                      <img src={img} alt="thumbnail" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                     </div>
                   ))}
                 </div>

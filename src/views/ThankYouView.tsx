@@ -65,16 +65,24 @@ export const ThankYouView: React.FC<ThankYouViewProps> = ({ navigate }) => {
       {/* Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <button
+          onClick={() => navigate('/track')}
+          className="px-6 py-4 bg-gradient-to-r from-[#008D7F] to-[#017267] text-white hover:opacity-90 rounded-xl font-bold text-xs shadow-md shadow-[#008D7F]/10 flex items-center justify-center gap-1.5 transition cursor-pointer"
+        >
+          <ArrowRight className="w-4 h-4" />
+          Track Real-Time Shipping
+        </button>
+
+        <button
           onClick={() => navigate('/dashboard')}
-          className="px-6 py-4 bg-gradient-to-r from-[#008D7F] to-[#017267] text-white hover:opacity-90 rounded-xl font-bold text-xs shadow-md shadow-[#008D7F]/10 flex items-center justify-center gap-1.5 transition"
+          className="px-6 py-4 bg-white border border-gray-200 text-gray-800 hover:bg-gray-50 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 transition cursor-pointer"
         >
           <LayoutDashboard className="w-4 h-4" />
-          Track Order in Dashboard
+          User Dashboard
         </button>
 
         <button
           onClick={() => navigate('/')}
-          className="px-6 py-4 bg-white border border-gray-200 text-gray-800 hover:bg-gray-50 rounded-xl font-bold text-xs shadow-sm transition"
+          className="px-6 py-4 bg-white border border-gray-200 text-gray-850 hover:bg-gray-50 rounded-xl font-bold text-xs shadow-sm transition cursor-pointer"
         >
           Continue Browse
         </button>

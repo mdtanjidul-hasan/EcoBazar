@@ -3590,7 +3590,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ navigate }) => {
                           </p>
                           
                           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                            <img src={p.photoURL || 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300'} alt={p.title} className="col-span-3 h-16 w-full object-cover rounded-xl border border-gray-200" />
+                            <img src={p.gallery?.[0] || 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300'} alt={p.title} className="col-span-3 h-16 w-full object-cover rounded-xl border border-gray-200" />
                             <div className="col-span-9 space-y-1.5 text-xs text-gray-550">
                               <p className="font-extrabold text-gray-800 text-sm leading-snug">{p.title}</p>
                               <p className="text-[10px] text-gray-400">Category Tags: <span className="bg-white border border-gray-100 px-2 py-0.5 rounded font-black text-[#008D7F]">{p.category}</span></p>
