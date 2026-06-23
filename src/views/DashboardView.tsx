@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { User, Order, Product } from '../types';
-import { SlidersHorizontal, ShieldCheck, Mail, Calendar, Sparkles, UserCheck, ShoppingBag, Plus, Trash2, CheckCircle, Truck, PackageCheck, Send, Edit, Heart, ShoppingCart, Clock, RefreshCw, MapPin, Activity, ChevronRight, Award, Gift, Ticket, Copy, Check, Lock, Cpu, Play, Pause, Database, TrendingUp, TrendingDown, Target, LineChart, Zap, Globe, Percent, Settings } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { SlidersHorizontal, ShieldCheck, Mail, Calendar, Sparkles, UserCheck, ShoppingBag, Plus, Trash2, CheckCircle, Truck, PackageCheck, Send, Edit, Heart, ShoppingCart, Clock, RefreshCw, MapPin, Activity, ChevronRight, Award, Gift, Ticket, Copy, Check, Lock, Cpu, Play, Pause, Database, TrendingUp, TrendingDown, Target, LineChart, Zap, Globe, Percent, Settings, XCircle } from 'lucide-react';
 
 interface DashboardViewProps {
   navigate: (path: string) => void;
@@ -10,7 +11,7 @@ interface DashboardViewProps {
 export const DashboardView: React.FC<DashboardViewProps> = ({ navigate }) => {
   const {
     user, allUsers, orders, products, addProduct, deleteProduct, updateProduct, updateOrderStatus, deleteOrder, updateProfile,
-    wishlist, removeFromWishlist, addToCart, lang, currency
+    wishlist, removeFromWishlist, addToCart, lang, currency, addLoyaltyPoints
   } = useStore();
 
   if (!user) {
@@ -60,6 +61,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ navigate }) => {
   const [selectedTrackOrderId, setSelectedTrackOrderId] = useState<string | null>(null);
   const [isTrackingLoading, setIsTrackingLoading] = useState(false);
   const [trackingStatusMessage, setTrackingStatusMessage] = useState<string>('');
+  const [orderHistoryFilter, setOrderHistoryFilter] = useState<'all' | 'delivered' | 'processing' | 'cancelled'>('all');
 
   // Dropshipping Automation & Global Social Marketing Hub States
   const [selectedDsProduct, setSelectedDsProduct] = useState<string>('');
@@ -508,20 +510,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ navigate }) => {
   const userOrdersCompleted = userOrders.filter(o => o.status === 'completed');
   const userOrdersPending = userOrders.filter(o => o.status === 'pending' || o.status === 'onTheWay');
 
-  // Earned Points: 1 point per ৳50 spent across all completed orders
-  const totalEarnedPoints = Math.floor(userOrdersCompleted.reduce((sum, o) => sum + o.total, 0) / 50);
+  // Earned Points: read starting points from context + purchase points, and fall back to completed spent calculation
+  const totalEarnedPoints = user && typeof user.loyaltyPoints === 'number'
+    ? user.loyaltyPoints + spentPoints
+    : Math.max(0, Math.floor(userOrdersCompleted.reduce((sum, o) => sum + o.total, 0) / 50));
 
   // Pending Points: 1 point per ৳50 spent on pending or in-transit orders
   const pendingPoints = Math.floor(userOrdersPending.reduce((sum, o) => sum + o.total, 0) / 50);
 
-  // Active usable points
-  const currentPoints = Math.max(0, totalEarnedPoints - spentPoints);
+  // Active usable points: read directly from the user's loyaltyPoints in context, fallback to calculation if undefined
+  const currentPoints = user && typeof user.loyaltyPoints === 'number'
+    ? Math.max(0, user.loyaltyPoints)
+    : Math.max(0, totalEarnedPoints - spentPoints);
 
   // Get current active loyalty level badge configuration
   const getUserBadge = () => {
-    if (totalEarnedPoints >= 1000) return { name: lang === 'EN' ? 'VIP PLATINUM' : 'ভিআইপি প্ল্যাটিনাম', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-750 dark:text-rose-400 border-rose-200 dark:border-rose-900/60 border' };
-    if (totalEarnedPoints >= 500) return { name: lang === 'EN' ? 'ROYAL GOLD' : 'রয়্যাল গোল্ড', color: 'bg-amber-100 dark:bg-amber-950/30 text-amber-800 dark:text-amber-405 border-amber-200 dark:border-amber-900/50 border' };
-    if (totalEarnedPoints >= 250) return { name: lang === 'EN' ? 'ELITE SILVER' : 'এলিট সিলভার', color: 'bg-blue-100 dark:bg-blue-950/30 text-blue-800 dark:text-blue-405 border-blue-200 dark:border-blue-900/50 border' };
+    const badgePointsCheck = totalEarnedPoints;
+    if (badgePointsCheck >= 1000) return { name: lang === 'EN' ? 'VIP PLATINUM' : 'ভিআইপি প্ল্যাটিনাম', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-750 dark:text-rose-400 border-rose-200 dark:border-rose-900/60 border' };
+    if (badgePointsCheck >= 500) return { name: lang === 'EN' ? 'ROYAL GOLD' : 'রয়্যাল গোল্ড', color: 'bg-amber-100 dark:bg-amber-950/30 text-amber-800 dark:text-amber-405 border-amber-200 dark:border-amber-900/50 border' };
+    if (badgePointsCheck >= 250) return { name: lang === 'EN' ? 'ELITE SILVER' : 'এলিট সিলভার', color: 'bg-blue-100 dark:bg-blue-950/30 text-blue-800 dark:text-blue-405 border-blue-200 dark:border-blue-900/50 border' };
     return { name: lang === 'EN' ? 'BRONZE START' : 'ব্রোঞ্জ স্টার্ট', color: 'bg-stone-100 dark:bg-zinc-800 text-stone-700 dark:text-gray-300 border-stone-200 dark:border-zinc-700 border' };
   };
 
@@ -567,6 +574,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ navigate }) => {
       used: false
     };
 
+    if (user && typeof user.loyaltyPoints === 'number') {
+      addLoyaltyPoints(user.email, -m.points);
+    }
     setSpentPoints(prev => prev + m.points);
     setRedeemedCoupons(prev => [newCoupon, ...prev]);
     alert(lang === 'EN' 
@@ -1703,72 +1713,187 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ navigate }) => {
                 );
               })()}
 
-              {/* Orders List for user */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-black text-gray-400 uppercase tracking-wider">Your transactions</h4>
-                
+              {/* Past Order History Section with Status Labels (Delivered, Processing, Cancelled) */}
+              <div id="past-order-history-section" className="space-y-6 pt-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div>
+                    <h4 className="font-display font-black text-sm text-gray-800 dark:text-gray-200 uppercase tracking-wider flex items-center gap-2">
+                      💼 {lang === 'EN' ? 'Order History & Status Tracker' : 'অর্ডারের ইতিহাস এবং স্থিতি ট্র্যাকার'}
+                    </h4>
+                    <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-400 mt-1">
+                      {lang === 'EN' ? 'Filter and review past or active orders with real-time status labels' : 'রিয়েল-টাইম স্ট্যাটাস লেবেল সহ পূর্ববর্তী বা সক্রিয় অর্ডার ফিল্টার করুন এবং পর্যালোচনা করুন'}
+                    </p>
+                  </div>
+                </div>
+
                 {userOrders.length === 0 ? (
-                  <div className="bg-slate-50 border border-gray-100 p-12 rounded-2xl text-center text-xs text-gray-400 font-semibold">
-                    You haven't placed any orders yet. Head to shop to purchase jewellery combos!
+                  <div className="bg-slate-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-12 rounded-3xl text-center text-xs text-gray-400 font-semibold shadow-inner">
+                    {lang === 'EN' ? "You haven't placed any orders yet. Head to shop to purchase jewellery combos!" : "আপনি এখনও কোনো অর্ডার করেননি। কম্বো কিনতে শপে যান!"}
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    {userOrders.map((o) => (
-                      <div key={o._id} className="border border-gray-100 rounded-2xl p-5 space-y-4 text-xs font-semibold">
-                        <div className="flex flex-wrap justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-100 gap-2">
-                          <div>
-                            <p className="font-bold text-gray-700">Order Reference ID: <span className="text-[#008D7F] font-black">{o._id}</span></p>
-                            <p className="text-[10px] text-gray-400 mt-0.5">Date: {o.date}</p>
-                          </div>
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                            o.status === 'completed' ? 'bg-emerald-100 text-emerald-800' :
-                            o.status === 'onTheWay' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'
-                          }`}>
-                            {o.status}
-                          </span>
-                        </div>
+                ) : (() => {
+                  const userProcessingOrders = userOrders.filter(o => o.status === 'pending' || o.status === 'onTheWay');
+                  const userDeliveredOrders = userOrders.filter(o => o.status === 'completed');
+                  const userCancelledOrders = userOrders.filter(o => o.status === 'cancelled');
 
-                        {/* order items list */}
-                        <div className="space-y-3 pl-1">
-                          {o.items.map((item, idx) => (
-                            <div key={idx} className="flex gap-4 items-center">
-                              <div className="w-10 h-10 rounded border border-gray-50 overflow-hidden shrink-0 bg-slate-100">
-                                <img src={item.image} alt="com" className="w-full h-full object-cover" />
-                              </div>
-                              <div className="flex-1">
-                                <p className="font-bold text-gray-750 line-clamp-1">{item.title}</p>
-                                <p className="text-gray-400 text-[10px]">{item.quantity} units x {convertPrice(item.price)}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                  const displayedOrders = userOrders.filter(o => {
+                    if (orderHistoryFilter === 'processing') return o.status === 'pending' || o.status === 'onTheWay';
+                    if (orderHistoryFilter === 'delivered') return o.status === 'completed';
+                    if (orderHistoryFilter === 'cancelled') return o.status === 'cancelled';
+                    return true;
+                  });
 
-                        {/* Order info foot block */}
-                        <div className="border-t border-gray-50 pt-3 flex flex-wrap justify-between items-center text-xs gap-3">
-                          <p className="text-gray-400 font-bold">Invoiced cod: <span className="font-display font-black text-sm text-gray-800">{convertPrice(o.total)}</span></p>
-                          {o.deliveryMan && (
-                            <p className="text-gray-500 bg-gray-50 border border-gray-100/50 px-2 py-1 rounded-md text-[10px]">
-                              🚚 Delivery logistics: <strong className="text-gray-700">{o.deliveryMan}</strong> ({o.deliveryDate})
-                            </p>
-                          )}
-                          {o.status === 'pending' && (
-                            <button
-                              onClick={() => {
-                                if (window.confirm("Are you sure? You won't be able to revert this!")) {
-                                  deleteOrder(o._id);
-                                  alert('Order canceled successfully.');
-                                }
-                              }}
-                              className="px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg text-[10px] font-bold leading-normal border border-rose-100 active:scale-95 transition"
-                            >
-                              Cancel Order
-                            </button>
-                          )}
-                        </div>
+                  return (
+                    <div className="space-y-5">
+                      {/* Interactive Filter Control Segment */}
+                      <div className="flex border-b border-gray-100 dark:border-zinc-800 pb-2 gap-1 overflow-x-auto scrollbar-none">
+                        <button
+                          onClick={() => setOrderHistoryFilter('all')}
+                          className={`px-3 py-2 text-[11px] font-extrabold rounded-xl transition-all duration-200 cursor-pointer shrink-0 ${
+                            orderHistoryFilter === 'all' 
+                              ? 'bg-slate-100 dark:bg-zinc-800 text-slate-800 dark:text-zinc-100 shadow-sm border border-slate-200 dark:border-zinc-700' 
+                              : 'text-gray-400 hover:text-gray-700 hover:bg-slate-50 dark:hover:bg-zinc-900'
+                          }`}
+                        >
+                          {lang === 'EN' ? 'All Transactions' : 'সকল লেনদেন'} ({userOrders.length})
+                        </button>
+                        <button
+                          onClick={() => setOrderHistoryFilter('processing')}
+                          className={`px-3 py-2 text-[11px] font-extrabold rounded-xl transition-all duration-200 cursor-pointer shrink-0 ${
+                            orderHistoryFilter === 'processing' 
+                              ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border border-blue-150 dark:border-blue-900/50 shadow-sm' 
+                              : 'text-gray-400 hover:text-blue-650 hover:bg-blue-50/30'
+                          }`}
+                        >
+                          {lang === 'EN' ? 'Processing ⌛' : 'প্রসেসিং ⌛'} ({userProcessingOrders.length})
+                        </button>
+                        <button
+                          onClick={() => setOrderHistoryFilter('delivered')}
+                          className={`px-3 py-2 text-[11px] font-extrabold rounded-xl transition-all duration-200 cursor-pointer shrink-0 ${
+                            orderHistoryFilter === 'delivered' 
+                              ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-150 dark:border-emerald-900/50 shadow-sm' 
+                              : 'text-gray-400 hover:text-emerald-600 hover:bg-emerald-50/30'
+                          }`}
+                        >
+                          {lang === 'EN' ? 'Delivered ✅' : 'ডেলিভারড ✅'} ({userDeliveredOrders.length})
+                        </button>
+                        <button
+                          onClick={() => setOrderHistoryFilter('cancelled')}
+                          className={`px-3 py-2 text-[11px] font-extrabold rounded-xl transition-all duration-200 cursor-pointer shrink-0 ${
+                            orderHistoryFilter === 'cancelled' 
+                              ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-150 dark:border-rose-900/50 shadow-sm' 
+                              : 'text-gray-400 hover:text-rose-600 hover:bg-rose-50/30'
+                          }`}
+                        >
+                          {lang === 'EN' ? 'Cancelled ❌' : 'বাতিল করা ❌'} ({userCancelledOrders.length})
+                        </button>
                       </div>
-                    ))}
-                  </div>
-                )}
+
+                      {/* Displayed filtered results list */}
+                      {displayedOrders.length === 0 ? (
+                        <div className="bg-slate-50 dark:bg-zinc-900 border border-dashed border-slate-200 dark:border-zinc-800 p-8 rounded-2xl text-center text-xs text-gray-400 font-semibold">
+                          {lang === 'EN' ? "No orders found in this status category." : "এই স্থিতি ক্যাটাগরিতে কোনো অর্ডার পাওয়া যায়নি।"}
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <AnimatePresence mode="popLayout">
+                            {displayedOrders.map((o) => {
+                              // Standardize label mappings
+                              let statusLabel = 'Processing';
+                              let badgeColor = 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900/50';
+                              let StatusIcon = Clock;
+
+                              if (o.status === 'completed') {
+                                statusLabel = 'Delivered';
+                                badgeColor = 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50';
+                                StatusIcon = CheckCircle;
+                              } else if (o.status === 'cancelled') {
+                                statusLabel = 'Cancelled';
+                                badgeColor = 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/50';
+                                StatusIcon = XCircle;
+                              } else if (o.status === 'onTheWay') {
+                                statusLabel = 'Processing (On the Way)';
+                                badgeColor = 'bg-[#008D7F]/10 dark:bg-[#008D7F]/20 text-[#008D7F] dark:text-teal-400 border-[#008D7F]/20';
+                                StatusIcon = Truck;
+                              }
+
+                              return (
+                                <motion.div
+                                  layout
+                                  key={o._id}
+                                  id={`user-order-card-${o._id}`}
+                                  initial={{ opacity: 0, y: 15 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, scale: 0.95 }}
+                                  className="border border-slate-150 dark:border-zinc-800 rounded-2xl p-5 space-y-4 text-xs font-semibold hover:shadow-md transition bg-white dark:bg-zinc-900"
+                                >
+                                  <div className="flex flex-wrap justify-between items-center bg-slate-50 dark:bg-zinc-950 p-3 rounded-xl border border-slate-100 dark:border-zinc-800 gap-2">
+                                    <div>
+                                      <p className="font-bold text-slate-700 dark:text-zinc-350">
+                                        {lang === 'EN' ? 'Order Reference ID:' : 'অর্ডার রেফারেন্স আইডি:'} <span className="text-[#008D7F] dark:text-teal-400 font-extrabold font-mono">{o._id}</span>
+                                      </p>
+                                      <p className="text-[10px] text-gray-400 dark:text-zinc-500 mt-0.5">
+                                        {lang === 'EN' ? 'Date Placed:' : 'ক্রয়কাল:'} {o.date}
+                                      </p>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className={`px-2.5 py-1 rounded-xl text-[10px] font-extrabold uppercase tracking-widest border flex items-center gap-1.5 ${badgeColor}`}>
+                                        <StatusIcon className="w-3 h-3" />
+                                        <span>{lang === 'EN' ? statusLabel : (statusLabel === 'Delivered' ? 'ডেলিভারড' : (statusLabel === 'Cancelled' ? 'বাতিল' : 'প্রসেসিং'))}</span>
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  {/* order items list */}
+                                  <div className="space-y-3 pl-1">
+                                    {o.items.map((item, idx) => (
+                                      <div key={idx} className="flex gap-4 items-center">
+                                        <div className="w-11 h-11 rounded-xl border border-slate-100 dark:border-zinc-800 overflow-hidden shrink-0 bg-slate-50 dark:bg-zinc-950 flex items-center justify-center">
+                                          <img src={item.image} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                          <p className="font-extrabold text-slate-800 dark:text-zinc-200 line-clamp-1">{item.title}</p>
+                                          <p className="text-gray-400 dark:text-zinc-500 text-[10px] mt-0.5">{item.quantity} units x {convertPrice(item.price)}</p>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+
+                                  {/* Order info foot block */}
+                                  <div className="border-t border-slate-100 dark:border-zinc-800/80 pt-3 flex flex-wrap justify-between items-center text-xs gap-3">
+                                    <p className="text-gray-400 dark:text-zinc-400 font-bold">
+                                      {lang === 'EN' ? 'Invoiced Amount:' : 'মোট ইনভয়েস বিল:'} <span className="font-display font-black text-sm text-[#008D7F] dark:text-teal-400">{convertPrice(o.total)}</span>
+                                    </p>
+                                    
+                                    {o.deliveryMan && (
+                                      <p className="text-gray-500 dark:text-zinc-400 bg-slate-50 dark:bg-zinc-950 border border-slate-100 dark:border-zinc-850 px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1">
+                                        🚚 {lang === 'EN' ? 'Courier Logistics:' : 'কুরিয়ার লজিস্টিকস:'} <strong className="text-[#008D7F] dark:text-teal-400">{o.deliveryMan}</strong> ({o.deliveryDate})
+                                      </p>
+                                    )}
+
+                                    {o.status === 'pending' && (
+                                      <button
+                                        onClick={() => {
+                                          if (window.confirm(lang === 'EN' ? "Are you sure you want to cancel this order?" : "আপনি কি নিশ্চিত যে আপনি এই অর্ডারটি বাতিল করতে চান?")) {
+                                            deleteOrder(o._id); // This now marks it as cancelled instead of deleting!
+                                            alert(lang === 'EN' ? 'Order cancelled successfully.' : 'অর্ডারটি সফলভাবে বাতিল করা হয়েছে।');
+                                          }
+                                        }}
+                                        className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:text-rose-700 rounded-xl text-[10px] font-black border border-rose-150 dark:border-rose-900/40 active:scale-95 transition cursor-pointer flex items-center gap-1 shrink-0 uppercase tracking-wider"
+                                      >
+                                        <XCircle className="w-3 h-3" />
+                                        <span>{lang === 'EN' ? 'Cancel Order' : 'অর্ডার বাতিল করুন'}</span>
+                                      </button>
+                                    )}
+                                  </div>
+                                </motion.div>
+                              );
+                            })}
+                          </AnimatePresence>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           )}

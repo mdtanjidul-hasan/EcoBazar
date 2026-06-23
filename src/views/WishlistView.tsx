@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { Product } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
@@ -12,7 +12,9 @@ import {
   Star,
   Sparkles,
   RefreshCw,
-  X
+  X,
+  Bell,
+  TrendingDown
 } from 'lucide-react';
 
 interface WishlistViewProps {
@@ -25,8 +27,48 @@ export const WishlistView: React.FC<WishlistViewProps> = ({ navigate }) => {
     removeFromWishlist, 
     addToCart, 
     formatPrice, 
-    lang 
+    lang,
+    updateProduct,
+    products,
+    addToWishlist
   } = useStore();
+
+  const [isSimulating, setIsSimulating] = useState(false);
+
+  // Trigger simulated price drops on a wishlisted product to display beautiful notifications instantly
+  const triggerSimulationPriceDrop = () => {
+    setIsSimulating(true);
+    
+    setTimeout(() => {
+      if (wishlist.length === 0) {
+        // Find some high-quality jewelry products
+        const targetItem = products.find(p => p.category.toLowerCase().includes('accessories') || p.category.toLowerCase().includes('gadget') || p.price > 100) || products[0];
+        
+        if (targetItem) {
+          addToWishlist(targetItem);
+          // Let it mount in state first, then trigger a price drop on it!
+          setTimeout(() => {
+            const currentP = targetItem.price;
+            const drop = Math.floor(currentP * 0.82); // 18% price drop
+            updateProduct({
+              ...targetItem,
+              price: drop
+            });
+          }, 450);
+        }
+      } else {
+        // Pick a random wishlisted item
+        const randomItem = wishlist[Math.floor(Math.random() * wishlist.length)];
+        const currentP = randomItem.price;
+        const drop = Math.max(10, Math.floor(currentP * 0.85)); // 15% drop
+        updateProduct({
+          ...randomItem,
+          price: drop
+        });
+      }
+      setIsSimulating(false);
+    }, 600);
+  };
 
   const handleMoveToCart = (p: Product) => {
     addToCart(p, 1);
@@ -85,6 +127,45 @@ export const WishlistView: React.FC<WishlistViewProps> = ({ navigate }) => {
             )}
           </div>
         </div>
+      </section>
+
+      {/* Dynamic Simulation Control Panel */}
+      <section className="bg-gradient-to-r from-teal-50/70 to-blue-50/40 dark:from-zinc-900/40 dark:to-zinc-900/10 border border-[#008D7F]/25 dark:border-zinc-800 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-5 text-left">
+        <div className="flex items-start gap-4">
+          <div className="p-3 bg-teal-500/15 text-[#008D7F] dark:text-teal-400 rounded-2xl shrink-0 mt-0.5">
+            <Bell className="w-5 h-5 animate-bounce" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-display font-extrabold text-sm md:text-base text-gray-950 dark:text-gray-100 flex items-center gap-2 flex-wrap">
+              {lang === 'EN' ? 'Toast Notification Simulator' : 'টস্টি নোটিফিকেশন সিমুলেটর'}
+              <span className="bg-[#00B894] text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full">
+                {lang === 'EN' ? 'New Feature' : 'নতুন ফিচার'}
+              </span>
+            </h3>
+            <p className="text-[11px] md:text-xs text-gray-400 dark:text-gray-400 font-semibold leading-relaxed max-w-xl">
+              {lang === 'EN'
+                ? "This utility drops a product's price in real-time to trigger our elegant Toast Alert. If your wishlist is empty, we'll automatically add a premium item and apply the discount instantly."
+                : "এই ইউটিলিটি রিয়েল-টাইমে একটি পণ্যের দাম কমিয়ে আমাদের সুন্দর টোস্ট অ্যালার্ট চালু করে। আপনার উইশলিস্ট খালি থাকলে, আমরা একটি প্রিমিয়াম পণ্য যুক্ত করে মূল্যহ্রাস করে দেব।"}
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={triggerSimulationPriceDrop}
+          disabled={isSimulating}
+          className="w-full md:w-auto px-6 py-3.5 bg-gradient-to-r from-teal-500 to-[#008D7F] hover:from-teal-600 hover:to-[#007065] text-white text-xs font-black rounded-2xl transition-all shadow-md active:scale-98 flex items-center justify-center gap-2 cursor-pointer shrink-0"
+        >
+          {isSimulating ? (
+            <RefreshCw className="w-4 h-4 animate-spin" />
+          ) : (
+            <TrendingDown className="w-4 h-4" />
+          )}
+          <span>
+            {lang === 'EN' 
+              ? 'Simulate Price Drop Alert! ⚡' 
+              : 'মূল্যহ্রাস অ্যালার্ট সিমুলেট করুন! ⚡'}
+          </span>
+        </button>
       </section>
 
       {/* Grid Showcase of Wishlist Items */}

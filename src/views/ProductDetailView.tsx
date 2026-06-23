@@ -54,7 +54,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
   const [zoomStyle, setZoomStyle] = useState({ display: 'none', backgroundPosition: '0% 0%' });
   const [activeMediaTab, setActiveMediaTab] = useState<'photo' | 'video'>('photo');
   const [quantity, setQuantity] = useState(1);
-  const [activeDetailTab, setActiveDetailTab] = useState<'desc' | 'specs' | 'reviews' | 'shipping'>('desc');
+  const [activeDetailTab, setActiveDetailTab] = useState<'desc' | 'specs' | 'reviews' | 'shipping' | 'assistant'>('desc');
 
   // Review states
   const [revRating, setRevRating] = useState(5);
@@ -62,6 +62,67 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
   const [revEmail, setRevEmail] = useState('');
   const [revComment, setRevComment] = useState('');
   const [isAddedFeedback, setIsAddedFeedback] = useState(false);
+
+  // AI Shopping Assistant chat states
+  const [assistantMessages, setAssistantMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([
+    { 
+      role: 'assistant', 
+      content: lang === 'EN' 
+        ? `Hello! I am your AI Shopping Assistant representing the beautiful "${product.title}". Feel free to ask me anything about its design, technical specs, pricing, shipping timeline, or availability!` 
+        : `হ্যালো! আমি আপনার এই পণ্যের ("${product.title}") কৃত্রিম বুদ্ধিমত্তা শপিং সহকারী। এই কারুশিল্প বা গ্যাজেটটির ডিজাইন, স্পেসিফিকেশন, দাম, শিপিং বা স্টক নিয়ে যেকোন প্রশ্ন আমাকে করতে পারেন!` 
+    }
+  ]);
+  const [assistantInput, setAssistantInput] = useState('');
+  const [isAssistantTyping, setIsAssistantTyping] = useState(false);
+  const assistantScrollRef = useRef<HTMLDivElement>(null);
+
+  // Update scroll on message update
+  useEffect(() => {
+    if (assistantScrollRef.current) {
+      assistantScrollRef.current.scrollTop = assistantScrollRef.current.scrollHeight;
+    }
+  }, [assistantMessages]);
+
+  const handleSendAssistantMessage = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!assistantInput.trim() || isAssistantTyping) return;
+
+    const userText = assistantInput.trim();
+    setAssistantInput('');
+    
+    // Append user message
+    const updatedMessages = [...assistantMessages, { role: 'user' as const, content: userText }];
+    setAssistantMessages(updatedMessages);
+    setIsAssistantTyping(true);
+
+    try {
+      const response = await fetch('/api/shopping-assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product,
+          messages: updatedMessages
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Upstream assistant error');
+      }
+
+      const data = await response.json();
+      setAssistantMessages(prev => [...prev, { role: 'assistant' as const, content: data.reply }]);
+    } catch (err) {
+      console.error(err);
+      setAssistantMessages(prev => [...prev, { 
+        role: 'assistant' as const, 
+        content: lang === 'EN' 
+          ? "I am currently experiencing connection difficulties. Please check your network or try again." 
+          : "আমি এই মুহূর্তে সংযোগ সমস্যায় ভুগছি। অনুগ্রহ করে পুনরায় চেষ্টা করুন।" 
+      }]);
+    } finally {
+      setIsAssistantTyping(false);
+    }
+  };
 
   // Multi-tier AI Recommendations arrays
   const [frequentlyBought, setFrequentlyBought] = useState<Product[]>([]);
@@ -455,6 +516,14 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
           >
             Reviews ({productReviews.length})
           </button>
+          <button
+            onClick={() => setActiveDetailTab('assistant')}
+            className={`pb-3 border-b-2 transition shrink-0 tracking-wider flex items-center gap-1.5 ${
+              activeDetailTab === 'assistant' ? 'border-[#00B894] text-[#00B894]' : 'border-transparent text-slate-450 hover:text-slate-600'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-emerald-500 fill-emerald-100" /> AI Q&A Assistant
+          </button>
         </div>
 
         {/* Tab contents panel rendering */}
@@ -659,6 +728,121 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
                   className="px-6 py-3 bg-[#1E293B] hover:bg-[#00B894] text-white font-extrabold rounded-xl text-xs uppercase tracking-wider transition duration-350"
                 >
                   Post Review
+                </button>
+              </form>
+            </div>
+          )}
+
+          {activeDetailTab === 'assistant' && (
+            <div className="space-y-6">
+              {/* Header section with assistant icon, name, and subtitle */}
+              <div id="ai-assistant-header" className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-2xl border border-slate-150 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#00B894] to-emerald-600 flex items-center justify-center text-white shadow relative">
+                    <Sparkles className="w-5 h-5 fill-current" />
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-white rounded-full"></span>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-black text-slate-800 uppercase tracking-widest flex items-center gap-1.5">
+                      EcoBazar AI Expert Companion
+                    </h4>
+                    <span className="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">
+                      Powered by Gemini 3.5 Flash • Active Q&A
+                    </span>
+                  </div>
+                </div>
+                {/* Suggestions chip row */}
+                <div className="flex flex-wrap gap-2 text-[10px] font-bold">
+                  <span className="text-slate-400 self-center">Instant Questions:</span>
+                  {[
+                    lang === 'EN' ? "Specs?" : "স্পেসিফিকেশন কি?",
+                    lang === 'EN' ? "Price details?" : "দাম কত?",
+                    lang === 'EN' ? "Is it in stock?" : "স্টকে আছে?",
+                    lang === 'EN' ? "Shipping terms?" : "শিপিং কি ফ্রি?"
+                  ].map((suggest, sIdx) => (
+                    <button
+                      key={sIdx}
+                      type="button"
+                      id={`suggest-btn-${sIdx}`}
+                      onClick={() => {
+                        setAssistantInput(suggest);
+                      }}
+                      className="px-2.5 py-1 bg-slate-100 hover:bg-[#00B894]/10 hover:text-[#00B894] text-slate-600 rounded-lg border border-slate-200 uppercase transition"
+                    >
+                      {suggest}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Chat dialogue display box */}
+              <div 
+                ref={assistantScrollRef}
+                id="ai-assistant-chatbox"
+                className="h-[320px] overflow-y-auto border border-slate-200 bg-white rounded-2xl p-4 sm:p-5 space-y-4 shadow-inner"
+              >
+                {assistantMessages.map((msg, idx) => (
+                  <div 
+                    key={idx}
+                    id={`msg-bubble-${idx}`}
+                    className={`flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : ''}`}
+                  >
+                    {/* Icon / Avatar */}
+                    {msg.role === 'assistant' ? (
+                      <div className="w-7 h-7 rounded-lg bg-[#00B894]/10 text-[#00B894] flex items-center justify-center shrink-0">
+                        <Sparkles className="w-4 h-4 fill-current" />
+                      </div>
+                    ) : (
+                      <div className="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+                        <span className="text-[10px] font-black uppercase">Me</span>
+                      </div>
+                    )}
+
+                    {/* Speech Bubble body */}
+                    <div className={`p-3.5 rounded-2xl text-xs leading-relaxed font-semibold ${
+                      msg.role === 'user' 
+                        ? 'bg-slate-900 text-white rounded-tr-none' 
+                        : 'bg-slate-50 text-slate-700 border border-slate-100 rounded-tl-none'
+                    }`}>
+                      {msg.content}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Loading indicator */}
+                {isAssistantTyping && (
+                  <div id="ai-assistant-typing" className="flex gap-3 max-w-[80%] animate-pulse">
+                    <div className="w-7 h-7 rounded-lg bg-[#00B894]/10 text-[#00B894] flex items-center justify-center select-none shrink-0">
+                      <Sparkles className="w-4 h-4 fill-current" />
+                    </div>
+                    <div className="bg-slate-50 border border-slate-100 p-3.5 rounded-2xl rounded-tl-none flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
+                      <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                      <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Message Typing Form */}
+              <form onSubmit={handleSendAssistantMessage} id="ai-assistant-form" className="flex gap-2">
+                <input
+                  type="text"
+                  id="ai-assistant-input"
+                  value={assistantInput}
+                  onChange={(e) => setAssistantInput(e.target.value)}
+                  placeholder={lang === 'EN' ? "Type a question about this product..." : "এই পণ্যটি সম্পর্কে কিছু লিখুন..."}
+                  className="flex-1 text-xs p-3.5 border border-slate-200 bg-white rounded-xl focus:border-[#00B894] outline-none font-semibold shadow-sm"
+                  disabled={isAssistantTyping}
+                />
+                <button
+                  type="submit"
+                  id="ai-assistant-send-btn"
+                  disabled={isAssistantTyping || !assistantInput.trim()}
+                  className="px-5 bg-[#00B894] hover:bg-[#008D7F] disabled:bg-slate-200 text-white font-extrabold rounded-xl text-xs uppercase tracking-wider transition-all shadow hover:shadow-md flex items-center justify-center gap-1"
+                >
+                  <Send className="w-3.5 h-3.5 fill-current" />
+                  <span>{lang === 'EN' ? "Send" : "পাঠান"}</span>
                 </button>
               </form>
             </div>

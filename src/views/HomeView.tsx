@@ -243,10 +243,40 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
   return (
     <div className="space-y-24 pb-20 overflow-x-hidden">
 
-      {/* Top Banner Notice - Spend Indicator */}
-      <div className="w-full bg-[#00B894] text-white py-2 text-xs font-semibold tracking-wider text-center flex items-center justify-center gap-2 animate-pulse">
-        <Sparkles className="w-3.5 h-3.5" />
-        <span>{t.spendMore}</span>
+      {/* Top Banner Notice - Floating Water-Transparent Spend Indicator with custom waves */}
+      <div className="px-4 sm:px-8 mt-4 max-w-7xl mx-auto">
+        <motion.div
+          id="floating-oceanic-banner"
+          animate={{
+            y: [0, -6, 0],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 4,
+            ease: "easeInOut",
+          }}
+          className="relative overflow-hidden rounded-[24px] bg-teal-500/10 dark:bg-teal-900/15 backdrop-blur-md border border-teal-500/25 dark:border-teal-400/15 shadow-[0_12px_40px_rgba(0,184,148,0.12)] p-4 sm:p-5 text-center select-none flex flex-col items-center justify-center gap-2"
+        >
+          {/* Water wave decoration vectors */}
+          <div className="absolute -bottom-2 -left-4 w-24 h-24 bg-gradient-to-tr from-[#00B894]/10 to-transparent rounded-full blur-xl pointer-events-none" />
+          <div className="absolute -top-4 -right-4 w-32 h-32 bg-gradient-to-bl from-teal-500/10 to-transparent rounded-full blur-xl pointer-events-none" />
+
+          {/* Line 1: Directive Tag */}
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-[#008D7F] dark:text-teal-400">
+            <Sparkles className="w-3.5 h-3.5 animate-pulse shrink-0 fill-[#00B894]/10" />
+            <span>
+              {lang === 'EN' ? '⚡ PREMIUM SHIPMENT DIRECTIVE ⚡' : 
+               lang === 'AR' ? '⚡ توجيه شحن حصري ⚡' : 
+               lang === 'FR' ? '⚡ CONSIGNES D\'EXPÉDITION ULTRA ⚡' : 
+               lang === 'ES' ? '⚡ DIRECTIVA DE ENVÍO PREMIUM ⚡' : '⚡ PREMIUM SHIPMENT DIRECTIVE ⚡'}
+            </span>
+          </div>
+
+          {/* Line 2: The actual shipping benefit */}
+          <div className="text-xs sm:text-sm font-black text-teal-950 dark:text-teal-200 tracking-wide max-w-2xl leading-relaxed">
+            {t.spendMore}
+          </div>
+        </motion.div>
       </div>
 
       {/* Hero Section */}

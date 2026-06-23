@@ -42,6 +42,7 @@ export interface User {
   role: 'admin' | 'delivery' | 'user';
   photoURL?: string;
   createdAt?: string;
+  loyaltyPoints?: number;
 }
 
 export interface Order {
@@ -54,7 +55,7 @@ export interface Order {
     image: string;
   }[];
   total: number;
-  status: 'pending' | 'onTheWay' | 'completed';
+  status: 'pending' | 'onTheWay' | 'completed' | 'cancelled';
   deliveryMan?: string;
   deliveryDate?: string;
   date: string;
@@ -73,4 +74,16 @@ export interface Review {
   comment: string;
   rating: number;
   date: string;
+}
+
+export interface ToastNotification {
+  _id: string;
+  type: 'sale' | 'info' | 'success' | 'warning';
+  title: string;
+  message: string;
+  product?: Product;
+  priceDropDetails?: {
+    oldPrice: number;
+    newPrice: number;
+  };
 }

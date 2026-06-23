@@ -578,6 +578,117 @@ Required JSON Structure:
   }
 });
 
+// AI Shopping Assistant Q&A Heuristics Matcher
+const getHeuristicAssistantResponse = (product: any, query: string): string => {
+  const qStr = (query || "").toLowerCase();
+  
+  if (qStr.includes("price") || qStr.includes("cost") || qStr.includes("how much") || qStr.includes("টাকা") || qStr.includes("দাম")) {
+    return `The price of "${product.title}" is ${product.price} BDT. We support cash on delivery inside Bangladesh, alongside Visa/Mastercard payments.`;
+  }
+  
+  if (qStr.includes("stock") || qStr.includes("quantity") || qStr.includes("available") || qStr.includes("কতটা আছে") || qStr.includes("স্টক") || qStr.includes("কয়টা")) {
+    return product.quantity > 0 
+      ? `Yes! We currently have ${product.quantity} units of "${product.title}" in stock and ready to ship within 24 hours.`
+      : `Currently, "${product.title}" is out of stock. It is expected to replenish soon, but you can pre-order or consult our help desk!`;
+  }
+  
+  if (qStr.includes("shipping") || qStr.includes("delivery") || qStr.includes("courier") || qStr.includes("শিপিং") || qStr.includes("ডেলিভারি") || qStr.includes("পৌঁছ")) {
+    return `We offer free standard global courier shipping (7-12 business days) with zero damage liability. You can also opt for priority tracked shipping (3-5 business days) for an extra ৳450 BDT at checkout.`;
+  }
+  
+  if (qStr.includes("material") || qStr.includes("made of") || qStr.includes("metal") || qStr.includes("silver") || qStr.includes("wood") || qStr.includes("তৈরি") || qStr.includes("উপাদান") || qStr.includes("উপকরণ")) {
+    const descLower = (product.description || "").toLowerCase();
+    if (descLower.includes("silver") || descLower.includes("gold") || descLower.includes("gemstone") || descLower.includes("alloy") || descLower.includes("pouch")) {
+      return `This is crafted with selected materials details: "${product.description.substring(0, 150)}...". All our jewelry products feature hypoallergenic materials, 100% free from Lead, Cadmium, or BPA.`;
+    }
+    return `This gadget features premium components: "${product.description.substring(0, 150)}...". Designed for high durability, energy efficiency, and modern everyday lifestyle standards.`;
+  }
+  
+  if (qStr.includes("origin") || qStr.includes("where") || qStr.includes("supplier") || qStr.includes("উৎস") || qStr.includes("কোন দেশ")) {
+    return `The "${product.title}" is premium quality and sourced directly through EcoBazar Certified Fair-Trade Green Manufacturing Hubs, guaranteeing both quality verification and ethical production loops.`;
+  }
+  
+  if (qStr.includes("hello") || qStr.includes("hi") || qStr.includes("hey") || qStr.includes("সালাম") || qStr.includes("হ্যালো") || qStr.includes("কেমন")) {
+    return `Hello there! I am your AI-powered boutique guide at EcoBazar. I'd be absolutely delighted to help you understand more about the beautiful "${product.title}". What would you like to know about its design, materials, spec metrics, or delivery options?`;
+  }
+  
+  // Default overview fallback
+  return `I'm happy to help explain more about "${product.title}"! It is priced at ${product.price} BDT in our "${product.category}" gallery. Description: "${product.description.substring(0, 120)}...". Let me know if you would like me to clarify its dimensions, stock depth, or shipping details!`;
+};
+
+// API Endpoint for AI Shopping Assistant (Product Q&A Chat)
+app.post("/api/shopping-assistant", async (req, res) => {
+  try {
+    const { product, messages } = req.body;
+    if (!product || !product.title || !messages || !Array.isArray(messages)) {
+      return res.status(400).json({ error: "Missing product object or messages array" });
+    }
+
+    const lastUserMessage = messages[messages.length - 1]?.content || "";
+    const ai = getGeminiClient();
+
+    // If API key is missing, fallback to our heuristic assistant engine
+    if (!ai) {
+      console.warn("GEMINI_API_KEY is not defined. Falling back to heuristic chatbot response.");
+      const reply = getHeuristicAssistantResponse(product, lastUserMessage);
+      return res.json({ reply, source: "fallback_heuristic" });
+    }
+
+    try {
+      // Map chat messages format to Google GenAI expectations
+      const contents = messages.map((m: any) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }]
+      }));
+
+      const systemInstruction = `You are a helpful, extremely polite, and personal AI shopping assistant at "EcoBazar Jewelry and Gadgets Store".
+Your goal is to assist customers with details or questions about the specific product they are currently viewing.
+Answer accurately based on the provided Product Details. If any detail is not specified or cannot be reasonably inferred, say you don't have that exact detail, but encourage them to proceed configuration or talk to EcoBazar customer service.
+
+Current Product Details:
+- Title: "${product.title}"
+- Price: ${product.price} BDT
+- Category: "${product.category}"
+- Sub-category: "${product.sub_category || "N/A"}"
+- Description: "${product.description}"
+- Rating: ${product.rating || "5"} / 5 stars
+- Available Inventory Stock: ${product.quantity} items available in our fair-trade hub
+
+Our General Store Standards:
+- Standard Shipping: Free worldwide delivery (typical timeframe 7-12 business days).
+- Express Delivery: Priority tracked courier is available for ৳450 BDT (takes 3-5 business days).
+- Raw Material Quality: All metallic products are hypoallergenic, lead/cadmium/BPA free. Handcrafted items come with a luxurious travel velvet packaging box.
+- Returns policy: 30 days money-back guarantee with prepaid return labels if unsatisfied.
+
+Tone Guidelines:
+1. Warm, premium boutique assistant vibe. Speak with gentle elegance and enthusiasm for fine items.
+2. Keep responses concise (usually 2-3 sentences), making them easy to read inside a small chat drawer or tab widget.
+3. Support Bengali natively if the user queries in Bengali, and English if they write in English. Use natural local phrasing.
+4. Do not mention any JSON, API, or engineering parameters. Speak directly as a human shop assistant.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents,
+        config: {
+          systemInstruction,
+          temperature: 0.7,
+        }
+      });
+
+      const reply = response.text?.trim() || "I'm sorry, I couldn't formulate an answer at the moment. Please feel free to ask again!";
+      return res.json({ reply, source: "gemini_api" });
+    } catch (apiError: any) {
+      console.warn("[AI Assistant API] Gemini API error, activating heuristics fallback:", apiError?.message || apiError);
+      const reply = getHeuristicAssistantResponse(product, lastUserMessage);
+      return res.json({ reply, source: "fallback_heuristic" });
+    }
+
+  } catch (error: any) {
+    console.error("[AI Assistant API] Outer handler error:", error?.message || error);
+    res.status(500).json({ error: error?.message || "Internal server error" });
+  }
+});
+
 // Serve frontend assets
 async function bootstrap() {
   if (process.env.NODE_ENV !== "production") {

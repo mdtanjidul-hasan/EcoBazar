@@ -6,6 +6,7 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { NewsletterModal } from './components/NewsletterModal';
+import { ToastContainer } from './components/ToastContainer';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Views
@@ -113,7 +114,7 @@ function AppContent() {
       <Navbar currentPath={currentPath} navigate={navigate} />
 
       {/* Main Container Stage */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-36 pb-12">
         <ErrorBoundary>
           <AnimatePresence mode="wait">
             <motion.div
@@ -138,6 +139,9 @@ function AppContent() {
 
       {/* Exit-Intent Newsletter Subscription Modal */}
       <NewsletterModal />
+
+      {/* Global Toast Notification System */}
+      <ToastContainer navigate={navigate} />
     </div>
   );
 }

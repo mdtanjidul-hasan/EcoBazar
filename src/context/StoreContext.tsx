@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product, Blog, User, Order, Review, Comment } from '../types';
+import { Product, Blog, User, Order, Review, Comment, ToastNotification } from '../types';
 import { INITIAL_PRODUCTS, INITIAL_BLOGS } from '../data';
 
 interface StoreContextType {
@@ -62,15 +62,20 @@ interface StoreContextType {
   compareList: Product[];
   addToCompare: (product: Product) => void;
   removeFromCompare: (productId: string) => void;
+  addLoyaltyPoints: (email: string, points: number) => void;
+  // Toast notifications state & methods
+  toasts: ToastNotification[];
+  addNotificationToast: (toast: Omit<ToastNotification, '_id'>) => void;
+  dismissNotificationToast: (id: string) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 // Seeds for Users list
 const DEFAULT_USERS: User[] = [
-  { email: 'admin@ecobazar.com', name: 'Maruf Hossen (Admin)', role: 'admin', photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces', createdAt: '2026-01-10' },
-  { email: 'delivery@ecobazar.com', name: 'Mishuk RJ (Delivery)', role: 'delivery', photoURL: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces', createdAt: '2026-02-15' },
-  { email: 'user@ecobazar.com', name: 'Zarin Tasnim', role: 'user', photoURL: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces', createdAt: '2026-03-20' }
+  { email: 'admin@ecobazar.com', name: 'Maruf Hossen (Admin)', role: 'admin', photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces', createdAt: '2026-01-10', loyaltyPoints: 1250 },
+  { email: 'delivery@ecobazar.com', name: 'Mishuk RJ (Delivery)', role: 'delivery', photoURL: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces', createdAt: '2026-02-15', loyaltyPoints: 320 },
+  { email: 'user@ecobazar.com', name: 'Zarin Tasnim', role: 'user', photoURL: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces', createdAt: '2026-03-20', loyaltyPoints: 450 }
 ];
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -117,6 +122,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const saved = localStorage.getItem('eb_wishlist');
     return saved ? JSON.parse(saved) : [];
   });
+
+  const [toasts, setToasts] = useState<ToastNotification[]>([]);
 
   const [orders, setOrders] = useState<Order[]>(() => {
     const saved = localStorage.getItem('eb_orders');
@@ -441,6 +448,21 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
     });
 
+    // Award loyalty points to user (1 loyalty point per ৳10 BDT spent)
+    if (user) {
+      const earnedPoints = Math.floor(total / 10);
+      if (earnedPoints > 0) {
+        setAllUsers(prev => prev.map(u => {
+          if (u.email.toLowerCase() === user.email.toLowerCase()) {
+            const updated = { ...u, loyaltyPoints: (u.loyaltyPoints || 0) + earnedPoints };
+            setUser(updated);
+            return updated;
+          }
+          return u;
+        }));
+      }
+    }
+
     clearCart();
     return newOrder;
   };
@@ -505,7 +527,41 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setProducts(prev => prev.filter(p => p._id !== id));
   };
 
+  const addNotificationToast = (toast: Omit<ToastNotification, '_id'>) => {
+    const id = 'toast_' + Math.random().toString(36).substr(2, 9);
+    setToasts(prev => [...prev, { ...toast, _id: id }]);
+    
+    // Auto remove after 6 seconds so users have ample time to click or read
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t._id !== id));
+    }, 6000);
+  };
+
+  const dismissNotificationToast = (id: string) => {
+    setToasts(prev => prev.filter(t => t._id !== id));
+  };
+
   const updateProduct = (updated: Product) => {
+    // Check if there is a price drop on this product
+    const oldProduct = products.find(p => p._id === updated._id);
+    if (oldProduct && updated.price < oldProduct.price) {
+      // It's a price drop! Verify if it is in the wishlist
+      const isWishlisted = wishlist.some(p => p._id === updated._id);
+      if (isWishlisted) {
+        addNotificationToast({
+          type: 'sale',
+          title: lang === 'EN' ? 'Wishlist Price Drop! 🚨' : 'উইশলিস্ট মূল্যহ্রাস! 🚨',
+          message: lang === 'EN' 
+            ? `Your wishlisted item "${updated.title}" has dropped from ${formatPrice(oldProduct.price)} to ${formatPrice(updated.price)}!`
+            : `আপনার পছন্দের তালিকায় থাকা "${updated.title}" এর দাম ${formatPrice(oldProduct.price)} থেকে কমে ${formatPrice(updated.price)} টাকা হয়েছে!`,
+          product: updated,
+          priceDropDetails: {
+            oldPrice: oldProduct.price,
+            newPrice: updated.price
+          }
+        });
+      }
+    }
     setProducts(prev => prev.map(p => p._id === updated._id ? updated : p));
   };
 
@@ -525,7 +581,20 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const deleteOrder = (orderId: string) => {
-    setOrders(prev => prev.filter(o => o._id !== orderId));
+    setOrders(prev => prev.map(o => o._id === orderId ? { ...o, status: 'cancelled' } : o));
+  };
+
+  const addLoyaltyPoints = (email: string, points: number) => {
+    setAllUsers(prev => prev.map(u => {
+      if (u.email.toLowerCase() === email.toLowerCase()) {
+        const updated = { ...u, loyaltyPoints: (u.loyaltyPoints || 0) + points };
+        if (user && user.email.toLowerCase() === email.toLowerCase()) {
+          setUser(updated);
+        }
+        return updated;
+      }
+      return u;
+    }));
   };
 
   return (
@@ -536,7 +605,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       addToWishlist, removeFromWishlist, createOrder, addReview, addComment,
       addProduct, deleteProduct, updateProduct, updateOrderStatus, deleteOrder,
       searchQuery, setSearchQuery,
-      theme, toggleTheme, lang, setLang, currency, setCurrency, formatPrice, compareList, addToCompare, removeFromCompare
+      theme, toggleTheme, lang, setLang, currency, setCurrency, formatPrice, compareList, addToCompare, removeFromCompare,
+      addLoyaltyPoints,
+      toasts, addNotificationToast, dismissNotificationToast
     }}>
       {children}
     </StoreContext.Provider>
