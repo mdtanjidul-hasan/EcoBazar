@@ -35,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate }) => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 w-full z-40 border-b border-gray-100 dark:border-zinc-850 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md shadow-sm transition-all duration-300">
+    <header className="sticky top-0 z-40 border-b border-gray-100 dark:border-zinc-850 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md shadow-sm transition-all duration-300 w-full">
       
       {/* ================= DESKTOP MODE: TWO DISTINCT ROWS ================= */}
       <div className="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,5 +1,9 @@
 import { Product, Blog } from './types';
 
+const petFeederImg = new URL('./assets/images/pet_feeder_1782500704020.jpg', import.meta.url).href;
+const petBedImg = new URL('./assets/images/pet_bed_1782500716368.jpg', import.meta.url).href;
+const massageGunImg = new URL('./assets/images/massage_gun_1782501229411.jpg', import.meta.url).href;
+
 export const INITIAL_PRODUCTS: Product[] = [
   {
     "_id": "eb-premium-fan-collage",
@@ -885,7 +889,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "quantity": 40,
     "sell_number": 95,
     "gallery": [
-      "https://images.unsplash.com/photo-1541599540903-216a46cc1cf0?w=600&h=600&fit=crop"
+      petBedImg
     ],
     "description": "Treat your cozy friends to optimal orthopedic sleep with our memory foam bed. Wrapped in pet-safe, stain-proof micro-fleece, featuring a non-slip secure grip base and a easily machine-washable outer zipper layer."
   },
@@ -900,7 +904,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "quantity": 30,
     "sell_number": 140,
     "gallery": [
-      "https://images.unsplash.com/photo-1563460716884-18a8a278fa89?w=600&h=600&fit=crop"
+      petFeederImg
     ],
     "description": "Set consistent health routines for your cat or dog. Smart automated feeding allows personalized portion allocations, schedule programming, backup batteries, and custom voice calls during meal notifications."
   },
@@ -915,7 +919,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "quantity": 70,
     "sell_number": 215,
     "gallery": [
-      "https://images.unsplash.com/photo-1614926857083-2bc5bcd72584?w=600&h=600&fit=crop"
+      massageGunImg
     ],
     "description": "The Elite EcoPulse delivers powerful, targeted muscle recovery. Operates with custom dual brushless quiet-glide motors, multiple speed settings, and 6 exchangeable wellness heads optimizing circulation."
   },
@@ -933,6 +937,74 @@ export const INITIAL_PRODUCTS: Product[] = [
       "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=600&h=600&fit=crop"
     ],
     "description": "Achieve perfect centering with the high-density EcoPro mat. Sourced from 100% recyclable hypoallergenic TPE material, presenting embossed stance laser guidelines to protect joints and ensure slip-free studio balance."
+  },
+  {
+    "_id": "eb-premium-group-1-june-23",
+    "title": "Moulvi Vampire Blood Premium Perfume Oil",
+    "category": "Fragrances",
+    "sub_category": "Attar & Perfume Oils",
+    "price": 650,
+    "currency": "BDT",
+    "quantity": 80,
+    "sell_number": 197,
+    "gallery": [
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-23%20at%209.15.53%20AM%20(1).jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-23%20at%209.15.53%20AM.jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-23%20at%209.15.54%20AM%20(1).jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-23%20at%209.15.54%20AM%20(2).jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-23%20at%209.15.54%20AM%20(3).jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-23%20at%209.15.54%20AM.jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-23%20at%209.15.56%20AM%20(1).jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-23%20at%209.15.56%20AM.jpeg"
+    ],
+    "description": "Unleash the dark elegance with Moulvi's Vampire Blood, a premium perfume oil designed for those who appreciate bold, mysterious, and sophisticated scents. This captivating fragrance is housed in a sleek, glass bottle with an elegant black cap, showing off its deep, rich blood-red hue. Formulated for longevity and intense projection, its enigmatic aroma leaves a lasting impression. Perfect for evening wear, special occasions, or anyone wishing to embody a powerful and refined aura.",
+    "colors": [
+      "Crimson Red",
+      "Black"
+    ],
+    "rating": 4.9
+  },
+  {
+    "_id": "eb-premium-group-2-june-24",
+    "title": "Moulvi Premium Everyday Crewneck T-Shirt",
+    "category": "Apparel",
+    "sub_category": "T-Shirts",
+    "price": 850,
+    "currency": "BDT",
+    "quantity": 80,
+    "sell_number": 127,
+    "gallery": [
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-24%20at%208.23.26%20PM.jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-24%20at%208.23.27%20PM%20(1).jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-24%20at%208.23.27%20PM.jpeg"
+    ],
+    "description": "Elevate your daily wear with the Moulvi Premium Everyday Crewneck T-Shirt, designed under the ethos of 'Style with Sunnah'. Engineered from ultra-premium, heavyweight yet lightweight-feeling combed cotton, this t-shirt offers unparalleled comfort and superb durability. Featuring a structured crewneck design, it provides a clean, elegant silhouette that drapes beautifully. An absolute wardrobe essential built to last, suitable for both casual and semi-formal modest styling.",
+    "colors": [
+      "Black",
+      "Off-White"
+    ],
+    "rating": 4.9
+  },
+  {
+    "_id": "eb-premium-group-3-june-25",
+    "title": "Premium Elegant Valentine Red Heart Plush Cushion Pillow",
+    "category": "Home Decor",
+    "sub_category": "Decorative Pillows",
+    "price": 550,
+    "currency": "BDT",
+    "quantity": 80,
+    "sell_number": 273,
+    "gallery": [
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-25%20at%202.36.27%20PM%20(1).jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-25%20at%202.36.27%20PM.jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-25%20at%202.36.28%20PM%20(1).jpeg",
+      "https://raw.githubusercontent.com/mdtanjidul-hasan/Product-/main/WhatsApp%20Image%202026-06-25%20at%202.36.28%20PM.jpeg"
+    ],
+    "description": "Add a touch of warmth and romance to your living space with this Premium Elegant Valentine Red Heart Plush Cushion. Expertly crafted from ultra-soft, velvety plush fabric, this heart-shaped pillow offers an incredibly cozy feel and a vibrant aesthetic appeal. Whether tossed onto a bed, nestled on a cozy armchair, or given as a heartfelt gift to someone special, its rich crimson hue and plush filling provide both luxurious comfort and charming decor. Its timeless shape and plush texture make it an irresistible accent piece for Valentine's Day or year-round warmth.",
+    "colors": [
+      "Red"
+    ],
+    "rating": 4.9
   }
 ];
 

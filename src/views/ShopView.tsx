@@ -11,13 +11,14 @@ interface ShopViewProps {
 export const getProductBrand = (p: Product): string => {
   const title = p.title.toLowerCase();
   
+  if (title.includes("moulvi")) return "Moulvi Signature";
   if (title.includes("earring's point")) return "Earring's Point";
   if (title.includes("kuromi")) return "CuteTech (Sanrio)";
   if (title.includes("disney") || title.includes("lotso") || title.includes("mouse")) return "Disney Craft";
   if (title.includes("panda") || title.includes("bunny") || title.includes("capybara") || title.includes("pet")) return "Animacool";
   if (title.includes("oxidised") || title.includes("jhumka") || title.includes("traditional")) return "Aparupa Artisans";
   if (title.includes("luxury") || title.includes("sapphire") || title.includes("emerald") || title.includes("gold-tone")) return "Luxor Boutique";
-  if (p.category === "Mini Fan") return "EcoBreeze";
+  if (p.category === "Smart Gadgets" || p.category === "Mini Fan") return "EcoBreeze";
   return "EcoBazar Handcrafted";
 };
 
@@ -40,7 +41,15 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
   const [sortBy, setSortBy] = useState('popular'); // 'popular', 'price-asc', 'price-desc'
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
 
-  const categories = ['All', 'Earrings', 'Jewelry Set', 'Kids Jewelry Sets', 'Mini Fan'];
+  const categories = [
+    'All',
+    'Fashion Accessories',
+    'Smart Gadgets',
+    'Home & Kitchen',
+    'Beauty & Personal Care',
+    'Pet Products',
+    'Fitness Products'
+  ];
 
   const maxPossiblePrice = products.length > 0
     ? Math.max(...products.map(p => p.price), 5000)
@@ -234,10 +243,10 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                   .filter(cat => {
                     if (cat === 'All') return true;
                     if (selectedGroup === 'jewelry') {
-                      return cat !== 'Mini Fan';
+                      return cat !== 'Smart Gadgets';
                     }
                     if (selectedGroup === 'gadgets') {
-                      return cat === 'Mini Fan';
+                      return cat === 'Smart Gadgets';
                     }
                     return true;
                   })

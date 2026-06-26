@@ -92,17 +92,39 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [products, setProducts] = useState<Product[]>(() => {
     const saved = localStorage.getItem('eb_products');
-    const list = saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+    let list = saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+    
+    // Auto-merge any newly added INITIAL_PRODUCTS that are missing in saved localStorage
+    if (saved) {
+      const savedIds = new Set(list.map((p: Product) => p._id));
+      const missing = INITIAL_PRODUCTS.filter(p => !savedIds.has(p._id));
+      if (missing.length > 0) {
+        list = [...list, ...missing];
+      }
+
+      // Update static properties like gallery for existing products from INITIAL_PRODUCTS
+      const initialMap = new Map(INITIAL_PRODUCTS.map(p => [p._id, p]));
+      list = list.map((p: Product) => {
+        const initial = initialMap.get(p._id);
+        if (initial) {
+          return { ...p, gallery: initial.gallery, title: initial.title, description: initial.description };
+        }
+        return p;
+      });
+    }
+
     return list.map((p: Product) => {
       let cat = p.category;
-      if (cat === 'Earrings' || cat === 'Jewelry Set' || cat === 'Kids Jewelry Sets' || cat === 'Jewellery' || cat === 'Jewelry') {
+      if (cat === 'Earrings' || cat === 'Jewelry Set' || cat === 'Kids Jewelry Sets' || cat === 'Jewellery' || cat === 'Jewelry' || cat === 'Apparel') {
         cat = 'Fashion Accessories';
       } else if (cat === 'Mini Fan' || cat === 'Gadget') {
         cat = 'Smart Gadgets';
-      } else if (cat === 'Beauty') {
+      } else if (cat === 'Beauty' || cat === 'Fragrances') {
         cat = 'Beauty & Personal Care';
       } else if (cat === 'Fitness') {
         cat = 'Fitness Products';
+      } else if (cat === 'Home Decor' || cat === 'Home & Kitchen' || cat === 'Home') {
+        cat = 'Home & Kitchen';
       }
       return { ...p, category: cat };
     });

@@ -114,7 +114,7 @@ function AppContent() {
       <Navbar currentPath={currentPath} navigate={navigate} />
 
       {/* Main Container Stage */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-36 pb-12">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 md:pt-4 pb-12">
         <ErrorBoundary>
           <AnimatePresence mode="wait">
             <motion.div

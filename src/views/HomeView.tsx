@@ -47,7 +47,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       blogSub: 'Follow lifestyle trends and innovative smart living logs by our design curators.',
       recentlyViewed: 'Recently Viewed Collection',
       spendMore: 'Free shipping worldwide on orders above ৳1,000!',
-      hours: 'h', mins: 'm', secs: 's'
+      hours: 'h', mins: 'm', secs: 's',
+      hookBadge: '🔥 ATTENTION CONSCIOUS BEINGS',
+      hookHeading: '99% of Modern Products Are Engineered To Fail. We Built the 1% That Elevates.',
+      hookParagraph: 'Most platforms flood your life with cheap, mass-produced disposable slop designed for the landfill. EcoBazar is the counter-culture. We curate aerospace-grade tech, masterfully carved sustainable woodcrafts, and hypoallergenic heirloom silver ornaments. Built to outlast trends. Engineered to command respect.',
+      hookCTA: 'Claim Your Heirloom Piece'
     },
     AR: {
       headline: 'اكتشف المنتجات التي تجعل الحياة أفضل',
@@ -66,7 +70,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       blogSub: 'تابع اتجاهات الحياة وتكنولوجيا المعيشة الذكية بقلم منسقي التصميم لدينا.',
       recentlyViewed: 'المنتجات التي تم الكشف عنها مؤخراً',
       spendMore: 'شحن مجاني عالمي للطلبات التي تزيد عن ١٠٠٠ ৳!',
-      hours: 'ساعة', mins: 'دقيقة', secs: 'ثانية'
+      hours: 'ساعة', mins: 'دقيقة', secs: 'ثانية',
+      hookBadge: '🔥 انتباه للعقول الواعية',
+      hookHeading: '٩٩٪ من المنتجات الحديثة مصممة للفشل. لقد صنعنا الـ ١٪ التي ترتقي بأسلوب حياتك.',
+      hookParagraph: 'تغمر معظم المنصات حياتك بمنتجات رخيصة ومنخفضة الجودة ومصممة لتنتهي في القمامة. إيكو بازار هو الثورة البديلة. نحن ننتقي بعناية تكنولوجيا فائقة، ومنتجات خشبية مستدامة، وحلي فضية فاخرة مضادة للحساسية. مصممة لتدوم وتفرض احترامها.',
+      hookCTA: 'احصل على قطعة العمر الفاخرة'
     },
     FR: {
       headline: 'Découvrez des produits qui embellissent la vie',
@@ -85,7 +93,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       blogSub: 'Suivez les tendances lifestyle et astuces intelligentes rédigées par nos experts du design.',
       recentlyViewed: 'Collection Consultée Récemment',
       spendMore: 'Livraison gratuite dans le monde à partir de 1 000 ৳!',
-      hours: 'h', mins: 'm', secs: 's'
+      hours: 'h', mins: 'm', secs: 's',
+      hookBadge: '🔥 ATTENTION ESPRITS CONSCIENTS',
+      hookHeading: '99% des produits modernes sont conçus pour échouer. Nous avons créé le 1% qui élève.',
+      hookParagraph: 'La plupart des plateformes inondent votre vie de produits jetables bas de gamme destinés à la décharge. EcoBazar est la contre-culture. Nous sélectionnons des technologies aérospatiales, des boiseries durables et des bijoux en argent hypoallergéniques. Conçus pour durer. Conçus pour inspirer le respect.',
+      hookCTA: 'Commandez Votre Pièce d’Exception'
     },
     ES: {
       headline: 'Descubre productos que mejoran tu vida',
@@ -104,7 +116,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       blogSub: 'Sigue el estilo de vida y guías de domótica escritas por nuestros curadores de diseño.',
       recentlyViewed: 'Colección Vista Recientemente',
       spendMore: '¡Envío gratis mundial en pedidos superiores a ৳1,000!',
-      hours: 'h', mins: 'm', secs: 's'
+      hours: 'h', mins: 'm', secs: 's',
+      hookBadge: '🔥 ATENCIÓN MENTES CONSCIENTES',
+      hookHeading: 'El 99% de los productos modernos están diseñados para fallar. Creamos el 1% que te eleva.',
+      hookParagraph: 'La mayoría de las plataformas inundan tu vida con baratijas desechables diseñadas para el vertedero. EcoBazar es la contracultura. Curamos tecnología aeroespacial, artesanías de madera sostenible y joyas de plata hipoalergénicas. Hecho para durar. Diseñado para imponer respeto.',
+      hookCTA: 'Reclama Tu Pieza de Colección'
     }
   }[lang] || {
     headline: 'Discover Products That Make Life Better',
@@ -123,7 +139,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
     blogSub: 'Follow lifestyle trends and innovative smart living logs by our design curators.',
     recentlyViewed: 'Recently Viewed Collection',
     spendMore: 'Free shipping worldwide on orders above ৳1,000!',
-    hours: 'h', mins: 'm', secs: 's'
+    hours: 'h', mins: 'm', secs: 's',
+    hookBadge: '🔥 ATTENTION CONSCIOUS BEINGS',
+    hookHeading: '99% of Modern Products Are Engineered To Fail. We Built the 1% That Elevates.',
+    hookParagraph: 'Most platforms flood your life with cheap, mass-produced disposable slop designed for the landfill. EcoBazar is the counter-culture. We curate aerospace-grade tech, masterfully carved sustainable woodcrafts, and hypoallergenic heirloom silver ornaments. Built to outlast trends. Engineered to command respect.',
+    hookCTA: 'Claim Your Heirloom Piece'
   };
 
   // Selected products for hero/spotlight
@@ -241,14 +261,14 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
   }, [products]);
 
   return (
-    <div className="space-y-24 pb-20 overflow-x-hidden">
+    <div className="space-y-8 md:space-y-10 pb-16 overflow-x-hidden">
 
       {/* Top Banner Notice - Floating Water-Transparent Spend Indicator with custom waves */}
       <div className="px-4 sm:px-8 mt-4 max-w-7xl mx-auto">
         <motion.div
           id="floating-oceanic-banner"
           animate={{
-            y: [0, -6, 0],
+            y: [0, -4, 0],
           }}
           transition={{
             repeat: Infinity,
@@ -278,6 +298,82 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
           </div>
         </motion.div>
       </div>
+
+      {/* HIGH-IMPACT MARKETING HOOK SECTION: HEATS THE HUMAN BRAIN */}
+      <section className="px-4 sm:px-8 max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-slate-900 via-[#0B2521] to-zinc-950 text-white border border-teal-500/30 shadow-[0_20px_50px_rgba(0,141,127,0.25)] p-8 md:p-12"
+        >
+          {/* Futuristic mesh gradient light circles */}
+          <div className="absolute -top-24 -left-24 w-80 h-80 bg-[#00B894]/15 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#D4AF37]/10 rounded-full blur-[120px] pointer-events-none" />
+          
+          {/* Dotted grid decorative texture */}
+          <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            {/* Hook Left Copywriting block */}
+            <div className="lg:col-span-8 space-y-6 text-left">
+              <span className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-teal-500/20 to-emerald-500/20 border border-teal-500/40 text-teal-300 rounded-full text-[10px] md:text-xs font-black tracking-wider uppercase">
+                <Flame className="w-3.5 h-3.5 fill-amber-400 text-amber-400 animate-bounce shrink-0" />
+                {t.hookBadge}
+              </span>
+              
+              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight tracking-tight">
+                {t.hookHeading.split('.').slice(0, 1).join('')}.
+                <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-emerald-400 to-[#D4AF37]">
+                  {t.hookHeading.split('.').slice(1).join('')}
+                </span>
+              </h2>
+
+              <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-3xl">
+                {t.hookParagraph}
+              </p>
+
+              <div className="pt-2 flex flex-wrap gap-4 items-center">
+                <button
+                  onClick={() => navigate('/shop')}
+                  className="px-6 py-3 bg-gradient-to-r from-teal-400 via-[#00B894] to-emerald-500 hover:opacity-95 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition duration-300 flex items-center gap-2 shadow-lg shadow-teal-500/20 hover:scale-[1.02] transform cursor-pointer"
+                >
+                  {t.hookCTA}
+                  <ArrowRight className="w-4 h-4 text-slate-950 stroke-[3]" />
+                </button>
+                <button
+                  onClick={() => navigate('/about')}
+                  className="px-5 py-3 bg-white/5 hover:bg-white/10 text-teal-300 border border-white/10 hover:border-teal-500/30 text-xs font-bold uppercase tracking-wider rounded-xl transition cursor-pointer"
+                >
+                  {lang === 'EN' ? 'Explore Manifesto' : 
+                   lang === 'AR' ? 'استكشف المانيفستو' : 
+                   lang === 'FR' ? 'Explorer le Manifeste' : 'Explorar Manifiesto'}
+                </button>
+              </div>
+            </div>
+
+            {/* Hook Right Proof/Metric widgets block */}
+            <div className="lg:col-span-4 grid grid-cols-1 gap-4">
+              <div className="backdrop-blur-md bg-white/5 border border-white/10 p-5 rounded-2xl space-y-1.5 text-left hover:border-teal-500/20 transition">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                  <p className="text-[10px] font-black uppercase text-teal-400 tracking-wider">Zero Slop Certified</p>
+                </div>
+                <h4 className="font-display font-extrabold text-xl text-white">99.8%</h4>
+                <p className="text-[11px] text-gray-400 leading-normal">Of our catalog items outlast average department store alternatives by 5x minimum.</p>
+              </div>
+
+              <div className="backdrop-blur-md bg-white/5 border border-white/10 p-5 rounded-2xl space-y-1.5 text-left hover:border-teal-500/20 transition">
+                <p className="text-[10px] font-black uppercase text-amber-400 tracking-wider">Global Aligned Minds</p>
+                <h4 className="font-display font-extrabold text-xl text-white">10,000+</h4>
+                <p className="text-[11px] text-gray-400 leading-normal">Discerning collectors worldwide have rejected disposable mass production for our premium catalog.</p>
+              </div>
+            </div>
+
+          </div>
+        </motion.div>
+      </section>
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-slate-50 to-emerald-50/30 rounded-[32px] overflow-hidden shadow-sm mx-4 sm:mx-8 mt-4 border border-slate-100">
