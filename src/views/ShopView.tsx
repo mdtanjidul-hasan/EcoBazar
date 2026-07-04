@@ -40,6 +40,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('popular'); // 'popular', 'price-asc', 'price-desc'
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
   const categories = [
     'All',
@@ -128,25 +129,12 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
   };
 
   return (
-    <div className="space-y-10 pb-20">
+    <div className="space-y-6 pb-20">
       
-      {/* Title & Banner */}
-      <section className="bg-slate-50 border border-slate-100 rounded-3xl p-8 md:p-12 text-left relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#008d7f_1px,transparent_1px)] [background-size:12px_12px]"></div>
-        <div className="relative z-10 max-w-xl space-y-3">
-          <h1 className="font-display text-3xl md:text-4xl font-black text-gray-900">
-            Premium Treasures Catalog
-          </h1>
-          <p className="text-sm text-gray-500 font-semibold leading-relaxed">
-            Discover exquisite jhumkas, gorgeous matching neck-drop sets, and ergonomic, silent mini hand fans curated for your refined taste.
-          </p>
-        </div>
-      </section>
-
       {/* Main Shop View grid with Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                {/* Sidebar Space */}
-        <aside className="lg:col-span-1 space-y-6">
+        <aside className="hidden lg:block lg:col-span-1 space-y-6">
           <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-6 text-left">
             
             {/* Search Filter */}
@@ -163,7 +151,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                   placeholder={lang === 'EN' ? 'Type to search...' : 'খুঁজতে এখানে লিখুন...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#008D7F] focus:ring-1 focus:ring-[#008D7F] transition shadow-inner"
+                  className="w-full bg-gray-55 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-950 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-550 focus:outline-none focus:border-[#008D7F] focus:ring-1 focus:ring-[#008D7F] transition shadow-inner"
                 />
               </div>
             </div>
@@ -182,7 +170,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                   }}
                   className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
                     selectedGroup === 'all'
-                      ? 'bg-teal-50 border-teal-100 text-[#008D7F]'
+                      ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
                       : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
                   }`}
                 >
@@ -200,7 +188,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                   }}
                   className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
                     selectedGroup === 'jewelry'
-                      ? 'bg-teal-50 border-teal-100 text-[#008D7F]'
+                      ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
                       : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
                   }`}
                 >
@@ -218,7 +206,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                   }}
                   className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
                     selectedGroup === 'gadgets'
-                      ? 'bg-teal-50 border-teal-100 text-[#008D7F]'
+                      ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
                       : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
                   }`}
                 >
@@ -266,7 +254,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                         onClick={() => setSelectedCategory(cat)}
                         className={`w-full text-left px-3.5 py-2 rounded-xl text-xs font-bold transition duration-150 flex items-center justify-between ${
                           isSel 
-                            ? 'bg-teal-950/5 text-[#008D7F] border border-teal-100/60 font-black' 
+                            ? 'bg-emerald-950/5 text-[#008D7F] border border-emerald-100/60 font-black' 
                             : 'bg-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700 border border-transparent'
                         }`}
                       >
@@ -362,7 +350,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                         max={maxPossiblePrice}
                         value={minPrice}
                         onChange={(e) => setMinPrice(Math.max(0, Math.min(maxPossiblePrice, Number(e.target.value))))}
-                        className="w-full bg-gray-50 border border-gray-200 rounded-lg pl-5 pr-1.5 py-1.5 text-xs font-bold text-gray-700 focus:outline-none focus:border-[#008D7F]"
+                        className="w-full bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg pl-5 pr-1.5 py-1.5 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#008D7F]"
                       />
                     </div>
                   </div>
@@ -380,7 +368,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                         max={maxPossiblePrice}
                         value={maxPrice}
                         onChange={(e) => setMaxPrice(Math.max(0, Math.min(maxPossiblePrice, Number(e.target.value))))}
-                        className="w-full bg-gray-50 border border-gray-200 rounded-lg pl-5 pr-1.5 py-1.5 text-xs font-bold text-gray-700 focus:outline-none focus:border-[#008D7F]"
+                        className="w-full bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg pl-5 pr-1.5 py-1.5 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none focus:border-[#008D7F]"
                       />
                     </div>
                   </div>
@@ -403,23 +391,34 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
         <div className="lg:col-span-3 space-y-6">
           
           {/* Sorting / Meta Header */}
-          <div className="bg-white border border-gray-100 rounded-2xl px-6 py-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">
-              Showing {sortedProducts.length} premium products
+          <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl px-3 py-3 sm:px-5 sm:py-3 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <p className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-455 font-extrabold uppercase tracking-wider truncate text-center sm:text-left">
+              Showing {sortedProducts.length} Products
             </p>
             
-            <div className="flex items-center gap-3">
-              <SlidersHorizontal className="w-4 h-4 text-gray-400" />
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Sort By</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs font-bold text-gray-600 focus:outline-none focus:border-[#008D7F] transition cursor-pointer"
+            <div className="flex items-center justify-between sm:justify-end gap-3">
+              <button
+                onClick={() => setIsMobileFiltersOpen(true)}
+                className="lg:hidden px-3.5 py-2 bg-emerald-50 dark:bg-emerald-950/30 text-[#008D7F] hover:bg-emerald-100 dark:hover:bg-emerald-900/20 rounded-lg text-[10px] font-black transition flex items-center justify-center gap-1.5 cursor-pointer border border-emerald-100/45 h-[38px] flex-1 sm:flex-initial"
+                title="Filters"
               >
-                <option value="popular">Best Sellers</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-              </select>
+                <SlidersHorizontal className="w-4 h-4 text-[#008D7F]" />
+                <span>Filters</span>
+              </button>
+
+              <div className="flex items-center justify-end gap-2 flex-1 sm:flex-initial">
+                <SlidersHorizontal className="w-4 h-4 text-gray-400 hidden lg:inline" />
+                <span className="text-[10px] sm:text-xs font-bold text-gray-450 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">Sort</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-gray-50 dark:bg-zinc-950 border border-gray-200 dark:border-zinc-800 rounded-lg px-2.5 py-1.5 text-[10px] sm:text-xs font-bold text-gray-655 dark:text-gray-300 focus:outline-none focus:border-[#008D7F] transition cursor-pointer h-[38px] flex-1 sm:flex-initial max-w-[150px]"
+                >
+                  <option value="popular">Best Sellers</option>
+                  <option value="price-asc">Price: L to H</option>
+                  <option value="price-desc">Price: H to L</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -437,119 +436,140 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                 </button>
               </div>
             ) : (
-              <div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 font-semibold">
-              {sortedProducts.map((p) => {
-                const hasWish = wishlist.some(item => item._id === p._id);
-                const isCompared = compareList.some(item => item._id === p._id);
-                return (
-                  <div
-                    key={p._id}
-                    className="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group relative"
-                  >
-                    {/* Wishlist Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (hasWish) {
-                          removeFromWishlist(p._id);
-                        } else {
-                          addToWishlist(p);
-                        }
-                      }}
-                      className={`absolute top-4 right-4 p-2.5 rounded-full shadow-md z-10 transition duration-200 ${
-                        hasWish ? 'bg-rose-50 text-rose-500' : 'bg-white/80 text-gray-400 hover:text-rose-500 backdrop-blur-sm'
-                      }`}
-                      title={hasWish ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6 font-semibold">
+                {sortedProducts.map((p) => {
+                  const hasWish = wishlist.some(item => item._id === p._id);
+                  const isCompared = compareList.some(item => item._id === p._id);
+                  return (
+                    <div
+                      key={p._id}
+                      className="product-card-container bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-lg sm:rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group relative"
                     >
-                      <Heart className="w-4.5 h-4.5" fill={hasWish ? 'currentColor' : 'none'} />
-                    </button>
-
-                    {/* Compare Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isCompared) {
-                          removeFromCompare(p._id);
-                        } else {
-                          if (compareList.length >= 3) {
-                            alert(lang === 'EN' ? 'You can compare up to 3 products at a time.' : 'আপনি একবারে সর্বোচ্চ ৩ টি পণ্য তুলনা করতে পারবেন।');
+                      {/* Floating Heart (Wishlist) Button stacked vertically (Fix 2: min 44x44px button) */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (hasWish) {
+                            removeFromWishlist(p._id);
                           } else {
-                            addToCompare(p);
+                            addToWishlist(p);
                           }
-                        }
-                      }}
-                      className={`absolute top-4 right-14 p-2.5 rounded-full shadow-md z-10 transition duration-200 ${
-                        isCompared ? 'bg-teal-50 text-[#008D7F]' : 'bg-white/80 text-gray-400 hover:text-teal-600 backdrop-blur-sm'
-                      }`}
-                      title={isCompared ? 'Added to Comparison' : 'Compare Product'}
-                    >
-                      <GitCompare className="w-4.5 h-4.5" />
-                    </button>
+                        }}
+                        className={`absolute top-1.5 right-1.5 w-11 h-11 flex items-center justify-center rounded-full shadow z-10 transition duration-200 tap-target-44 ${
+                          hasWish ? 'bg-rose-500 text-white shadow-rose-500/20' : 'bg-white/95 dark:bg-zinc-900/95 text-gray-650 dark:text-gray-300 hover:text-rose-500 hover:bg-white dark:hover:bg-zinc-800 backdrop-blur-sm border border-gray-100/50 dark:border-zinc-800/50'
+                        }`}
+                        title={hasWish ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                      >
+                        <Heart className="w-5.5 h-5.5" fill={hasWish ? 'currentColor' : 'none'} />
+                      </button>
 
-                    {/* Rating Badge */}
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full shadow-sm z-10 flex items-center gap-1">
-                      <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                      <span className="text-xs font-black text-gray-800">{p.rating}</span>
-                    </div>
+                      {/* Compare Button stacked vertically below Wishlist (Fix 2: min 44x44px button) */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isCompared) {
+                            removeFromCompare(p._id);
+                          } else {
+                            if (compareList.length >= 3) {
+                              alert(lang === 'EN' ? 'You can compare up to 3 products at a time.' : 'আপনি একবারে সর্বোচ্চ ৩ টি পণ্য তুলনা করতে পারবেন।');
+                            } else {
+                              addToCompare(p);
+                            }
+                          }
+                        }}
+                        className={`absolute top-[52px] right-1.5 w-11 h-11 flex items-center justify-center rounded-full shadow z-10 transition duration-200 tap-target-44 ${
+                          isCompared ? 'bg-teal-500 text-white shadow-teal-500/20' : 'bg-white/95 dark:bg-zinc-900/95 text-gray-650 dark:text-gray-300 hover:text-teal-500 hover:bg-white dark:hover:bg-zinc-800 backdrop-blur-sm border border-gray-100/50 dark:border-zinc-800/50'
+                        }`}
+                        title={isCompared ? 'Added to Comparison' : 'Compare Product'}
+                      >
+                        <GitCompare className="w-5.5 h-5.5" />
+                      </button>
 
-                    {/* Product Image Clickable */}
-                    <div 
-                      onClick={() => navigate(`/product/${p._id}`)} 
-                      className="h-56 overflow-hidden bg-gray-50 cursor-pointer relative"
-                    >
-                      <img
-                        src={p.gallery[0] || 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300'}
-                        alt={p.title}
-                        referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover group-hover:scale-102 transition duration-500"
-                      />
-                    </div>
-
-                    {/* Body details */}
-                    <div className="p-5 flex-1 flex flex-col text-left space-y-3">
-                      <div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-md">
-                          {p.category}
-                        </span>
-                        <h3 
-                          onClick={() => navigate(`/product/${p._id}`)}
-                          className="font-display font-bold text-sm text-gray-800 line-clamp-2 mt-2 hover:text-[#008D7F] cursor-pointer"
-                        >
-                          {p.title}
-                        </h3>
-                      </div>
-                      
-                      <div className="flex-1">
-                        <p className="text-xs text-gray-400 line-clamp-2 min-h-8 font-medium">
-                          {p.description}
-                        </p>
+                      {/* Rating Badge */}
+                      <div className="absolute top-1.5 left-1.5 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm px-1.5 py-0.5 rounded-full shadow-sm z-10 flex items-center gap-0.5 border border-gray-100/50 dark:border-zinc-800/50">
+                        <Star className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500" />
+                        <span className="text-[11px] sm:text-xs font-black text-gray-800 dark:text-gray-200">{p.rating}</span>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+                      {/* Product Image Clickable (Fix 6: height: 120px on mobile, aspect-square) */}
+                      <div 
+                        onClick={() => navigate(`/product/${p._id}`)} 
+                        className="h-[120px] md:h-40 lg:h-44 overflow-hidden bg-gray-50 dark:bg-zinc-950 cursor-pointer relative"
+                      >
+                        <img
+                          src={p.gallery[0] || 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300'}
+                          alt={p.title}
+                          loading="lazy"
+                          width="300"
+                          height="180"
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover group-hover:scale-102 transition duration-500"
+                        />
+                      </div>
+
+                      {/* Body details (Fix 6: padding 8px to 12px) */}
+                      <div className="p-2 sm:p-3 flex-1 flex flex-col text-left space-y-1.5 sm:space-y-2">
                         <div>
-                          <p className="text-xs text-gray-400 font-semibold uppercase">Price</p>
-                          <span className="font-display font-black text-lg text-[#008D7F]">
-                            {convertPrice(p.price)}
+                          <span className="text-[10px] sm:text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50/60 dark:bg-emerald-950/20 px-1.5 py-0.5 rounded">
+                            {p.category}
                           </span>
+                          <h3 
+                            onClick={() => navigate(`/product/${p._id}`)}
+                            className="font-display font-semibold text-[14px] sm:text-[16px] text-gray-800 dark:text-gray-100 line-clamp-2 mt-1.5 hover:text-[#008D7F] cursor-pointer min-h-[36px] sm:min-h-[40px] leading-snug"
+                          >
+                            {p.title}
+                          </h3>
+                        </div>
+                        
+                        <div className="flex-1 hidden md:block">
+                          <p className="text-[13px] text-gray-400 dark:text-gray-455 line-clamp-2 min-h-6 font-medium leading-relaxed">
+                            {p.description}
+                          </p>
                         </div>
 
-                        <button
-                          onClick={() => addToCart(p, 1)}
-                          className="p-3 bg-teal-50 hover:bg-[#008D7F] text-[#008D7F] hover:text-white rounded-xl transition duration-300 relative group/btn"
-                          title="Add to Cart"
-                        >
-                          <ShoppingCart className="w-5 h-5" />
-                        </button>
+                        {/* Supplier Info */}
+                        <div className="pt-1.5 border-t border-gray-100 dark:border-zinc-855 flex flex-col gap-0.5 text-[9.5px] sm:text-xs text-gray-500 dark:text-gray-400">
+                          <div className="flex items-center gap-1 font-bold">
+                            {p.isVerifiedSupplier && (
+                              <span className="bg-[#008D7F] text-white text-[8px] font-black px-1 py-0.2 rounded uppercase tracking-wider">Verified</span>
+                            )}
+                            <span className="truncate hover:underline cursor-pointer text-gray-750 dark:text-gray-300">{p.supplierName}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-gray-450 dark:text-gray-500 font-semibold text-[9px] sm:text-[10px]">
+                            <span>★ {p.supplierRating} <span className="hidden sm:inline">• Resp: {p.supplierResponseRate || "95%"}</span></span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-1.5 border-t border-gray-100 dark:border-zinc-855">
+                          {(() => {
+                            const lowestPrice = p.priceTiers ? Math.min(...p.priceTiers.map((t: any) => t.price)) : p.price;
+                            const highestPrice = p.priceTiers ? Math.max(...p.priceTiers.map((t: any) => t.price)) : p.price;
+                            return (
+                              <div className="min-w-0 flex-1 pr-1">
+                                <p className="text-[9px] sm:text-[10px] text-gray-400 font-semibold uppercase truncate">FOB Price</p>
+                                <span className="font-display font-bold text-[14px] sm:text-[16px] text-[#008D7F] block truncate">
+                                  {lowestPrice === highestPrice ? convertPrice(p.price) : `${convertPrice(lowestPrice)}`}
+                                </span>
+                                <p className="text-[9px] sm:text-[10px] text-gray-400 font-bold -mt-0.5 truncate">MOQ: {p.moq} pcs</p>
+                              </div>
+                            );
+                          })()}
+
+                          <button
+                            onClick={() => addToCart(p, p.moq || 1)}
+                            className="w-11 h-11 shrink-0 flex items-center justify-center bg-emerald-50 dark:bg-emerald-950/40 hover:bg-[#008D7F] dark:hover:bg-[#008D7F] text-[#008D7F] dark:text-emerald-400 hover:text-white dark:hover:text-white rounded-lg transition duration-300 relative group/btn cursor-pointer border border-emerald-100/30 dark:border-emerald-950/30 tap-target-44"
+                            title={`Add MOQ (${p.moq || 1} pcs) to Cart`}
+                          >
+                            <ShoppingCart className="w-5 h-5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </section>
+                  );
+                })}
+              </div>
+            )}
+          </section>
 
       </div> {/* closes lg:col-span-3 product listing area */}
     </div> {/* closes grid grid-cols-4 main sidebar layout */}
@@ -870,6 +890,239 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
               className="px-5 py-2.5 bg-gray-900 text-white hover:bg-gray-800 rounded-xl text-xs font-black tracking-wide active:scale-95 transition cursor-pointer"
             >
               {lang === 'EN' ? 'Close Matrix' : 'বন্ধ করুন'}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* Mobile Filters Drawer Overlay */}
+    {isMobileFiltersOpen && (
+      <div className="fixed inset-0 z-50 lg:hidden flex justify-end">
+        {/* Backdrop */}
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
+          onClick={() => setIsMobileFiltersOpen(false)}
+        />
+        
+        {/* Drawer Body */}
+        <div className="relative w-full max-w-sm bg-white dark:bg-zinc-950 h-full overflow-y-auto p-6 shadow-2xl flex flex-col justify-between animate-slide-in-right z-50">
+          <div>
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-4 mb-6">
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4 text-[#008D7F]" />
+                <h2 className="font-display font-black text-sm text-gray-900 dark:text-white uppercase tracking-wider">
+                  Filter & Refine
+                </h2>
+              </div>
+              <button 
+                onClick={() => setIsMobileFiltersOpen(false)}
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-850 rounded-full transition text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Sidebar Filters copied here */}
+            <div className="space-y-6 text-left">
+              {/* Search Filter */}
+              <div>
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                  {lang === 'EN' ? 'Search Products' : 'পণ্য খুঁজুন'}
+                </h3>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                    <Search className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="text"
+                    placeholder={lang === 'EN' ? 'Type to search...' : 'খুঁজতে এখানে লিখুন...'}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-gray-55 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-950 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-550 focus:outline-none focus:border-[#008D7F] focus:ring-1 focus:ring-[#008D7F] transition shadow-inner"
+                  />
+                </div>
+              </div>
+
+              {/* Super Category / Product Type Option */}
+              <div className="border-t border-gray-150/40 pt-5">
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                  {lang === 'EN' ? 'Jewelry & Gadgets' : 'অলঙ্কার নাকি গ্যাজেট'}
+                </h3>
+                <div className="grid grid-cols-1 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedGroup('all');
+                      setSelectedCategory('All');
+                    }}
+                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
+                      selectedGroup === 'all'
+                        ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
+                        : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
+                    }`}
+                  >
+                    <span>{lang === 'EN' ? '✨ All Collections' : '✨ সব কালেকশন'}</span>
+                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-mono">
+                      {products.length}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedGroup('jewelry');
+                      setSelectedCategory('All');
+                    }}
+                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
+                      selectedGroup === 'jewelry'
+                        ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
+                        : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
+                    }`}
+                  >
+                    <span>{lang === 'EN' ? '🌸 Fine Jewelry' : '🌸 প্রিমিয়াম অলঙ্কার'}</span>
+                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-mono">
+                      {products.filter(p => getProductGroup(p) === 'jewelry').length}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedGroup('gadgets');
+                      setSelectedCategory('All');
+                    }}
+                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
+                      selectedGroup === 'gadgets'
+                        ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
+                        : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
+                    }`}
+                  >
+                    <span>{lang === 'EN' ? '⚡ Handy Gadgets' : '⚡ স্মার্ট গ্যাজেটস'}</span>
+                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-mono">
+                      {products.filter(p => getProductGroup(p) === 'gadgets').length}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Sub-Categories List Section */}
+              <div className="border-t border-gray-150/40 pt-5">
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                  {lang === 'EN' ? 'Sub Categories' : 'ক্যাটাগরি'}
+                </h3>
+                <div className="flex flex-col gap-1.5">
+                  {categories
+                    .filter(cat => {
+                      if (cat === 'All') return true;
+                      if (selectedGroup === 'jewelry') return cat !== 'Smart Gadgets';
+                      if (selectedGroup === 'gadgets') return cat === 'Smart Gadgets';
+                      return true;
+                    })
+                    .map((cat) => {
+                      const isSel = selectedCategory === cat;
+                      const catCount = products.filter(p => {
+                        const matchesGroup = selectedGroup === 'all' || getProductGroup(p) === selectedGroup;
+                        const matchesCat = cat === 'All' || p.category === cat;
+                        return matchesGroup && matchesCat;
+                      }).length;
+
+                      return (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => setSelectedCategory(cat)}
+                          className={`w-full text-left px-3.5 py-2 rounded-xl text-xs font-bold transition duration-150 flex items-center justify-between ${
+                            isSel 
+                              ? 'bg-emerald-950/5 text-[#008D7F] border border-emerald-100/60 font-black' 
+                              : 'bg-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700 border border-transparent'
+                          }`}
+                        >
+                          <span>{cat === 'All' ? (lang === 'EN' ? 'All Classes' : 'সব বিভাগ') : cat}</span>
+                          <span className="text-[10px] text-gray-400 font-semibold">{catCount}</span>
+                        </button>
+                      );
+                    })}
+                </div>
+              </div>
+
+              {/* Brand Filter Checklist */}
+              <div className="border-t border-gray-150/40 pt-5">
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                  {lang === 'EN' ? 'Filter by Brand' : 'ব্র্যান্ড দিয়ে খুঁজুন'}
+                </h3>
+                <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                  {allBrands.map((brand) => {
+                    const isChecked = selectedBrands.includes(brand);
+                    const brandCount = products.filter(p => {
+                      const matchesGroup = selectedGroup === 'all' || getProductGroup(p) === selectedGroup;
+                      const matchesCat = selectedCategory === 'All' || p.category === selectedCategory;
+                      return matchesGroup && matchesCat && getProductBrand(p) === brand;
+                    }).length;
+
+                    return (
+                      <label
+                        key={brand}
+                        className="flex items-center justify-between cursor-pointer group py-0.5"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => {
+                              setSelectedBrands(prev => 
+                                prev.includes(brand) 
+                                  ? prev.filter(b => b !== brand) 
+                                  : [...prev, brand]
+                              );
+                            }}
+                            className="w-4 h-4 rounded text-[#008D7F] focus:ring-[#008D7F] border-gray-300 transition cursor-pointer accent-[#008D7F]"
+                          />
+                          <span className={`text-xs transition ${
+                            isChecked ? 'text-gray-900 font-bold' : 'text-gray-600 group-hover:text-gray-900'
+                          }`}>
+                            {brand}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-gray-400 font-mono">
+                          ({brandCount})
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Price Filter Section */}
+              <div className="border-t border-gray-150/40 pt-5">
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                  {lang === 'EN' ? 'Filter by Price' : 'মূল্য দিয়ে খুঁজুন'}
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-gray-500">
+                    <span>Min: {convertPrice(minPrice)}</span>
+                    <span>Max: {convertPrice(maxPrice)}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max={maxPossiblePrice}
+                    step="10"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(Number(e.target.value))}
+                    className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#008D7F]"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-100 dark:border-zinc-800 pt-4 mt-6">
+            <button
+              onClick={() => setIsMobileFiltersOpen(false)}
+              className="w-full py-3.5 bg-[#008D7F] text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md hover:bg-[#00B894] cursor-pointer"
+            >
+              Apply ({sortedProducts.length} Products)
             </button>
           </div>
         </div>

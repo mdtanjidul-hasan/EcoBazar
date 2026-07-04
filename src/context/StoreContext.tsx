@@ -59,6 +59,7 @@ interface StoreContextType {
   currency: 'BDT' | 'USD' | 'GBP' | 'EUR' | 'AUD';
   setCurrency: (curr: 'BDT' | 'USD' | 'GBP' | 'EUR' | 'AUD') => void;
   formatPrice: (bdtPrice: number) => string;
+  getWholesalePrice: (product: Product, quantity: number) => number;
   compareList: Product[];
   addToCompare: (product: Product) => void;
   removeFromCompare: (productId: string) => void;
@@ -113,7 +114,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
     }
 
-    return list.map((p: Product) => {
+    return list.map((p: Product, index: number) => {
       let cat = p.category;
       if (cat === 'Earrings' || cat === 'Jewelry Set' || cat === 'Kids Jewelry Sets' || cat === 'Jewellery' || cat === 'Jewelry' || cat === 'Apparel') {
         cat = 'Fashion Accessories';
@@ -126,7 +127,46 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       } else if (cat === 'Home Decor' || cat === 'Home & Kitchen' || cat === 'Home') {
         cat = 'Home & Kitchen';
       }
-      return { ...p, category: cat };
+
+      // Add Alibaba wholesale details dynamically
+      const price = p.price;
+      const moq = p.moq || (price < 150 ? 20 : price < 500 ? 10 : price < 2000 ? 5 : 2);
+      
+      const supplierNames = [
+        "Guangzhou Sheng Jewelry Co., Ltd.",
+        "Yiwu EcoBreeze Electronic Appliance Factory",
+        "Zhejiang Well-Living Manufacturing Ltd.",
+        "Shenzhen CuteTech Innovations Co., Ltd.",
+        "Aparupa Ethnic Craft & Export Co.",
+        "Dhanmondi Signature Wholesalers",
+        "Ningbo Sports & Fitness Equipment Factory"
+      ];
+      const supplierName = p.supplierName || supplierNames[index % supplierNames.length];
+      const supplierRating = p.supplierRating || parseFloat((4.5 + (index % 5) * 0.1).toFixed(1));
+      const supplierResponseRate = p.supplierResponseRate || `${85 + (index % 16)}%`;
+      const supplierResponseTime = p.supplierResponseTime || (index % 2 === 0 ? "< 2h" : "< 5h");
+      const isVerifiedSupplier = p.isVerifiedSupplier !== undefined ? p.isVerifiedSupplier : (index % 3 !== 2);
+      const isTradeAssurance = p.isTradeAssurance !== undefined ? p.isTradeAssurance : true;
+
+      // Price Tiers: progressive volume discounts
+      const priceTiers = p.priceTiers || [
+        { minQty: moq, maxQty: moq * 3, price: Math.round(price) },
+        { minQty: moq * 3 + 1, maxQty: moq * 10, price: Math.round(price * 0.9) },
+        { minQty: moq * 10 + 1, price: Math.round(price * 0.8) }
+      ];
+
+      return {
+        ...p,
+        category: cat,
+        moq,
+        supplierName,
+        supplierRating,
+        supplierResponseRate,
+        supplierResponseTime,
+        isVerifiedSupplier,
+        isTradeAssurance,
+        priceTiers
+      };
     });
   });
 
@@ -208,7 +248,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Premium Extra states
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('eb_theme') as 'light' | 'dark') || 'light';
+    return (localStorage.getItem('ecobazar-theme') as 'light' | 'dark') || 'light';
   });
 
   const [lang, setLangState] = useState<'EN' | 'AR' | 'FR' | 'ES'>(() => {
@@ -232,7 +272,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const toggleTheme = () => {
     setTheme(prev => {
       const next = prev === 'light' ? 'dark' : 'light';
-      localStorage.setItem('eb_theme', next);
+      localStorage.setItem('ecobazar-theme', next);
       return next;
     });
   };
@@ -261,6 +301,19 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return 'A$' + (bdtPrice / 80).toFixed(2);
     }
     return '৳' + bdtPrice.toLocaleString();
+  };
+
+  const getWholesalePrice = (product: Product, quantity: number): number => {
+    if (!product.priceTiers || product.priceTiers.length === 0) {
+      return product.price;
+    }
+    const sortedTiers = [...product.priceTiers].sort((a, b) => b.minQty - a.minQty);
+    for (const tier of sortedTiers) {
+      if (quantity >= tier.minQty) {
+        return tier.price;
+      }
+    }
+    return product.price;
   };
 
   const addToCompare = (product: Product) => {
@@ -383,6 +436,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Cart Functions
   const addToCart = (product: Product, quantity = 1) => {
+    const finalQty = Math.max(quantity, 1);
+
     setCart(prev => {
       const idx = prev.findIndex(item => item.product._id === product._id);
       if (idx !== -1) {
@@ -390,7 +445,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         next[idx] = { ...next[idx], quantity: next[idx].quantity + quantity };
         return next;
       }
-      return [...prev, { product, quantity }];
+      return [...prev, { product, quantity: finalQty }];
     });
     setTimeout(() => {
       window.dispatchEvent(new CustomEvent('cart-item-added'));
@@ -407,7 +462,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       removeFromCart(productId);
       return;
     }
-    setCart(prev => prev.map(item => item.product._id === productId ? { ...item, quantity } : item));
+    const finalQty = Math.max(quantity, 1);
+
+    setCart(prev => prev.map(item => item.product._id === productId ? { ...item, quantity: finalQty } : item));
   };
 
   const clearCart = () => {
@@ -627,7 +684,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       addToWishlist, removeFromWishlist, createOrder, addReview, addComment,
       addProduct, deleteProduct, updateProduct, updateOrderStatus, deleteOrder,
       searchQuery, setSearchQuery,
-      theme, toggleTheme, lang, setLang, currency, setCurrency, formatPrice, compareList, addToCompare, removeFromCompare,
+      theme, toggleTheme, lang, setLang, currency, setCurrency, formatPrice, getWholesalePrice, compareList, addToCompare, removeFromCompare,
       addLoyaltyPoints,
       toasts, addNotificationToast, dismissNotificationToast
     }}>

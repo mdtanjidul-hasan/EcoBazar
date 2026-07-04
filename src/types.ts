@@ -13,6 +13,14 @@ export interface Product {
   colors?: string[];
   dan?: string;
   sellNumber?: number;
+  moq?: number;
+  supplierName?: string;
+  supplierRating?: number;
+  supplierResponseTime?: string;
+  supplierResponseRate?: string;
+  isVerifiedSupplier?: boolean;
+  isTradeAssurance?: boolean;
+  priceTiers?: { minQty: number; maxQty?: number; price: number }[];
 }
 
 export interface Blog {

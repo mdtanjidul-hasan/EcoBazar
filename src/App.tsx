@@ -109,7 +109,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-gray-800 selection:bg-teal-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#ebf6f2] dark:bg-black text-gray-800 dark:text-white selection:bg-emerald-600 selection:text-white transition-colors duration-200">
       {/* Navigation Top bar */}
       <Navbar currentPath={currentPath} navigate={navigate} />
 

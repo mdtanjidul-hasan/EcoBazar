@@ -25,16 +25,16 @@ export const BlogListView: React.FC<BlogListViewProps> = ({ navigate }) => {
     <div className="space-y-10 pb-20 text-left">
       
       {/* Editorial space head banner */}
-      <section className="bg-[#ebf3f2] p-8 md:p-12 rounded-3xl relative overflow-hidden">
+      <section className="bg-[#ebf3f2] dark:bg-zinc-900 p-8 md:p-12 rounded-3xl relative overflow-hidden border border-transparent dark:border-zinc-800">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#008d7f_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div className="relative z-10 max-w-xl space-y-3">
-          <span className="text-[10px] bg-[#008d7f1c] text-[#008D7F] px-3 py-1 font-extrabold uppercase rounded-full">
+          <span className="text-[10px] bg-[#008d7f1c] dark:bg-[#008d7f30] text-[#008D7F] px-3 py-1 font-extrabold uppercase rounded-full">
             EcoBazar Editorials
           </span>
-          <h1 className="font-display text-3xl md:text-4xl font-black text-gray-900">
+          <h1 className="font-display text-3xl md:text-4xl font-black text-gray-900 dark:text-white">
             Handcrafted Journals & Tech Guides
           </h1>
-          <p className="text-sm text-gray-500 font-semibold leading-relaxed">
+          <p className="text-sm text-gray-500 dark:text-gray-300 font-semibold leading-relaxed">
             Discover tips to clean silver jewelry, style earrings for festive gatherings, or maintain rechargeable battery-powered fans during intense summers.
           </p>
         </div>

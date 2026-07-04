@@ -64,10 +64,10 @@ export const BlogDetailView: React.FC<BlogDetailViewProps> = ({ blogId, navigate
       {/* Main post layout */}
       <article className="space-y-6">
         <div className="space-y-3">
-          <span className="text-[10px] font-bold text-[#008D7F] bg-teal-50 px-2.5 py-1 rounded-full uppercase tracking-wider">
+          <span className="text-[10px] font-bold text-[#008D7F] bg-teal-50 dark:bg-teal-950/40 px-2.5 py-1 rounded-full uppercase tracking-wider">
             {blog.category}
           </span>
-          <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 leading-tight">
+          <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white leading-tight">
             {blog.title}
           </h1>
 
@@ -93,8 +93,8 @@ export const BlogDetailView: React.FC<BlogDetailViewProps> = ({ blogId, navigate
         <div className="space-y-6 font-semibold text-sm text-gray-600 leading-relaxed pt-3">
           <p>{blog.description}</p>
           
-          <div className="border-l-4 border-[#008D7F] pl-4 py-1.5 bg-teal-50/30 rounded-r-xl">
-            <p className="italic text-gray-700 text-sm">
+          <div className="border-l-4 border-[#008D7F] pl-4 py-1.5 bg-teal-50/30 dark:bg-teal-950/20 rounded-r-xl">
+            <p className="italic text-gray-700 dark:text-gray-300 text-sm">
               "Fine craftsmanship is an investment in durability. We design each earring and mini fan using skin-safe materials that endure seasonal aesthetics flawlessly."
             </p>
           </div>
@@ -168,7 +168,7 @@ export const BlogDetailView: React.FC<BlogDetailViewProps> = ({ blogId, navigate
           ) : (
             blogComments.map((com, idx) => (
               <div key={idx} className="bg-white border border-gray-100 p-5 rounded-2xl flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-sm font-bold text-[#008D7F] uppercase shrink-0 select-none">
+                <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-950/40 flex items-center justify-center text-sm font-bold text-[#008D7F] uppercase shrink-0 select-none">
                   {com.name.charAt(0)}
                 </div>
                 <div className="space-y-1 text-xs">

@@ -24,13 +24,13 @@ export const ContactView: React.FC = () => {
     <div className="space-y-16 pb-20 text-left">
       
       {/* Intro block */}
-      <section className="bg-[#ebf3f2] rounded-3xl p-8 md:p-12 relative overflow-hidden">
+      <section className="bg-[#ebf3f2] dark:bg-zinc-900 rounded-3xl p-8 md:p-12 relative overflow-hidden border border-transparent dark:border-zinc-800">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#008d7f_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div className="relative z-10 max-w-xl space-y-3">
-          <h1 className="font-display text-3xl md:text-4xl font-black text-gray-900 leading-tight">
+          <h1 className="font-display text-3xl md:text-4xl font-black text-gray-900 dark:text-white leading-tight">
             Contact Support & Enquiries
           </h1>
-          <p className="text-sm text-gray-500 font-semibold leading-relaxed">
+          <p className="text-sm text-gray-500 dark:text-gray-300 font-semibold leading-relaxed">
             Have questions regarding boutique custom jewelry, wholesale earring combos, or custom battery support for mini fans? Reach out now.
           </p>
         </div>
@@ -134,7 +134,7 @@ export const ContactView: React.FC = () => {
                 <Mail className="w-5 h-5 text-[#008D7F] shrink-0 mt-0.5" />
                 <div>
                   <p className="text-white font-bold mb-0.5">Inquiry Email</p>
-                  <span>support@ecobazar.com</span>
+                  <span>strategyconsumer2026@gmail.com</span>
                 </div>
               </li>
             </ul>

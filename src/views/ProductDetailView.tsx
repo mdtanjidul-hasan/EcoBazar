@@ -16,7 +16,7 @@ interface ProductDetailViewProps {
 export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId, navigate }) => {
   const { 
     products, reviews, addToCart, addToWishlist, removeFromWishlist, 
-    wishlist, addReview, currency, lang, formatPrice 
+    wishlist, addReview, currency, lang, formatPrice, getWholesalePrice 
   } = useStore();
 
   const product = products.find(p => p._id === productId);
@@ -307,7 +307,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
               <button
                 onClick={() => setActiveMediaTab('video')}
                 className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm transition flex items-center gap-1 ${
-                  activeMediaTab === 'video' ? 'bg-[#00B894] text-white' : 'bg-white/90 text-slate-705 backdrop-blur-md'
+                  activeMediaTab === 'video' ? 'bg-[#008D7F] text-white' : 'bg-white/90 text-slate-705 backdrop-blur-md'
                 }`}
               >
                 Video Preview
@@ -326,8 +326,8 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
                 }}
                 className={`w-20 h-20 rounded-xl overflow-hidden border-2 shrink-0 bg-slate-50 transition p-0.5 ${
                   activeImage === img && activeMediaTab === 'photo' 
-                    ? 'border-[#00B894] shadow-sm scale-95' 
-                    : 'border-slate-100 opacity-80 hover:opacity-100'
+                ? 'border-[#008D7F] shadow-sm scale-95' 
+                : 'border-slate-100 opacity-80 hover:opacity-100'
                 }`}
               >
                 <img src={img} alt="Spec Thumbnail" className="w-full h-full object-cover rounded-lg" />
@@ -341,7 +341,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
           
           {/* Header metadata */}
           <div className="space-y-3">
-            <span className="inline-block text-[10px] font-extrabold text-[#00B894] uppercase tracking-widest bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-full">
+            <span className="inline-block text-[10px] font-extrabold text-[#008D7F] uppercase tracking-widest bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-zinc-800 px-3.5 py-1.5 rounded-full">
               {product.category}
             </span>
             <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-[#1E293B] tracking-tight leading-tight">
@@ -350,21 +350,21 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
 
             {/* Star average counts */}
             <div className="flex items-center gap-2.5 flex-wrap">
-              <div className="flex text-[#D4AF37]">
+              <div className="flex text-emerald-500">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className={`w-4 h-4 ${
-                      i < Math.floor(product.rating) ? 'fill-[#D4AF37]' : 'text-slate-200'
+                      i < Math.floor(product.rating) ? 'fill-emerald-500' : 'text-slate-200'
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-xs font-black text-slate-800">
+              <span className="text-xs font-black text-slate-800 dark:text-gray-200">
                 {product.rating} Rating Stars
               </span>
               <span className="text-xs text-slate-300">|</span>
-              <span className="text-xs text-[#00B894] font-extrabold tracking-wide">
+              <span className="text-xs text-[#008D7F] font-extrabold tracking-wide">
                 {productReviews.length} Verified Buyer Reviews
               </span>
               <span className="text-xs text-slate-300">|</span>
@@ -374,105 +374,159 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
             </div>
           </div>
 
-          {/* Pricing with markdown gold discount badges */}
-          <div className="p-6 bg-slate-50 border border-slate-150 rounded-2xl flex items-center justify-between gap-6">
-            <div className="space-y-1">
-              <span className="text-[10px] text-slate-400 font-extrabold uppercase block tracking-wider leading-none">MSRP Standard retail price</span>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-slate-400 line-through text-sm font-semibold">
-                  {getOriginalPrice(product.price)}
-                </span>
-                <span className="font-display font-black text-3xl text-[#00B894]">
-                  {convertPrice(product.price)}
-                </span>
-                <span className="ml-2 text-[10px] font-black uppercase text-[#D4AF37] bg-white border border-[#D4AF37]/20 px-2 py-0.5 rounded-md">
-                  Save 45%
-                </span>
+          {/* Supplier Profile Widget & Trade Assurance Banner */}
+          <div className="p-4.5 bg-emerald-50/20 dark:bg-zinc-900/40 border border-emerald-100/30 dark:border-zinc-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 text-left">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-400 to-[#008D7F] flex items-center justify-center text-white font-black shadow-sm text-sm shrink-0">
+                {product.supplierName?.charAt(0) || "S"}
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-150 text-sm">
+                  <span>{product.supplierName}</span>
+                  {product.isVerifiedSupplier && (
+                    <span className="bg-[#008D7F] text-white text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">Verified</span>
+                  )}
+                </div>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold">
+                  ★ {product.supplierRating} Rating • Response: {product.supplierResponseRate || "95%"}
+                </p>
+              </div>
+            </div>
+            <div className="text-left sm:text-right">
+              <span className="text-[10px] text-emerald-600 bg-emerald-100/60 dark:bg-emerald-950/20 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">
+                🛡️ Trade Assurance Protected
+              </span>
+            </div>
+          </div>
+
+          {/* Pricing Tiers Table */}
+          <div className="p-5 border border-slate-150 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-950 space-y-4 shadow-sm text-left">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[10px] text-slate-400 font-extrabold uppercase block tracking-wider leading-none">Wholesale Tiered Pricing</span>
+                <p className="text-[11px] text-[#008D7F] font-bold mt-1">Select quantity to activate dynamic tier discounts</p>
+              </div>
+              <div className="text-right">
+                <span className="text-xs font-bold text-gray-500">MOQ: </span>
+                <span className="text-xs font-black text-slate-800 dark:text-slate-100">{product.moq || 1} pcs</span>
               </div>
             </div>
 
-            {/* Live custom Stock Indicator */}
-            {product.quantity > 0 ? (
-              <div className="text-right space-y-1">
-                <span className="inline-flex h-2.5 w-2.5 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                </span>
-                <span className="text-xs font-black text-red-650 uppercase block">
-                  Limited stock (Only {product.quantity} units left)
-                </span>
-              </div>
-            ) : (
-              <span className="text-xs font-bold text-slate-400 uppercase bg-slate-200 px-3 py-1 rounded-full">
-                Temporarily Sold Out
-              </span>
-            )}
+            {/* Tiers Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {product.priceTiers?.map((t: any, idx: number) => {
+                const isActive = quantity >= t.minQty && (!t.maxQty || quantity <= t.maxQty);
+                return (
+                  <div
+                    key={idx}
+                    className={`p-3.5 rounded-xl border text-center transition-all ${
+                      isActive
+                        ? 'border-[#008D7F] bg-emerald-50/40 dark:bg-emerald-950/10 shadow-sm scale-102 ring-1 ring-[#008D7F]'
+                        : 'border-slate-150 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-900/40'
+                    }`}
+                  >
+                    <p className="text-xs font-bold text-slate-500 dark:text-gray-400">
+                      {t.maxQty ? `${t.minQty} - ${t.maxQty} pcs` : `${t.minQty}+ pcs`}
+                    </p>
+                    <p className="text-lg font-black text-slate-800 dark:text-slate-100 mt-1">
+                      {convertPrice(t.price)}
+                    </p>
+                    {isActive && (
+                      <span className="text-[9px] text-[#008D7F] font-black uppercase tracking-wider bg-white dark:bg-zinc-900 px-1.5 py-0.5 rounded border border-[#008D7F]/30 dark:border-zinc-850 mt-1 inline-block">
+                        Active Tier
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Calculated Order value */}
+            {(() => {
+              const currentUnitPrice = getWholesalePrice ? getWholesalePrice(product, quantity) : product.price;
+              const totalVal = currentUnitPrice * quantity;
+              return (
+                <div className="pt-3 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between text-xs font-bold text-slate-600 dark:text-gray-300">
+                  <div>
+                    <span className="text-slate-400">Unit Price: </span>
+                    <span className="text-slate-800 dark:text-slate-100 font-extrabold">{convertPrice(currentUnitPrice)}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Estimated Total: </span>
+                    <span className="text-lg font-black text-[#008D7F]">{convertPrice(totalVal)}</span>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Sourced summary */}
-          <p className="text-slate-500 text-sm leading-relaxed font-semibold">
+          <p className="text-slate-500 dark:text-gray-400 text-sm leading-relaxed font-semibold text-left">
             {product.description}
           </p>
 
           {/* Core conversion indicators */}
-          <div className="grid grid-cols-3 gap-3 border-y border-slate-150 py-4 text-xs font-bold text-slate-600">
-            <div className="flex items-center gap-1.5">
-              <Globe className="w-4 h-4 text-[#00B894]" /> Worldwide Shipping
+          <div className="grid grid-cols-1 xs:grid-cols-3 gap-2.5 sm:gap-3 border-y border-slate-150 dark:border-zinc-800 py-4 text-[10px] sm:text-xs font-bold text-slate-600 dark:text-gray-300">
+            <div className="flex items-center gap-1.5 justify-center">
+              <Globe className="w-4 h-4 text-[#008D7F]" /> Worldwide Cargo
             </div>
-            <div className="flex items-center gap-1.5">
-              <RefreshCcw className="w-4 h-4 text-[#D4AF37]" /> 30-Day Money Back
+            <div className="flex items-center gap-1.5 justify-center">
+              <Truck className="w-4 h-4 text-[#008D7F]" /> Fast Dispatch
             </div>
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#00B894]" /> Premium Guarantee
+            <div className="flex items-center gap-1.5 justify-center">
+              <ShieldCheck className="w-4 h-4 text-[#008D7F]" /> Trade Assurance
             </div>
           </div>
 
           {/* Selector dials with "Add" and "Buy" triggers */}
           {product.quantity > 0 && (
-            <div className="space-y-4 pt-2">
+            <div className="space-y-4 pt-2 text-left">
               
               {/* Quantity Dials */}
               <div className="flex items-center gap-4">
-                <span className="text-xs font-extrabold text-[#1E293B]/60 uppercase tracking-widest">Select Quantity:</span>
-                <div className="flex items-center border border-slate-200 bg-white p-1 rounded-xl shadow-sm">
+                <span className="text-xs font-extrabold text-[#1E293B]/60 dark:text-gray-400 uppercase tracking-widest">Select Quantity:</span>
+                <div className="flex items-center border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-1 rounded-xl shadow-sm">
                   <button
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="w-8 h-8 flex items-center justify-center text-sm font-black bg-slate-100/50 text-[#1E293B] rounded-lg active:scale-90 transition-transform select-none"
+                    className="w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center text-sm font-black bg-slate-100/50 dark:bg-zinc-800/50 text-[#1E293B] dark:text-slate-150 rounded-lg active:scale-90 transition-transform select-none cursor-pointer hover:bg-slate-100 dark:hover:bg-zinc-800"
                   >
                     −
                   </button>
-                  <span className="w-10 text-center text-xs font-extrabold text-slate-800">
+                  <span className="w-12 text-center text-xs font-extrabold text-slate-800 dark:text-slate-100">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity(q => Math.min(product.quantity, q + 1))}
-                    className="w-8 h-8 flex items-center justify-center text-sm font-black bg-slate-100/50 text-[#1E293B] rounded-lg active:scale-90 transition-transform select-none"
+                    className="w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center text-sm font-black bg-slate-100/50 dark:bg-zinc-800/50 text-[#1E293B] dark:text-slate-150 rounded-lg active:scale-90 transition-transform select-none cursor-pointer hover:bg-slate-100 dark:hover:bg-zinc-800"
                   >
                     +
                   </button>
                 </div>
+                <span className="text-[10px] text-gray-400 font-bold uppercase">
+                  (Buy 1 item, or purchase {product.moq || 1}+ for wholesale tiers)
+                </span>
               </div>
 
               {/* Action Buttons */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button
                   onClick={handleAddToCart}
-                  className={`w-full py-4.5 rounded-2xl font-extrabold text-xs uppercase tracking-wider text-white shadow-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 ${
+                  className={`w-full py-4 rounded-2xl font-extrabold text-xs uppercase tracking-wider text-white shadow-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer ${
                     isAddedFeedback 
                       ? 'bg-emerald-600 shadow-emerald-700/10' 
-                      : 'bg-gradient-to-r from-[#00B894] to-[#008D7F] hover:from-[#008D7F] hover:to-[#00B894]'
+                      : 'bg-gradient-to-r from-[#008D7F] to-[#00B894] hover:opacity-95'
                   }`}
                 >
                   <ShoppingBag className="w-4.5 h-4.5" />
-                  {isAddedFeedback ? 'Added to drawer! ✓' : 'Add to Shopping Basket'}
+                  {isAddedFeedback ? 'Added to wholesale list! ✓' : 'Add to wholesale list'}
                 </button>
 
                 <button
                   onClick={handleBuyNow}
-                  className="w-full py-4.5 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-extrabold uppercase tracking-wider transition-colors duration-200 flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-slate-900 hover:bg-slate-800 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-white rounded-2xl text-xs font-extrabold uppercase tracking-wider transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Zap className="w-4.5 h-4.5 fill-current text-[#D4AF37]" />
-                  Direct Express Checkout
+                  <Zap className="w-4.5 h-4.5 fill-current text-amber-500 animate-pulse" />
+                  Start Order (Buy Now)
                 </button>
               </div>
             </div>
@@ -487,7 +541,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
           <button
             onClick={() => setActiveDetailTab('desc')}
             className={`pb-3 border-b-2 transition shrink-0 tracking-wider ${
-              activeDetailTab === 'desc' ? 'border-[#00B894] text-[#00B894]' : 'border-transparent text-slate-400 hover:text-slate-600'
+              activeDetailTab === 'desc' ? 'border-[#008D7F] text-[#008D7F]' : 'border-transparent text-slate-400 hover:text-slate-600'
             }`}
           >
             Product Overview
@@ -495,7 +549,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
           <button
             onClick={() => setActiveDetailTab('specs')}
             className={`pb-3 border-b-2 transition shrink-0 tracking-wider ${
-              activeDetailTab === 'specs' ? 'border-[#00B894] text-[#00B894]' : 'border-transparent text-slate-400 hover:text-slate-600'
+              activeDetailTab === 'specs' ? 'border-[#008D7F] text-[#008D7F]' : 'border-transparent text-slate-400 hover:text-slate-600'
             }`}
           >
             Technical Specs
@@ -503,7 +557,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
           <button
             onClick={() => setActiveDetailTab('shipping')}
             className={`pb-3 border-b-2 transition shrink-0 tracking-wider ${
-              activeDetailTab === 'shipping' ? 'border-[#00B894] text-[#00B894]' : 'border-transparent text-slate-400 hover:text-slate-600'
+              activeDetailTab === 'shipping' ? 'border-[#008D7F] text-[#008D7F]' : 'border-transparent text-slate-400 hover:text-slate-600'
             }`}
           >
             Worldwide Shipping Details
@@ -511,7 +565,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
           <button
             onClick={() => setActiveDetailTab('reviews')}
             className={`pb-3 border-b-2 transition shrink-0 tracking-wider flex items-center gap-1.5 ${
-              activeDetailTab === 'reviews' ? 'border-[#00B894] text-[#00B894]' : 'border-transparent text-slate-400 hover:text-slate-600'
+              activeDetailTab === 'reviews' ? 'border-[#008D7F] text-[#008D7F]' : 'border-transparent text-slate-400 hover:text-slate-600'
             }`}
           >
             Reviews ({productReviews.length})
@@ -519,7 +573,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
           <button
             onClick={() => setActiveDetailTab('assistant')}
             className={`pb-3 border-b-2 transition shrink-0 tracking-wider flex items-center gap-1.5 ${
-              activeDetailTab === 'assistant' ? 'border-[#00B894] text-[#00B894]' : 'border-transparent text-slate-450 hover:text-slate-600'
+              activeDetailTab === 'assistant' ? 'border-[#008D7F] text-[#008D7F]' : 'border-transparent text-slate-450 hover:text-slate-600'
             }`}
           >
             <Sparkles className="w-4 h-4 text-emerald-500 fill-emerald-100" /> AI Q&A Assistant
@@ -907,10 +961,10 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
                       addToCart(p, 1);
                       alert('Item added to shopping drawer successfully!');
                     }}
-                    className="p-2 bg-slate-100 hover:bg-[#00B894] text-slate-600 hover:text-white rounded-lg transition"
+                    className="w-11 h-11 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-100 hover:bg-[#00B894] text-slate-600 hover:text-white rounded-xl transition cursor-pointer"
                     title="Add bundle item"
                   >
-                    <ShoppingBag className="w-3.5 h-3.5" />
+                    <ShoppingBag className="w-4.5 h-4.5" />
                   </button>
                 </div>
               </div>
@@ -978,10 +1032,10 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
                         addToCart(p, 1);
                         alert('Item added to shopping drawer successfully!');
                       }}
-                      className="p-2 bg-slate-100 hover:bg-[#00B894] text-slate-600 hover:text-white rounded-lg transition"
+                      className="w-11 h-11 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-100 hover:bg-[#00B894] text-slate-600 hover:text-white rounded-xl transition cursor-pointer"
                       title="Add to Basket"
                     >
-                      <ShoppingBag className="w-3.5 h-3.5" />
+                      <ShoppingBag className="w-4.5 h-4.5" />
                     </button>
                   </div>
                 </div>
@@ -1047,10 +1101,10 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({ productId,
                       addToCart(p, 1);
                       alert('Item added to shopping drawer successfully!');
                     }}
-                    className="p-2 bg-slate-100 hover:bg-[#00B894] text-slate-600 hover:text-white rounded-lg transition"
+                    className="w-11 h-11 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-100 hover:bg-[#00B894] text-slate-600 hover:text-white rounded-xl transition cursor-pointer"
                     title="Add to Basket"
                   >
-                    <ShoppingBag className="w-3.5 h-3.5" />
+                    <ShoppingBag className="w-4.5 h-4.5" />
                   </button>
                 </div>
               </div>

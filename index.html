@@ -3,7 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EcoBazar - Jewelry and Gadgets Store</title>
+    <title>My Google AI Studio App</title>
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('ecobazar-theme');
+          if (saved === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else if (saved === 'light') {
+            document.documentElement.classList.remove('dark');
+          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Defaulting safely if they want, but let's stick strictly to user choice or light by default
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

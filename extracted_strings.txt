@@ -1,0 +1,211 @@
+read from private field
+Cannot add the same private member more than once
+write to private field
+access private method
+setState(...): takes an object of state variables to update or a function which returns an object of state variables.
+Objects are not valid as a React child (found: 
+). If you meant to render a collection of children, use an array instead.
+act(...) is not supported in production builds of React.
+React.Children.only expected to receive a single React element child.
+React.cloneElement(...): The argument must be a React element, but you passed 
+forceFrameRate takes a positive int between 0 and 125, forcing frame rates higher than 125 fps is not supported
+ for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+children dangerouslySetInnerHTML defaultValue defaultChecked innerHTML suppressContentEditableWarning suppressHydrationWarning style
+allowFullScreen async autoFocus autoPlay controls default defer disabled disablePictureInPicture disableRemotePlayback formNoValidate hidden loop noModule noValidate open playsInline readOnly required reversed scoped seamless itemScope
+accent-height alignment-baseline arabic-form baseline-shift cap-height clip-path clip-rule color-interpolation color-interpolation-filters color-profile color-rendering dominant-baseline enable-background fill-opacity fill-rule flood-color flood-opacity font-family font-size font-size-adjust font-stretch font-style font-variant font-weight glyph-name glyph-orientation-horizontal glyph-orientation-vertical horiz-adv-x horiz-origin-x image-rendering letter-spacing lighting-color marker-end marker-mid marker-start overline-position overline-thickness paint-order panose-1 pointer-events rendering-intent shape-rendering stop-color stop-opacity strikethrough-position strikethrough-thickness stroke-dasharray stroke-dashoffset stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width text-anchor text-decoration text-rendering underline-position underline-thickness unicode-bidi unicode-range units-per-em v-alphabetic v-hanging v-ideographic v-mathematical vector-effect vert-adv-y vert-origin-x vert-origin-y word-spacing writing-mode xmlns:xlink x-height
+xlink:actuate xlink:arcrole xlink:role xlink:show xlink:title xlink:type
+mousedown mouseup touchcancel touchend touchstart auxclick dblclick pointercancel pointerdown pointerup dragend dragstart drop compositionend compositionstart keydown keypress keyup input textInput copy cut paste click change contextmenu reset submit
+abort auxClick cancel canPlay canPlayThrough click close contextMenu copy cut drag dragEnd dragEnter dragExit dragLeave dragOver dragStart drop durationChange emptied encrypted ended error gotPointerCapture input invalid keyDown keyPress keyUp load loadedData loadedMetadata loadStart lostPointerCapture mouseDown mouseMove mouseOut mouseOver mouseUp paste pause play playing pointerCancel pointerDown pointerMove pointerOut pointerOver pointerUp progress rateChange reset resize seeked seeking stalled submit suspend timeUpdate touchCancel touchEnd touchStart volumeChange scroll toggle touchMove waiting wheel
+change click focusin focusout input keydown keyup selectionchange
+focusout contextmenu dragend focusin keydown keyup mousedown mouseup selectionchange
+compositionend focusout keydown keypress keyup mousedown
+compositionstart focusout keydown keypress keyup mousedown
+compositionupdate focusout keydown keypress keyup mousedown
+abort canplay canplaythrough durationchange emptied encrypted ended error loadeddata loadedmetadata loadstart pause play playing progress ratechange resize seeked seeking stalled suspend timeupdate volumechange waiting
+cancel close invalid load scroll toggle
+
+Error generating stack: 
+A history only accepts one active listener
+Cannot specify children on an index route
+must start with the combined path of all its parent routes.
+Index routes must not have child routes. Please remove 
+encoding (
+Cannot include a '
+' character in a manually specified 
+You must provide a non-empty routes array to createRouter
+router.fetch() was called during the server render, but it shouldn't be. You are likely calling a useFetcher() method in the body of your component. Try moving it to a useEffect or a callback.
+Didn't find any matches after fetcher action
+Expected pending action
+Unhandled fetcher deferred data
+Expected a Location header on the redirect Response
+Expected fetch controller: 
+Expected fetcher: 
+Invalid blocker state transition: 
+A router only supports one blocker at a time
+FormData is not available in this environment
+No route found in manifest
+You cannot call the handler for a route which defines a boolean 
+You defined 
+ for route 
+Redirects returned/thrown from loaders/actions must have a Location header
+Cannot handle redirect results in processLoaderData
+Did not find corresponding fetcher result
+Unhandled fetcher revalidation redirect
+Unknown Server Error
+Bad Request
+You made a 
+so there is no way to handle the request.
+defer() is not supported in actions
+Unable to encode submission body
+Method Not Allowed
+Expected an AbortSignal for revalidating fetcher deferred result
+Failed to save applied view transitions in sessionStorage (
+rgba(200,200,200, 0.5)
+Unexpected Application Error!
+React Router caught the following error during render
+encodeByteArray takes an array as a parameter
+base64Decode failed: 
+Unable to locate global object.
+Missing Observer.
+Firebase Server App has been deleted
+Need to provide options, when not being deployed to hosting via source.
+FirebaseServerApp deleteOnDeref field defined but the JS runtime does not support FinalizationRegistry.
+FirebaseServerApp is not for use in browser environments.
+Operations that alter the current user are not supported in conjunction with FirebaseServerApp
+INTERNAL ASSERTION FAILED: 
+Short delay should be less than long delay!
+Emulator should always be set here
+Could not find fetch implementation, make sure you call FetchProvider.initialize() with an appropriate polyfill
+Could not find Headers implementation, make sure you call FetchProvider.initialize() with an appropriate polyfill
+Could not find Response implementation, make sure you call FetchProvider.initialize() with an appropriate polyfill
+recaptchaKey undefined
+JWT malformed, contained fewer than 3 sections
+Failed to decode base64 JWT payload
+Caught error parsing JWT payload as JSON
+not implemented
+Expected a class definition
+Instance stored in cache mismatched with class
+FirebaseServerApp could not login user with provided authIdToken: 
+Unable to load external scripts
+recaptcha Enterprise site key undefined
+No reCAPTCHA enterprise script loaded.
+RecaptchaVerifier is only supported in browser
+Running in emulator mode. Do not use with production credentials.
+WARNING: You are using the Auth Emulator, which is intended for local testing only.  Do not use with production credentials.
+Pending promise was never set
+Popup operations only handle one event
+_initialize() not called before _openPopup()
+If manager is not set, promise should be
+Can not rewrite read-only method '
+target must be an object
+visitor must be a function
+Blob is not supported. Use a Buffer instead.
+Circular reference detected in 
+data must be an object
+header name must be a non-empty string
+Object iterator must return a key-value pair
+Request failed with status code 
+Request aborted
+Network Error
+timeout of 
+ms exceeded
+timeout exceeded
+Unsupported protocol 
+is not supported by the environment
+is not available in the build
+as no adapter specified
+There is no suitable adapter to dispatch the request 
+ has been removed
+ has been deprecated since v
+ and will be removed in the near future
+options must be an object
+Unknown option 
+executor must be a function.
+M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z
+M21.801 10A10 10 0 1 1 17 3.335
+m9 11 3 3L22 4
+M12 6v6l4 2
+M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z
+M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z
+M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5
+M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z
+M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z
+M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12
+M9 17H7A5 5 0 0 1 7 7h2
+M15 7h2a5 5 0 1 1 0 10h-2
+m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7
+M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0
+M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z
+3.29 7 12 12 20.71 7
+m7.5 4.27 9 5.15
+M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384
+m21 21-4.34-4.34
+M16 10a4 4 0 0 1-8 0
+M3.103 6.034h17.794
+M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z
+M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12
+M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z
+M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z
+M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2
+M18 6 6 18
+m6 6 12 12
+M7.71 8.23l3.75 3.75-1.48 1.48-3.75-3.75-3.75 3.75L1 11.98l3.75-3.75L1 4.48 2.48 3l3.75 3.75L9.98 3l1.48 1.48-3.75 3.75z
+notification timer
+transform 0.2s, opacity 0.2s
+M23.32 17.191L15.438 2.184C14.728.833 13.416 0 11.996 0c-1.42 0-2.733.833-3.443 2.184L.533 17.448a4.744 4.744 0 000 4.368C1.243 23.167 2.555 24 3.975 24h16.05C22.22 24 24 22.044 24 19.632c0-.904-.251-1.746-.68-2.44zm-9.622 1.46c0 1.033-.724 1.823-1.698 1.823s-1.698-.79-1.698-1.822v-.043c0-1.028.724-1.822 1.698-1.822s1.698.79 1.698 1.822v.043zm.039-12.285l-.84 8.06c-.057.581-.408.943-.897.943-.49 0-.84-.367-.896-.942l-.84-8.065c-.057-.624.25-1.095.779-1.095h1.91c.528.005.84.476.784 1.1z
+M12 0a12 12 0 1012 12A12.013 12.013 0 0012 0zm.25 5a1.5 1.5 0 11-1.5 1.5 1.5 1.5 0 011.5-1.5zm2.25 13.5h-4a1 1 0 010-2h.75a.25.25 0 00.25-.25v-4.5a.25.25 0 00-.25-.25h-.75a1 1 0 010-2h1a2 2 0 012 2v4.75a.25.25 0 00.25.25h.75a1 1 0 110 2z
+M12 0a12 12 0 1012 12A12.014 12.014 0 0012 0zm6.927 8.2l-6.845 9.289a1.011 1.011 0 01-1.43.188l-4.888-3.908a1 1 0 111.25-1.562l4.076 3.261 6.227-8.451a1 1 0 111.61 1.183z
+M11.983 0a12.206 12.206 0 00-8.51 3.653A11.8 11.8 0 000 12.207 11.779 11.779 0 0011.8 24h.214A12.111 12.111 0 0024 11.791 11.766 11.766 0 0011.983 0zM10.5 16.542a1.476 1.476 0 011.449-1.53h.027a1.527 1.527 0 011.523 1.47 1.475 1.475 0 01-1.449 1.53h-.027a1.529 1.529 0 01-1.523-1.47zM11 12.5v-6a1 1 0 012 0v6a1 1 0 11-2 0z
+Toastify--animate-icon Toastify__zoom-enter
+additions text
+No mutationFn found
+experimental_prefetchInRender feature flag is not enabled
+Expected enabled to be a boolean or a callback that returns a boolean
+No QueryClient set, use QueryClientProvider to set one
+fixed top-0 left-0 w-full z-40 border-b bg-white
+flex items-center gap-4
+md:hidden block
+flex items-center gap-6
+hidden sm:block font-semibold
+Shopping cart:
+px-4 pb-4 md:hidden mt-3
+flex w-full
+w-full border border-gray-300 rounded-l-lg px-4 py-2
+py-6 text-black  hidden md:block
+flex items-center gap-8
+Contact Us
+btn btn-ghost btn-circle
+menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52
+flex justify-between items-center mb-6
+flex flex-col gap-4
+flex justify-between p-5 border-b
+flex gap-4 mb-4
+w-16 h-16 object-cover
+Private element is not present on this object
+Cannot call a class as a function
+Super expression must either be null or a function
+this hasn't been initialised - super() hasn't been called
+Derived constructors may only return object or undefined
+Cannot initialize the same private elements twice on an object
+Invalid type of customClass.
+SweetAlert2 requires document to initialize
+Unexpected type of input! Expected 
+Invalid currentProgressStep parameter, it should be less than progressSteps.length (currentProgressStep like JS arrays starts from 0)
+display:none !important
+Unexpected type of inputOptions! Expected object, Map or Promise, got 
+Error in inputValue promise: 
+Close this dialog
+You're trying to update the closed or closing popup, that won't work. Use the update() method in preConfirm parameter or show a new popup.
+Invalid parameter to update: 
+Unexpected type of 
+Allowed attributes are: 
+To set the value, use HTML within the element.
+top-start     top            top-end
+center-start  center         center-end
+bottom-start  bottom-center  bottom-end
+M0.38296 20.0762C0.111788 19.805 0.111788 19.3654 0.38296 19.0942L9.19758 10.2796L0.38296 1.46497C0.111788 1.19379 0.111788 0.754138 0.38296 0.482966C0.654131 0.211794 1.09379 0.211794 1.36496 0.482966L10.4341 9.55214C10.8359 9.9539 10.8359 10.6053 10.4341 11.007L1.36496 20.0762C1.09379 20.3474 0.654131 20.3474 0.38296 20.0762Z
+).replace(/ /g,
+t been initialised - super() hasn
+)throw new TypeError(
+bg-blue-50 border-blue-500
+Product not found

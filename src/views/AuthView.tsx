@@ -146,12 +146,25 @@ export const AuthView: React.FC<AuthViewProps> = ({ navigate }) => {
             </div>
           </div>
 
-
+          {activeTab === 'signup' && (
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Account Role *</label>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value as 'admin' | 'delivery' | 'user')}
+                className="w-full bg-slate-50/50 border border-gray-200 rounded-xl px-4 py-3.5 text-xs font-bold focus:outline-none focus:border-[#008D7F] text-gray-800 cursor-pointer"
+              >
+                <option value="user">Customer / Wholesaler</option>
+                <option value="delivery">Delivery Rider</option>
+                <option value="admin">Administrator / Seller</option>
+              </select>
+            </div>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 bg-[#008D7F] hover:bg-[#9c1343] text-white font-extrabold text-sm rounded-xl transition shadow flex items-center justify-center gap-2 pt-4 disabled:opacity-50"
+            className="w-full py-4 bg-[#008D7F] hover:bg-[#00B894] text-white font-extrabold text-sm rounded-xl transition shadow flex items-center justify-center gap-2 pt-4 disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <RefreshCw className="w-4 h-4 animate-spin" />
@@ -162,6 +175,72 @@ export const AuthView: React.FC<AuthViewProps> = ({ navigate }) => {
             )}
           </button>
         </form>
+
+        {/* Quick Demo Accounts Helper */}
+        <div className="border-t border-gray-100 pt-6 space-y-3">
+          <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider text-center">
+            Or Sign In Instantly via Demo Personas
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={async () => {
+                setEmail('admin@ecobazar.com');
+                setPassword('admin123');
+                setActiveTab('signin');
+                setErrorMsg('');
+                try {
+                  await signIn('admin@ecobazar.com', 'admin123');
+                  navigate('/');
+                } catch (e) {
+                  setErrorMsg('Failed to sign in demo admin.');
+                }
+              }}
+              className="px-3 py-2.5 bg-rose-50 hover:bg-rose-100/80 text-rose-700 rounded-xl text-[11px] font-extrabold transition text-center flex flex-col items-center justify-center gap-1 border border-rose-100/50 shadow-sm cursor-pointer"
+            >
+              <span className="text-sm">👑</span>
+              <span>Admin Demo</span>
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                setEmail('delivery@ecobazar.com');
+                setPassword('delivery123');
+                setActiveTab('signin');
+                setErrorMsg('');
+                try {
+                  await signIn('delivery@ecobazar.com', 'delivery123');
+                  navigate('/');
+                } catch (e) {
+                  setErrorMsg('Failed to sign in demo rider.');
+                }
+              }}
+              className="px-3 py-2.5 bg-amber-50 hover:bg-amber-100/80 text-amber-800 rounded-xl text-[11px] font-extrabold transition text-center flex flex-col items-center justify-center gap-1 border border-amber-100/50 shadow-sm cursor-pointer"
+            >
+              <span className="text-sm">🚴</span>
+              <span>Rider Demo</span>
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                setEmail('user@ecobazar.com');
+                setPassword('user123');
+                setActiveTab('signin');
+                setErrorMsg('');
+                try {
+                  await signIn('user@ecobazar.com', 'user123');
+                  navigate('/');
+                } catch (e) {
+                  setErrorMsg('Failed to sign in demo buyer.');
+                }
+              }}
+              className="px-3 py-2.5 bg-teal-50 hover:bg-teal-100/80 text-[#008D7F] rounded-xl text-[11px] font-extrabold transition text-center flex flex-col items-center justify-center gap-1 border border-teal-100/50 shadow-sm cursor-pointer"
+            >
+              <span className="text-sm">🛍️</span>
+              <span>Buyer Demo</span>
+            </button>
+          </div>
+        </div>
 
 
 

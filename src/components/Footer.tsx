@@ -218,7 +218,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-[#008D7F] shrink-0" />
-                <span>support@ecobazar.com</span>
+                <span>strategyconsumer2026@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -227,7 +227,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
 
         {/* Footer Bottom */}
         <div className="flex flex-col sm:flex-row justify-between items-center pt-8 text-xs text-gray-500 gap-4">
-          <p>© 2026 EcoBazar Luxury Crafts. All rights reserved.</p>
+          <p>© 2026 Temu Global Marketplace. All rights reserved.</p>
           <p className="flex items-center gap-1">
             Engineered with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 animate-pulse" /> in Bangladesh
           </p>

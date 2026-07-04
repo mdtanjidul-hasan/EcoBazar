@@ -1,6 +1,6 @@
 {
-  "name": "EcoBazar Jewelry and Gadgets Store",
-  "description": "Dropshipping store featuring integrated supplier syncs, pricing, and AI social copy generation.",
+  "name": "EcoBazar B2B Wholesale Marketplace",
+  "description": "EcoBazar wholesale platform featuring tiered pricing, supplier verification, and RFQ sourcing pipelines.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
