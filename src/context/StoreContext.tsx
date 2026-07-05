@@ -86,32 +86,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return saved ? JSON.parse(saved) : null;
   });
   
-  const [allUsers, setAllUsers] = useState<User[]>(() => {
-    const saved = localStorage.getItem('eb_users');
-    return saved ? JSON.parse(saved) : DEFAULT_USERS;
-  });
+  const [allUsers, setAllUsers] = useState<User[]>([]);
 
-  const [products, setProducts] = useState<Product[]>(() => {
-    const saved = localStorage.getItem('eb_products');
-    let list = saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
-    
-    // Auto-merge any newly added INITIAL_PRODUCTS that are missing in saved localStorage
-    if (saved) {
-      const savedIds = new Set(list.map((p: Product) => p._id));
-      const missing = INITIAL_PRODUCTS.filter(p => !savedIds.has(p._id));
-      if (missing.length > 0) {
-        list = [...list, ...missing];
-      }
-
-      // Update static properties like gallery for existing products from INITIAL_PRODUCTS
-      const initialMap = new Map(INITIAL_PRODUCTS.map(p => [p._id, p]));
-      list = list.map((p: Product) => {
-        const initial = initialMap.get(p._id);
-        if (initial) {
-          return { ...p, gallery: initial.gallery, title: initial.title, description: initial.description };
-        }
-        return p;
-      });
+  const [products, setProducts] = useState<Product[]>([]);
     }
 
     return list.map((p: Product, index: number) => {
@@ -170,10 +147,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   });
 
-  const [blogs, setBlogs] = useState<Blog[]>(() => {
-    const saved = localStorage.getItem('eb_blogs');
-    return saved ? JSON.parse(saved) : INITIAL_BLOGS;
-  });
+  const [blogs, setBlogs] = useState<Blog[]>([]);
 
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>(() => {
     const saved = localStorage.getItem('eb_cart');
@@ -187,61 +161,87 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
 
-  const [orders, setOrders] = useState<Order[]>(() => {
-    const saved = localStorage.getItem('eb_orders');
-    if (saved) return JSON.parse(saved);
-    
-    // Seed an order for showcases
-    return [
-      {
-        _id: 'ord_' + Math.random().toString(36).substr(2, 9),
-        items: [
-          {
-            productId: '6a099b6f6cf6409285fb55f4',
-            title: "Earring's Point 3-in-1 Combo Set – Pearl, Crystal & Butterfly Drop",
-            price: 100,
-            quantity: 2,
-            image: "https://i.ibb.co/0RS6Bnr4/image-113.jpg"
-          }
-        ],
-        total: 200,
-        status: 'pending',
-        date: '2026-06-17',
-        name: 'Zarin Tasnim',
-        email: 'user@ecobazar.com',
-        address: 'House 24, Road 5, Dhanmondi, Dhaka',
-        phone: '+8801712345678',
-        notes: 'Please deliver in the afternoon.'
-      }
-    ];
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [prodRes, userRes, blogRes, orderRes, revRes] = await Promise.all([
+          fetch('/api/products'),
+          fetch('/api/users'),
+          fetch('/api/blogs'),
+          fetch('/api/orders'),
+          fetch('/api/reviews')
+        ]);
+        if(prodRes.ok) {
+          const rawProds = await prodRes.json();
+          // Apply wholesale formatting mapping
+          const mappedProds = rawProds.map((p: Product, index: number) => {
+            let cat = p.category;
+            if (cat === 'Earrings' || cat === 'Jewelry Set' || cat === 'Kids Jewelry Sets' || cat === 'Jewellery' || cat === 'Jewelry' || cat === 'Apparel') {
+              cat = 'Fashion Accessories';
+            } else if (cat === 'Mini Fan' || cat === 'Gadget') {
+              cat = 'Smart Gadgets';
+            } else if (cat === 'Beauty' || cat === 'Fragrances') {
+              cat = 'Beauty & Personal Care';
+            } else if (cat === 'Fitness') {
+              cat = 'Fitness Products';
+            } else if (cat === 'Home Decor' || cat === 'Home & Kitchen' || cat === 'Home') {
+              cat = 'Home & Kitchen';
+            }
 
-  const [reviews, setReviews] = useState<Review[]>(() => {
-    const saved = localStorage.getItem('eb_reviews');
-    if (saved) return JSON.parse(saved);
-    
-    // Default seeded reviews
-    return [
-      {
-        _id: 'rev_1',
-        productId: '6a099b6f6cf6409285fb55f4',
-        name: 'Sadia Rahman',
-        email: 'sadia@gmail.com',
-        comment: 'Absolutely stunning! The packaging was gorgeous and the earrings feel premium and gentle on skins.',
-        rating: 5,
-        date: '2026-06-15'
-      },
-      {
-        _id: 'rev_2',
-        productId: '6a099b6f6cf6409285fb55f4',
-        name: 'Farhana Akhter',
-        email: 'farhana@gmail.com',
-        comment: 'Nice combo sets. Good value for money and very shiny crystal studs.',
-        rating: 4,
-        date: '2026-06-16'
+            const price = p.price;
+            const moq = p.moq || (price < 150 ? 20 : price < 500 ? 10 : price < 2000 ? 5 : 2);
+            
+            const supplierNames = [
+              "Guangzhou Sheng Jewelry Co., Ltd.",
+              "Yiwu EcoBreeze Electronic Appliance Factory",
+              "Zhejiang Well-Living Manufacturing Ltd.",
+              "Shenzhen CuteTech Innovations Co., Ltd.",
+              "Aparupa Ethnic Craft & Export Co.",
+              "Dhanmondi Signature Wholesalers",
+              "Ningbo Sports & Fitness Equipment Factory"
+            ];
+            const supplierName = p.supplierName || supplierNames[index % supplierNames.length];
+            const supplierRating = p.supplierRating || parseFloat((4.5 + (index % 5) * 0.1).toFixed(1));
+            const supplierResponseRate = p.supplierResponseRate || `${85 + (index % 16)}%`;
+            const supplierResponseTime = p.supplierResponseTime || (index % 2 === 0 ? "< 2h" : "< 5h");
+            const isVerifiedSupplier = p.isVerifiedSupplier !== undefined ? p.isVerifiedSupplier : (index % 3 !== 2);
+            const isTradeAssurance = p.isTradeAssurance !== undefined ? p.isTradeAssurance : true;
+
+            const priceTiers = p.priceTiers || [
+              { minQty: moq, maxQty: moq * 3, price: Math.round(price) },
+              { minQty: moq * 3 + 1, maxQty: moq * 10, price: Math.round(price * 0.9) },
+              { minQty: moq * 10 + 1, price: Math.round(price * 0.8) }
+            ];
+
+            return {
+              ...p,
+              category: cat,
+              moq,
+              supplierName,
+              supplierRating,
+              supplierResponseRate,
+              supplierResponseTime,
+              isVerifiedSupplier,
+              isTradeAssurance,
+              priceTiers
+            };
+          });
+          setProducts(mappedProds);
+        }
+        if(userRes.ok) setAllUsers(await userRes.json());
+        if(blogRes.ok) setBlogs(await blogRes.json());
+        if(orderRes.ok) setOrders(await orderRes.json());
+        if(revRes.ok) setReviews(await revRes.json());
+      } catch (err) {
+        console.error("Failed to fetch initial data", err);
       }
-    ];
-  });
+    };
+    fetchData();
+  }, []);
+
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -335,205 +335,28 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('eb_current_user', user ? JSON.stringify(user) : '');
   }, [user]);
 
-  useEffect(() => {
-    localStorage.setItem('eb_users', JSON.stringify(allUsers));
-  }, [allUsers]);
-
-  useEffect(() => {
-    localStorage.setItem('eb_products', JSON.stringify(products));
-  }, [products]);
-
-  useEffect(() => {
-    localStorage.setItem('eb_blogs', JSON.stringify(blogs));
-  }, [blogs]);
-
-  useEffect(() => {
-    localStorage.setItem('eb_cart', JSON.stringify(cart));
-  }, [cart]);
-
-  useEffect(() => {
-    localStorage.setItem('eb_wishlist', JSON.stringify(wishlist));
-  }, [wishlist]);
-
-  useEffect(() => {
-    localStorage.setItem('eb_orders', JSON.stringify(orders));
-  }, [orders]);
-
-  useEffect(() => {
-    localStorage.setItem('eb_reviews', JSON.stringify(reviews));
-  }, [reviews]);
-
   // Auth Functions
   const signIn = async (email: string, pass: string): Promise<User> => {
     setLoading(true);
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        setLoading(false);
-        // Standard check
-        const found = allUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
-        
-        if (found) {
-          // If password matches password scheme or just standard pass
-          // For sandbox simplicity, any pass works but seed checks can exist
-          setUser(found);
-          resolve(found);
-        } else {
-          // If not found, let's auto-create a user role for easy testing!
-          const name = email.split('@')[0];
-          const newUser: User = {
-            email: email.toLowerCase(),
-            name: name.charAt(0).toUpperCase() + name.slice(1),
-            role: 'user',
-            photoURL: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=faces',
-            createdAt: new Date().toISOString().split('T')[0]
-          };
-          setAllUsers(prev => [...prev, newUser]);
-          setUser(newUser);
-          resolve(newUser);
-        }
-      }, 600);
-    });
-  };
-
-  const signUp = async (email: string, name: string, pass: string, role: 'admin' | 'delivery' | 'user'): Promise<User> => {
-    setLoading(true);
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        setLoading(false);
-        const exists = allUsers.some(u => u.email.toLowerCase() === email.toLowerCase());
-        if (exists) {
-          reject(new Error('User already exists with this email address.'));
-          return;
-        }
-        const newUser: User = {
-          email: email.toLowerCase(),
-          name,
-          role,
-          photoURL: role === 'delivery' 
-            ? 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&h=100&fit=crop&crop=faces'
-            : role === 'admin'
-            ? 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=faces'
-            : 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=faces',
-          createdAt: new Date().toISOString().split('T')[0]
-        };
-        setAllUsers(prev => [...prev, newUser]);
-        setUser(newUser);
-        resolve(newUser);
-      }, 600);
-    });
-  };
-
-  const logout = () => {
-    setUser(null);
-  };
-
-  const updateProfile = (updates: Partial<User>) => {
-    if (!user) return;
-    const updated = { ...user, ...updates };
-    setUser(updated);
-    setAllUsers(prev => prev.map(u => u.email === user.email ? updated : u));
-  };
-
-  // Cart Functions
-  const addToCart = (product: Product, quantity = 1) => {
-    const finalQty = Math.max(quantity, 1);
-
-    setCart(prev => {
-      const idx = prev.findIndex(item => item.product._id === product._id);
-      if (idx !== -1) {
-        const next = [...prev];
-        next[idx] = { ...next[idx], quantity: next[idx].quantity + quantity };
-        return next;
-      }
-      return [...prev, { product, quantity: finalQty }];
-    });
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('cart-item-added'));
-      window.dispatchEvent(new CustomEvent('set-cart-drawer-state', { detail: true }));
-    }, 50);
-  };
-
-  const removeFromCart = (productId: string) => {
-    setCart(prev => prev.filter(item => item.product._id !== productId));
-  };
-
-  const updateCartQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
-      return;
-    }
-    const finalQty = Math.max(quantity, 1);
-
-    setCart(prev => prev.map(item => item.product._id === productId ? { ...item, quantity: finalQty } : item));
-  };
-
-  const clearCart = () => {
-    setCart([]);
-  };
-
-  // Wishlist Functions
-  const addToWishlist = (product: Product) => {
-    setWishlist(prev => {
-      if (prev.some(p => p._id === product._id)) return prev;
-      return [...prev, product];
-    });
-  };
-
-  const removeFromWishlist = (productId: string) => {
-    setWishlist(prev => prev.filter(p => p._id !== productId));
-  };
-
-  // Order Functions
-  const createOrder = (orderDetail: {
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-    notes?: string;
-  }): Order => {
-    const orderItems = cart.map(item => ({
-      productId: item.product._id,
-      title: item.product.title,
-      price: item.product.price,
-      quantity: item.quantity,
-      image: item.product.gallery[0] || 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=200'
-    }));
-
-    const total = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-
-    const newOrder: Order = {
-      _id: 'ord_' + Math.random().toString(36).substr(2, 9),
-      items: orderItems,
-      total,
-      status: 'pending',
-      date: new Date().toISOString().split('T')[0],
-      ...orderDetail
-    };
-
-    setOrders(prev => [newOrder, ...prev]);
-    
-    // Increment sell count of products
-    setProducts(prevProducts => {
-      return prevProducts.map(p => {
-        const purchased = cart.find(c => c.product._id === p._id);
-        if (purchased) {
-          return {
-            ...p,
-            quantity: Math.max(0, p.quantity - purchased.quantity),
-            sell_number: p.sell_number + purchased.quantity
-          };
-        }
-        return p;
+    try {
+      const res = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass })
       });
-    });
-
-    // Award loyalty points to user (1 loyalty point per ৳10 BDT spent)
-    if (user) {
-      const earnedPoints = Math.floor(total / 10);
-      if (earnedPoints > 0) {
-        setAllUsers(prev => prev.map(u => {
-          if (u.email.toLowerCase() === user.email.toLowerCase()) {
-            const updated = { ...u, loyaltyPoints: (u.loyaltyPoints || 0) + earnedPoints };
+      const data = await res.json();
+      setLoading(false);
+      if (res.ok) {
+        setUser(data);
+        return data;
+      } else {
+        throw new Error(data.error || 'Login failed');
+      }
+    } catch (err: any) {
+      setLoading(false);
+      throw err;
+    }
+  };
             setUser(updated);
             return updated;
           }
@@ -557,6 +380,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       date: new Date().toISOString().split('T')[0]
     };
     setReviews(prev => [...prev, newRev]);
+    fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newRev)
+    }).catch(console.error);
 
     // Recalculate average rating of product
     setProducts(prevProducts => {
@@ -589,6 +417,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return b;
       });
     });
+    fetch(`/api/blogs/${blogId}/comments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newComment)
+    }).catch(console.error);
   };
 
   // Product CRUD
@@ -600,10 +433,16 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       sell_number: 0
     };
     setProducts(prev => [newProd, ...prev]);
+    fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newProd)
+    }).catch(console.error);
   };
 
   const deleteProduct = (id: string) => {
     setProducts(prev => prev.filter(p => p._id !== id));
+    fetch(`/api/products/${id}`, { method: 'DELETE' }).catch(console.error);
   };
 
   const addNotificationToast = (toast: Omit<ToastNotification, '_id'>) => {
@@ -642,10 +481,16 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     }
     setProducts(prev => prev.map(p => p._id === updated._id ? updated : p));
+    fetch(`/api/products/${updated._id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated)
+    }).catch(console.error);
   };
 
   // Admin / Delivery updates
   const updateOrderStatus = (orderId: string, status: Order['status'], deliveryMan?: string, deliveryDate?: string) => {
+
     setOrders(prev => prev.map(o => {
       if (o._id === orderId) {
         return {
@@ -653,14 +498,23 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           status,
           deliveryMan: deliveryMan !== undefined ? deliveryMan : o.deliveryMan,
           deliveryDate: deliveryDate !== undefined ? deliveryDate : o.deliveryDate
-        };
+        
+    fetch(`/api/orders/${orderId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status, deliveryMan, deliveryDate })
+    }).catch(console.error);
+  };
       }
       return o;
     }));
   };
 
   const deleteOrder = (orderId: string) => {
+
     setOrders(prev => prev.map(o => o._id === orderId ? { ...o, status: 'cancelled' } : o));
+  
+    fetch(`/api/orders/${orderId}`, { method: 'DELETE' }).catch(console.error);
   };
 
   const addLoyaltyPoints = (email: string, points: number) => {
