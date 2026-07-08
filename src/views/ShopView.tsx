@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../context/StoreContext';
 import { Product } from '../types';
-import { Star, Heart, ShoppingCart, Search, SlidersHorizontal, GitCompare, X } from 'lucide-react';
+import { Star, Heart, ShoppingCart, Search, SlidersHorizontal, GitCompare, X, Eye } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface ShopViewProps {
   navigate: (path: string) => void;
@@ -30,6 +31,8 @@ export const getProductGroup = (p: Product): 'jewelry' | 'gadgets' => {
   return 'jewelry';
 };
 
+import QuickViewModal from '../components/QuickViewModal';
+
 export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
   const { products, addToCart, addToWishlist, removeFromWishlist, wishlist, searchQuery, setSearchQuery, theme, lang, currency, compareList, addToCompare, removeFromCompare } = useStore();
   
@@ -41,6 +44,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
   const [sortBy, setSortBy] = useState('popular'); // 'popular', 'price-asc', 'price-desc'
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   const categories = [
     'All',
@@ -132,9 +136,9 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
     <div className="space-y-6 pb-20">
       
       {/* Main Shop View grid with Sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="shop-layout-container grid grid-cols-1 lg:grid-cols-4 gap-8">
                {/* Sidebar Space */}
-        <aside className="hidden lg:block lg:col-span-1 space-y-6">
+        <aside className="shop-sidebar-aside hidden lg:block lg:col-span-1 space-y-6">
           <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-6 text-left">
             
             {/* Search Filter */}
@@ -388,7 +392,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
         </aside>
 
         {/* Product Listing Area */}
-        <div className="lg:col-span-3 space-y-6">
+        <div className="shop-products-area lg:col-span-3 space-y-6">
           
           {/* Sorting / Meta Header */}
           <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl px-3 py-3 sm:px-5 sm:py-3 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -399,11 +403,12 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
             <div className="flex items-center justify-between sm:justify-end gap-3">
               <button
                 onClick={() => setIsMobileFiltersOpen(true)}
-                className="lg:hidden px-3.5 py-2 bg-emerald-50 dark:bg-emerald-950/30 text-[#008D7F] hover:bg-emerald-100 dark:hover:bg-emerald-900/20 rounded-lg text-[10px] font-black transition flex items-center justify-center gap-1.5 cursor-pointer border border-emerald-100/45 h-[38px] flex-1 sm:flex-initial"
-                title="Filters"
+                style={{ touchAction: 'manipulation' }}
+                className="lg:hidden px-3.5 py-2 bg-emerald-50 dark:bg-emerald-950/30 text-[#008D7F] hover:bg-emerald-100 dark:hover:bg-emerald-900/20 rounded-lg text-[10px] font-black transition flex items-center justify-center gap-1.5 cursor-pointer border border-emerald-100/45 h-[38px] flex-1 sm:flex-initial uppercase tracking-wider"
+                title="Filters and Sorting"
               >
                 <SlidersHorizontal className="w-4 h-4 text-[#008D7F]" />
-                <span>Filters</span>
+                <span>FILTER + SORT</span>
               </button>
 
               <div className="flex items-center justify-end gap-2 flex-1 sm:flex-initial">
@@ -436,7 +441,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6 font-semibold">
+              <div className="responsive-product-grid font-semibold">
                 {sortedProducts.map((p) => {
                   const hasWish = wishlist.some(item => item._id === p._id);
                   const isCompared = compareList.some(item => item._id === p._id);
@@ -491,19 +496,29 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                         <span className="text-[11px] sm:text-xs font-black text-gray-800 dark:text-gray-200">{p.rating}</span>
                       </div>
 
-                      {/* Product Image Clickable (Fix 6: height: 120px on mobile, aspect-square) */}
+                      {/* Quick View Button at bottom right of image */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setQuickViewProduct(p);
+                        }}
+                        className="absolute bottom-1.5 right-1.5 w-11 h-11 flex items-center justify-center rounded-full shadow z-10 transition duration-200 tap-target-44 bg-white/95 dark:bg-zinc-900/95 text-gray-650 dark:text-gray-300 hover:text-emerald-500 hover:bg-white dark:hover:bg-zinc-800 backdrop-blur-sm border border-gray-100/50 dark:border-zinc-800/50 opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
+                        title={lang === 'EN' ? 'Quick View' : 'দ্রুত দেখুন'}
+                      >
+                        <Eye className="w-5.5 h-5.5" />
+                      </button>
+
+                      {/* Product Image Clickable with aspect-ratio: 4/3, object-fit: cover */}
                       <div 
                         onClick={() => navigate(`/product/${p._id}`)} 
-                        className="h-[120px] md:h-40 lg:h-44 overflow-hidden bg-gray-50 dark:bg-zinc-950 cursor-pointer relative"
+                        className="overflow-hidden bg-gray-50 dark:bg-zinc-950 cursor-pointer relative aspect-[4/3] w-full"
                       >
                         <img
                           src={p.gallery[0] || 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300'}
                           alt={p.title}
                           loading="lazy"
-                          width="300"
-                          height="180"
                           referrerPolicy="no-referrer"
-                          className="w-full h-full object-cover group-hover:scale-102 transition duration-500"
+                          className="product-card-image group-hover:scale-102 transition duration-500"
                         />
                       </div>
 
@@ -898,237 +913,259 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
 
     {/* Mobile Filters Drawer Overlay */}
     {isMobileFiltersOpen && (
-      <div className="fixed inset-0 z-50 lg:hidden flex justify-end">
-        {/* Backdrop */}
-        <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
+      <div className="fixed inset-0 z-50 lg:hidden flex justify-start">
+        {/* Backdrop with fade effect */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
           onClick={() => setIsMobileFiltersOpen(false)}
         />
         
-        {/* Drawer Body */}
-        <div className="relative w-full max-w-sm bg-white dark:bg-zinc-950 h-full overflow-y-auto p-6 shadow-2xl flex flex-col justify-between animate-slide-in-right z-50">
-          <div>
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-4 mb-6">
-              <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-[#008D7F]" />
-                <h2 className="font-display font-black text-sm text-gray-900 dark:text-white uppercase tracking-wider">
-                  Filter & Refine
-                </h2>
+        {/* Drawer Body with smooth slide-in from the left */}
+        <motion.div 
+          initial={{ x: '-100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '-100%' }}
+          transition={{ type: 'spring', damping: 26, stiffness: 220 }}
+          style={{ overscrollBehavior: 'contain' }}
+          className="relative w-full max-w-sm bg-white dark:bg-zinc-950 h-full overflow-hidden shadow-2xl flex flex-col justify-between z-50 overscroll-contain"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 p-6">
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal className="w-4 h-4 text-[#008D7F]" />
+              <h2 className="font-display font-black text-sm text-gray-900 dark:text-white uppercase tracking-wider">
+                Filter & Refine
+              </h2>
+            </div>
+            <button 
+              onClick={() => setIsMobileFiltersOpen(false)}
+              style={{ touchAction: 'manipulation' }}
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-850 rounded-full transition text-gray-400 hover:text-gray-600 tap-target-44"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 text-left">
+            {/* Search Filter */}
+            <div>
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                {lang === 'EN' ? 'Search Products' : 'পণ্য খুঁজুন'}
+              </h3>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                  <Search className="w-4 h-4" />
+                </span>
+                <input
+                  type="text"
+                  placeholder={lang === 'EN' ? 'Type to search...' : 'খুঁজতে এখানে লিখুন...'}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-gray-55 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-950 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-550 focus:outline-none focus:border-[#008D7F] focus:ring-1 focus:ring-[#008D7F] transition shadow-inner"
+                />
               </div>
-              <button 
-                onClick={() => setIsMobileFiltersOpen(false)}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-850 rounded-full transition text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
             </div>
 
-            {/* Sidebar Filters copied here */}
-            <div className="space-y-6 text-left">
-              {/* Search Filter */}
-              <div>
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-                  {lang === 'EN' ? 'Search Products' : 'পণ্য খুঁজুন'}
-                </h3>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
-                    <Search className="w-4 h-4" />
+            {/* Super Category / Product Type Option */}
+            <div className="border-t border-gray-150/40 pt-5">
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                {lang === 'EN' ? 'Jewelry & Gadgets' : 'অলঙ্কার নাকি গ্যাজেট'}
+              </h3>
+              <div className="grid grid-cols-1 gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedGroup('all');
+                    setSelectedCategory('All');
+                  }}
+                  style={{ touchAction: 'manipulation' }}
+                  className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
+                    selectedGroup === 'all'
+                      ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
+                      : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
+                  }`}
+                >
+                  <span>{lang === 'EN' ? '✨ All Collections' : '✨ সব কালেকশন'}</span>
+                  <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-mono">
+                    {products.length}
                   </span>
-                  <input
-                    type="text"
-                    placeholder={lang === 'EN' ? 'Type to search...' : 'খুঁজতে এখানে লিখুন...'}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-gray-55 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-950 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-550 focus:outline-none focus:border-[#008D7F] focus:ring-1 focus:ring-[#008D7F] transition shadow-inner"
-                  />
-                </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedGroup('jewelry');
+                    setSelectedCategory('All');
+                  }}
+                  style={{ touchAction: 'manipulation' }}
+                  className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
+                    selectedGroup === 'jewelry'
+                      ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
+                      : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
+                  }`}
+                >
+                  <span>{lang === 'EN' ? '🌸 Fine Jewelry' : '🌸 প্রিমিয়াম অলঙ্কার'}</span>
+                  <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-mono">
+                    {products.filter(p => getProductGroup(p) === 'jewelry').length}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedGroup('gadgets');
+                    setSelectedCategory('All');
+                  }}
+                  style={{ touchAction: 'manipulation' }}
+                  className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
+                    selectedGroup === 'gadgets'
+                      ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
+                      : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
+                  }`}
+                >
+                  <span>{lang === 'EN' ? '⚡ Handy Gadgets' : '⚡ স্মার্ট গ্যাজেটস'}</span>
+                  <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-mono">
+                    {products.filter(p => getProductGroup(p) === 'gadgets').length}
+                  </span>
+                </button>
               </div>
+            </div>
 
-              {/* Super Category / Product Type Option */}
-              <div className="border-t border-gray-150/40 pt-5">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-                  {lang === 'EN' ? 'Jewelry & Gadgets' : 'অলঙ্কার নাকি গ্যাজেট'}
-                </h3>
-                <div className="grid grid-cols-1 gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedGroup('all');
-                      setSelectedCategory('All');
-                    }}
-                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
-                      selectedGroup === 'all'
-                        ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
-                        : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
-                    }`}
-                  >
-                    <span>{lang === 'EN' ? '✨ All Collections' : '✨ সব কালেকশন'}</span>
-                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-mono">
-                      {products.length}
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedGroup('jewelry');
-                      setSelectedCategory('All');
-                    }}
-                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
-                      selectedGroup === 'jewelry'
-                        ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
-                        : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
-                    }`}
-                  >
-                    <span>{lang === 'EN' ? '🌸 Fine Jewelry' : '🌸 প্রিমিয়াম অলঙ্কার'}</span>
-                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-mono">
-                      {products.filter(p => getProductGroup(p) === 'jewelry').length}
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedGroup('gadgets');
-                      setSelectedCategory('All');
-                    }}
-                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
-                      selectedGroup === 'gadgets'
-                        ? 'bg-emerald-50 border-emerald-100 text-[#008D7F]'
-                        : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-55 hover:text-gray-700'
-                    }`}
-                  >
-                    <span>{lang === 'EN' ? '⚡ Handy Gadgets' : '⚡ স্মার্ট গ্যাজেটস'}</span>
-                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md font-mono">
-                      {products.filter(p => getProductGroup(p) === 'gadgets').length}
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Sub-Categories List Section */}
-              <div className="border-t border-gray-150/40 pt-5">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                  {lang === 'EN' ? 'Sub Categories' : 'ক্যাটাগরি'}
-                </h3>
-                <div className="flex flex-col gap-1.5">
-                  {categories
-                    .filter(cat => {
-                      if (cat === 'All') return true;
-                      if (selectedGroup === 'jewelry') return cat !== 'Smart Gadgets';
-                      if (selectedGroup === 'gadgets') return cat === 'Smart Gadgets';
-                      return true;
-                    })
-                    .map((cat) => {
-                      const isSel = selectedCategory === cat;
-                      const catCount = products.filter(p => {
-                        const matchesGroup = selectedGroup === 'all' || getProductGroup(p) === selectedGroup;
-                        const matchesCat = cat === 'All' || p.category === cat;
-                        return matchesGroup && matchesCat;
-                      }).length;
-
-                      return (
-                        <button
-                          key={cat}
-                          type="button"
-                          onClick={() => setSelectedCategory(cat)}
-                          className={`w-full text-left px-3.5 py-2 rounded-xl text-xs font-bold transition duration-150 flex items-center justify-between ${
-                            isSel 
-                              ? 'bg-emerald-950/5 text-[#008D7F] border border-emerald-100/60 font-black' 
-                              : 'bg-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700 border border-transparent'
-                          }`}
-                        >
-                          <span>{cat === 'All' ? (lang === 'EN' ? 'All Classes' : 'সব বিভাগ') : cat}</span>
-                          <span className="text-[10px] text-gray-400 font-semibold">{catCount}</span>
-                        </button>
-                      );
-                    })}
-                </div>
-              </div>
-
-              {/* Brand Filter Checklist */}
-              <div className="border-t border-gray-150/40 pt-5">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-                  {lang === 'EN' ? 'Filter by Brand' : 'ব্র্যান্ড দিয়ে খুঁজুন'}
-                </h3>
-                <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
-                  {allBrands.map((brand) => {
-                    const isChecked = selectedBrands.includes(brand);
-                    const brandCount = products.filter(p => {
+            {/* Sub-Categories List Section */}
+            <div className="border-t border-gray-150/40 pt-5">
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                {lang === 'EN' ? 'Sub Categories' : 'ক্যাটাগরি'}
+              </h3>
+              <div className="flex flex-col gap-1.5">
+                {categories
+                  .filter(cat => {
+                    if (cat === 'All') return true;
+                    if (selectedGroup === 'jewelry') return cat !== 'Smart Gadgets';
+                    if (selectedGroup === 'gadgets') return cat === 'Smart Gadgets';
+                    return true;
+                  })
+                  .map((cat) => {
+                    const isSel = selectedCategory === cat;
+                    const catCount = products.filter(p => {
                       const matchesGroup = selectedGroup === 'all' || getProductGroup(p) === selectedGroup;
-                      const matchesCat = selectedCategory === 'All' || p.category === selectedCategory;
-                      return matchesGroup && matchesCat && getProductBrand(p) === brand;
+                      const matchesCat = cat === 'All' || p.category === cat;
+                      return matchesGroup && matchesCat;
                     }).length;
 
                     return (
-                      <label
-                        key={brand}
-                        className="flex items-center justify-between cursor-pointer group py-0.5"
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setSelectedCategory(cat)}
+                        style={{ touchAction: 'manipulation' }}
+                        className={`w-full text-left px-3.5 py-2 rounded-xl text-xs font-bold transition duration-150 flex items-center justify-between ${
+                          isSel 
+                            ? 'bg-emerald-950/5 text-[#008D7F] border border-emerald-100/60 font-black' 
+                            : 'bg-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700 border border-transparent'
+                        }`}
                       >
-                        <div className="flex items-center gap-2.5">
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => {
-                              setSelectedBrands(prev => 
-                                prev.includes(brand) 
-                                  ? prev.filter(b => b !== brand) 
-                                  : [...prev, brand]
-                              );
-                            }}
-                            className="w-4 h-4 rounded text-[#008D7F] focus:ring-[#008D7F] border-gray-300 transition cursor-pointer accent-[#008D7F]"
-                          />
-                          <span className={`text-xs transition ${
-                            isChecked ? 'text-gray-900 font-bold' : 'text-gray-600 group-hover:text-gray-900'
-                          }`}>
-                            {brand}
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-gray-400 font-mono">
-                          ({brandCount})
-                        </span>
-                      </label>
+                        <span>{cat === 'All' ? (lang === 'EN' ? 'All Classes' : 'সব বিভাগ') : cat}</span>
+                        <span className="text-[10px] text-gray-400 font-semibold">{catCount}</span>
+                      </button>
                     );
                   })}
-                </div>
               </div>
+            </div>
 
-              {/* Price Filter Section */}
-              <div className="border-t border-gray-150/40 pt-5">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-                  {lang === 'EN' ? 'Filter by Price' : 'মূল্য দিয়ে খুঁজুন'}
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between text-[11px] font-bold text-gray-500">
-                    <span>Min: {convertPrice(minPrice)}</span>
-                    <span>Max: {convertPrice(maxPrice)}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max={maxPossiblePrice}
-                    step="10"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(Number(e.target.value))}
-                    className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#008D7F]"
-                  />
+            {/* Brand Filter Checklist */}
+            <div className="border-t border-gray-150/40 pt-5">
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                {lang === 'EN' ? 'Filter by Brand' : 'ব্র্যান্ড দিয়ে খুঁজুন'}
+              </h3>
+              <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                {allBrands.map((brand) => {
+                  const isChecked = selectedBrands.includes(brand);
+                  const brandCount = products.filter(p => {
+                    const matchesGroup = selectedGroup === 'all' || getProductGroup(p) === selectedGroup;
+                    const matchesCat = selectedCategory === 'All' || p.category === selectedCategory;
+                    return matchesGroup && matchesCat && getProductBrand(p) === brand;
+                  }).length;
+
+                  return (
+                    <label
+                      key={brand}
+                      className="flex items-center justify-between cursor-pointer group py-0.5"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => {
+                            setSelectedBrands(prev => 
+                              prev.includes(brand) 
+                                ? prev.filter(b => b !== brand) 
+                                : [...prev, brand]
+                            );
+                          }}
+                          className="w-4 h-4 rounded text-[#008D7F] focus:ring-[#008D7F] border-gray-300 transition cursor-pointer accent-[#008D7F]"
+                        />
+                        <span className={`text-xs transition ${
+                          isChecked ? 'text-gray-900 font-bold' : 'text-gray-600 group-hover:text-gray-900'
+                        }`}>
+                          {brand}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-gray-400 font-mono">
+                        ({brandCount})
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Price Filter Section */}
+            <div className="border-t border-gray-150/40 pt-5">
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                {lang === 'EN' ? 'Filter by Price' : 'মূল্য দিয়ে খুঁজুন'}
+              </h3>
+              <div className="space-y-4 font-semibold text-xs">
+                <div className="flex items-center justify-between text-[11px] font-bold text-gray-500">
+                  <span>Min: {convertPrice(minPrice)}</span>
+                  <span>Max: {convertPrice(maxPrice)}</span>
                 </div>
+                <input
+                  type="range"
+                  min="0"
+                  max={maxPossiblePrice}
+                  step="10"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#008D7F]"
+                />
               </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-100 dark:border-zinc-800 pt-4 mt-6">
+          {/* Sticky Bottom Footer with Apply button */}
+          <div className="border-t border-gray-100 dark:border-zinc-800 p-6 bg-white dark:bg-zinc-950 sticky bottom-0 z-10 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
             <button
               onClick={() => setIsMobileFiltersOpen(false)}
+              style={{ touchAction: 'manipulation' }}
               className="w-full py-3.5 bg-[#008D7F] text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md hover:bg-[#00B894] cursor-pointer"
             >
-              Apply ({sortedProducts.length} Products)
+              Apply Filters ({sortedProducts.length} Products)
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
     )}
 
+    <QuickViewModal
+      product={quickViewProduct}
+      isOpen={!!quickViewProduct}
+      onClose={() => setQuickViewProduct(null)}
+      navigate={navigate}
+    />
     </div>
   );
 };

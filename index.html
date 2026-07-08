@@ -2,18 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <title>My Google AI Studio App</title>
     <script>
       (function() {
         try {
           var saved = localStorage.getItem('ecobazar-theme');
+          var isDark = false;
           if (saved === 'dark') {
-            document.documentElement.classList.add('dark');
+            isDark = true;
           } else if (saved === 'light') {
-            document.documentElement.classList.remove('dark');
+            isDark = false;
           } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            // Defaulting safely if they want, but let's stick strictly to user choice or light by default
+            isDark = true;
+          }
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
           }
         } catch (e) {}
       })();

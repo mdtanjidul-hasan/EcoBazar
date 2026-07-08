@@ -7,6 +7,7 @@ import {
   ChevronLeft, ChevronRight, Percent
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import QuickViewModal from '../components/QuickViewModal';
 
 interface HomeViewProps {
   navigate: (path: string) => void;
@@ -695,7 +696,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
               <Zap className="w-3.5 h-3.5 fill-[#008D7F] animate-bounce text-[#008D7F]" /> {t.flashSale}
             </div>
             
-            <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#1E293B] dark:text-white leading-tight tracking-tight">
+            <h1 className="hero-catalog-heading font-display text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#1E293B] dark:text-white leading-tight tracking-tight">
               {t.headline.split(' ').slice(0, 3).join(' ')} <br />
               <span className="text-[#008D7F]">
                 {t.headline.split(' ').slice(3).join(' ')}
@@ -1044,16 +1045,20 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
                   <img
                     src={p.gallery[0]}
                     alt={p.title}
+                    loading="lazy"
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   
                   {/* Quick View Cover Trigger */}
-                  <div className="absolute inset-0 bg-[#1E293B]/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-                    <span className="pointer-events-auto px-4 py-2 bg-white/90 backdrop-blur-sm hover:bg-white text-slate-800 hover:text-[#008D7F] text-xs font-extrabold rounded-xl shadow-lg flex items-center gap-1.5 transform translate-y-4 group-hover:translate-y-0 transition duration-300">
+                  <div className="absolute inset-0 bg-[#1E293B]/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none z-20">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setQuickViewProduct(p); }}
+                      className="pointer-events-auto px-4 py-2 bg-white/90 backdrop-blur-sm hover:bg-white text-slate-800 hover:text-[#008D7F] text-xs font-extrabold rounded-xl shadow-lg flex items-center gap-1.5 transform translate-y-4 group-hover:translate-y-0 transition duration-300"
+                    >
                       <Eye className="w-4 h-4" />
                       Quick View
-                    </span>
+                    </button>
                   </div>
                 </div>
 
@@ -1310,115 +1315,12 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       </section>
 
       {/* Quick View Modal Popup */}
-      <AnimatePresence>
-        {quickViewProduct && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setQuickViewProduct(null)}
-              className="absolute inset-0 bg-[#1E293B]/70 backdrop-blur-sm"
-            ></motion.div>
-
-            {/* Modal Body */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white dark:bg-zinc-900 rounded-[24px] overflow-y-auto max-h-[90vh] max-w-3xl w-full p-4 sm:p-8 relative z-10 shadow-2xl border border-slate-150 dark:border-zinc-800 text-left grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8"
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => setQuickViewProduct(null)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 text-[#1E293B] dark:text-white transition z-20"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {/* Left Column Image */}
-              <div className="space-y-4">
-                <div className="h-48 sm:h-72 overflow-hidden rounded-2xl bg-slate-150 dark:bg-zinc-950">
-                  <img
-                    src={quickViewProduct.gallery[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600'}
-                    alt={quickViewProduct.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  {quickViewProduct.gallery.slice(0, 3).map((img, i) => (
-                    <div key={i} className="w-16 h-16 rounded-lg overflow-hidden bg-slate-50 border border-slate-100">
-                      <img src={img} alt="thumbnail" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right Column Details */}
-              <div className="flex flex-col space-y-4 justify-between">
-                <div className="space-y-2">
-                  <span className="text-[10px] font-bold text-[#00B894] uppercase tracking-widest bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-md">
-                    {quickViewProduct.category}
-                  </span>
-                  <h2 className="font-display font-extrabold text-xl text-[#1E293B]">
-                    {quickViewProduct.title}
-                  </h2>
-                  
-                  {/* Stars Info */}
-                  <div className="flex items-center gap-1">
-                    <div className="flex text-amber-400">
-                      <Star className="w-4.5 h-4.5 fill-current" />
-                      <Star className="w-4.5 h-4.5 fill-current" />
-                      <Star className="w-4.5 h-4.5 fill-current" />
-                      <Star className="w-4.5 h-4.5 fill-current" />
-                      <Star className="w-4.5 h-4.5 fill-current" />
-                    </div>
-                    <span className="text-xs font-black text-[#1E293B]">({quickViewProduct.rating} / 5.0)</span>
-                  </div>
-
-                  <p className="text-xs text-slate-500 leading-relaxed font-semibold">
-                    {quickViewProduct.description}
-                  </p>
-                </div>
-
-                <div className="space-y-4 pt-4 border-t border-slate-100">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-sm font-bold text-slate-400 line-through">
-                      {getOriginalPrice(quickViewProduct.price)}
-                    </span>
-                    <span className="text-2xl font-black font-display text-[#00B894]">
-                      {convertPrice(quickViewProduct.price)}
-                    </span>
-                  </div>
-
-                  <div className="flex gap-4">
-                    <button
-                      onClick={() => {
-                        addToCart(quickViewProduct, 1);
-                        setQuickViewProduct(null);
-                      }}
-                      className="flex-1 py-3 bg-[#00B894] hover:bg-[#008D7F] text-white font-extrabold rounded-xl transition shadow-md shadow-emerald-700/5 uppercase tracking-wide text-xs flex items-center justify-center gap-1.5"
-                    >
-                      <ShoppingCart className="w-4.5 h-4.5" />
-                      Add to basket
-                    </button>
-                    <button
-                      onClick={() => {
-                        addToWishlist(quickViewProduct);
-                      }}
-                      className="p-3 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-rose-500 rounded-xl transition border border-slate-250"
-                    >
-                      <Heart className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      <QuickViewModal
+        product={quickViewProduct}
+        isOpen={!!quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+        navigate={navigate}
+      />
 
       {/* Exit Intent Coupon Popup */}
       <AnimatePresence>
