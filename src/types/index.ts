@@ -1,3 +1,11 @@
+export interface Category {
+  _id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  productCount?: number;
+}
+
 export interface Product {
   _id: string;
   title: string;
@@ -8,11 +16,11 @@ export interface Product {
   currency?: string;
   quantity: number;
   sell_number?: number;
+  sellNumber?: number;
   gallery: string[];
   description: string;
   colors?: string[];
   dan?: string;
-  sellNumber?: number;
   moq?: number;
   supplierName?: string;
   supplierRating?: number;
@@ -53,15 +61,17 @@ export interface User {
   loyaltyPoints?: number;
 }
 
+export interface OrderItem {
+  productId: string;
+  title: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
+
 export interface Order {
   _id: string;
-  items: {
-    productId: string;
-    title: string;
-    price: number;
-    quantity: number;
-    image: string;
-  }[];
+  items: OrderItem[];
   total: number;
   status: 'pending' | 'onTheWay' | 'completed' | 'cancelled';
   deliveryMan?: string;
@@ -94,4 +104,9 @@ export interface ToastNotification {
     oldPrice: number;
     newPrice: number;
   };
+}
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
 }

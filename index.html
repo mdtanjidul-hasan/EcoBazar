@@ -2,8 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <title>My Google AI Studio App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>EcoBazar - Handcrafted Jewelry and Gadgets Store</title>
+
+    <!--
+      CONTENT SECURITY POLICY & SECURITY HEADERS DOCUMENTATION
+      - default-src 'self': Restricts asset loads to our origin by default.
+      - script-src: Restricts JS execution to trusted paths to prevent arbitrary dynamic scripts or ad injection.
+      - style-src & font-src: Restricts styling and typography to self and Google Fonts.
+      - img-src: Safely allows self-hosted and secure https images, data URLs, and blobs.
+      - connect-src: Restricts network requests to self-origin, Anthropic, and form submissions.
+      - frame-src & object-src 'none': Completely prevents frame / flash / object injection.
+      - X-Frame-Options and X-Content-Type-Options are applied via meta and server level to block clickjacking and mime sniffing.
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://formsubmit.co https://www.emailjs.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://api.anthropic.com https://formsubmit.co; frame-src 'none'; object-src 'none';">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
     <script>
       (function() {
         try {
@@ -22,6 +37,87 @@
             document.documentElement.classList.remove('dark');
           }
         } catch (e) {}
+      })();
+
+      // Ad-blocker & Anti-Injection proactive protection system
+      (function() {
+        // Safe check function to see if element is from our trusted React application
+        function isUntrusted(node) {
+          if (!node || node.nodeType !== 1) return false;
+          
+          var tag = node.tagName.toLowerCase();
+          
+          // Script or iframe tags are highly suspicious if injected dynamically after load
+          if (tag === 'script' || tag === 'iframe') {
+            var src = node.getAttribute('src') || '';
+            if (src && (src.includes('src/main.tsx') || src.includes('vite') || src.includes('react-example'))) {
+              return false;
+            }
+            return true;
+          }
+
+          var id = (node.id || '').toLowerCase();
+          var className = '';
+          if (node.classList) {
+            className = Array.from(node.classList).join(' ').toLowerCase();
+          } else if (node.className) {
+            className = String(node.className).toLowerCase();
+          }
+
+          var keywords = ['ad', 'ads', 'advertisement', 'temu', 'sponsored', 'promo', 'banner'];
+          for (var i = 0; i < keywords.length; i++) {
+            var kw = keywords[i];
+            if (id.includes(kw) || className.includes(kw)) {
+              var rootEl = document.getElementById('root');
+              if (rootEl) {
+                var isOutsideRoot = !rootEl.contains(node);
+                if (isOutsideRoot) {
+                  return true;
+                }
+              }
+              var hasReactKey = Object.keys(node).some(function(k) { return k.startsWith('__reactFiber$') || k.startsWith('__reactContainer$'); });
+              if (!hasReactKey && (tag === 'iframe' || tag === 'script')) {
+                return true;
+              }
+            }
+          }
+          return false;
+        }
+
+        // MutationObserver to track any dynamic body/head additions
+        var observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+              if (isUntrusted(node)) {
+                console.warn('[EcoBazar Shield] Intercepted and blocked third-party ad element injection:', node);
+                node.remove();
+              } else if (node.querySelectorAll) {
+                var badChildren = node.querySelectorAll('iframe, script, [id*="ad"], [id*="temu"], [class*="ad"], [class*="temu"]');
+                badChildren.forEach(function(child) {
+                  if (isUntrusted(child)) {
+                    console.warn('[EcoBazar Shield] Intercepted and blocked third-party ad child injection:', child);
+                    child.remove();
+                  }
+                });
+              }
+            });
+          });
+        });
+
+        // Start observing document early
+        if (document.documentElement) {
+          observer.observe(document.documentElement, { childList: true, subtree: true });
+        }
+
+        // Global Error Handler to catch third-party script crashes
+        window.onerror = function(message, source, lineno, colno, error) {
+          console.error('[EcoBazar Shield] Caught and handled runtime script error safely:', {
+            message: message,
+            source: source,
+            line: lineno
+          });
+          return true;
+        };
       })();
     </script>
   </head>

@@ -4,10 +4,11 @@ import { Product, Blog } from '../types';
 import { 
   ArrowRight, Star, Leaf, Award, ShieldCheck, Heart, ShoppingCart, 
   Eye, Zap, Flame, Users, ShieldAlert, Sparkles, X, Gift, CheckCircle,
-  ChevronLeft, ChevronRight, Percent
+  ChevronLeft, ChevronRight, Percent, Lock, CreditCard, Truck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import QuickViewModal from '../components/QuickViewModal';
+import { AmazonStarRating } from '../components/AmazonStarRating';
 
 interface HomeViewProps {
   navigate: (path: string) => void;
@@ -15,7 +16,7 @@ interface HomeViewProps {
 
 const premiumPosters = [
   {
-    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80",
+    image: "https://raw.githubusercontent.com/mdtanjidul-hasan/Frame/main/WhatsApp%20Image%202026-07-01%20at%2011.35.12%20PM.jpeg",
     title: "Chandelia Shimmer",
     subtitle: "Concentric Silver Hoops",
     tag: "ROYAL EDITION",
@@ -24,7 +25,7 @@ const premiumPosters = [
     target: "/shop"
   },
   {
-    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80",
+    image: "https://raw.githubusercontent.com/mdtanjidul-hasan/Frame/main/WhatsApp%20Image%202026-07-01%20at%2011.35.26%20PM.jpeg",
     title: "Symphony of Blue",
     subtitle: "Sapphire Crystal Choker",
     tag: "IMPERIAL COLLECTION",
@@ -33,7 +34,7 @@ const premiumPosters = [
     target: "/shop"
   },
   {
-    image: "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=800&q=80",
+    image: "https://raw.githubusercontent.com/mdtanjidul-hasan/Frame/main/WhatsApp%20Image%202026-07-01%20at%2011.35.26%20PM%20(1).jpeg",
     title: "The Carbon Epoch",
     subtitle: "EcoFit Smart Wearables",
     tag: "EXQUISITE TECH",
@@ -42,12 +43,12 @@ const premiumPosters = [
     target: "/shop"
   },
   {
-    image: "https://images.unsplash.com/photo-1616627547584-bf28cee262db?w=800&q=80",
-    title: "Botanical Serenity",
-    subtitle: "Glow Jade Facial Quartz",
-    tag: "NATURAL THERAPEUTICS",
-    desc: "Sculpted from selected mineral jadeite to enrich skin vibrancy and holistic wellness.",
-    badge: "Certified Mineral",
+    image: "https://raw.githubusercontent.com/mdtanjidul-hasan/Frame/main/WhatsApp%20Image%202026-07-01%20at%2011.35.26%20PM%20(2).jpeg",
+    title: "Luxe Timepieces & Gems",
+    subtitle: "Modern Aesthetic Precision",
+    tag: "PREMIUM SELECTION",
+    desc: "Curated accessories showcasing brilliant craft, state-of-the-art materials, and style.",
+    badge: "Elite Curation",
     target: "/shop"
   }
 ];
@@ -72,26 +73,26 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
   // Translations matching Arabic, French, Spanish and English standard dropship requirements
   const t = {
     EN: {
-      headline: '⚡️ Shop Like a Billionaire!',
-      subheadline: 'Direct factory outlet deals, trending smart gadgets, jewelry combos, and home essentials with free shipping worldwide.',
+      headline: 'Premium Jewelry & Gadget Deals',
+      subheadline: 'Direct artisan deals, trending smart gadgets, jewelry combos, and home essentials with free shipping worldwide.',
       shopNow: 'Shop Super Deals',
       bestSellers: 'Best Sellers',
-      flashSale: '⚡️ TEMU LIGHTNING DEALS',
+      flashSale: 'EXCLUSIVE DEALS',
       endsIn: 'Ends in',
       categoriesHeading: 'Best Categories',
       categoriesSub: 'Curated direct-from-manufacturer selections with massive price drops.',
-      trendingHeading: 'Lightning Deals Grid',
+      trendingHeading: 'Trending Products',
       trendingSub: 'Take a glance at our highest-converting global signature items.',
       whyUs: 'Direct Sourcing Advantage',
       artisanText: 'We partner directly with over 10,000+ top-tier global manufacturers to eliminate middleman margins, passing massive discounts directly down to you.',
-      blogHeading: 'Temu Fashion & Tech Guides',
+      blogHeading: 'EcoBazar Fashion & Tech Guides',
       blogSub: 'Follow smart consumer hacks, product guides, and modern lifestyle trends.',
       recentlyViewed: 'Recently Viewed Collection',
       spendMore: 'Free shipping on all items! 90-day free returns.',
       hours: 'h', mins: 'm', secs: 's',
-      hookBadge: '⚡️ SUPER DISCOUNT CODE CLAIM',
+      hookBadge: 'SUPER DISCOUNT CODE CLAIM',
       hookHeading: 'Blink And You\'ll Miss Them! Grab Up to 90% OFF Now.',
-      hookParagraph: 'Join millions of active smart shoppers on Temu. Our logistics network guarantees lightning-fast tracked delivery directly to your doorstep. Don\'t overpay on secondary retail stores.',
+      hookParagraph: 'Join millions of active smart shoppers on EcoBazar. Our logistics network guarantees fast tracked delivery directly to your doorstep. Don\'t overpay on secondary retail stores.',
       hookCTA: 'Claim Extra 90% OFF'
     },
     AR: {
@@ -164,26 +165,26 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       hookCTA: 'Reclama Tu Pieza de Colección'
     }
   }[lang] || {
-    headline: '⚡️ Shop Like a Billionaire!',
-    subheadline: 'Direct factory outlet deals, trending smart gadgets, jewelry combos, and home essentials with free shipping worldwide.',
+    headline: 'Premium Jewelry & Gadget Deals',
+    subheadline: 'Direct artisan deals, trending smart gadgets, jewelry combos, and home essentials with free shipping worldwide.',
     shopNow: 'Shop Super Deals',
     bestSellers: 'Best Sellers',
-    flashSale: '⚡️ TEMU LIGHTNING DEALS',
+    flashSale: 'EXCLUSIVE DEALS',
     endsIn: 'Ends in',
     categoriesHeading: 'Best Categories',
     categoriesSub: 'Curated direct-from-manufacturer selections with massive price drops.',
-    trendingHeading: 'Lightning Deals Grid',
+    trendingHeading: 'Trending Products',
     trendingSub: 'Take a glance at our highest-converting global signature items.',
     whyUs: 'Direct Sourcing Advantage',
     artisanText: 'We partner directly with over 10,000+ top-tier global manufacturers to eliminate middleman margins, passing massive discounts directly down to you.',
-    blogHeading: 'Temu Fashion & Tech Guides',
+    blogHeading: 'EcoBazar Fashion & Tech Guides',
     blogSub: 'Follow smart consumer hacks, product guides, and modern lifestyle trends.',
     recentlyViewed: 'Recently Viewed Collection',
     spendMore: 'Free shipping on all items! 90-day free returns.',
     hours: 'h', mins: 'm', secs: 's',
-    hookBadge: '⚡️ SUPER DISCOUNT CODE CLAIM',
+    hookBadge: 'SUPER DISCOUNT CODE CLAIM',
     hookHeading: 'Blink And You\'ll Miss Them! Grab Up to 90% OFF Now.',
-    hookParagraph: 'Join millions of active smart shoppers on Temu. Our logistics network guarantees lightning-fast tracked delivery directly to your doorstep. Don\'t overpay on secondary retail stores.',
+    hookParagraph: 'Join millions of active smart shoppers on EcoBazar. Our logistics network guarantees fast tracked delivery directly to your doorstep. Don\'t overpay on secondary retail stores.',
     hookCTA: 'Claim Extra 90% OFF'
   };
 
@@ -204,40 +205,46 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
     }
   };
 
-  // Dynamic ticking countdown banner
-  const [timeLeft, setTimeLeft] = useState({ hours: 14, minutes: 28, seconds: 45 });
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return { hours: 12, minutes: 0, seconds: 0 };
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Auto-scrolling featured products inside the right corner marketing section
-  const [featuredIndex, setFeaturedIndex] = useState(0);
-  useEffect(() => {
-    if (!products || products.length === 0) return;
-    const interval = setInterval(() => {
-      setFeaturedIndex(prev => (prev + 1) % Math.min(products.length, 6));
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [products]);
-
-  // Premium auto-scrolling poster frames
+  // Premium auto-scrolling poster carousel state
   const [posterIndex, setPosterIndex] = useState(0);
-  const [isPosterAutoplay, setIsPosterAutoplay] = useState(true);
+
+  // Auto-scrolling interval: slide transition every 4 seconds
   useEffect(() => {
-    if (!isPosterAutoplay) return;
     const interval = setInterval(() => {
       setPosterIndex(prev => (prev + 1) % premiumPosters.length);
-    }, 4500); // 4.5 seconds per poster
+    }, 4000);
     return () => clearInterval(interval);
-  }, [isPosterAutoplay]);
+  }, [posterIndex]);
+
+  // Touch Swipe Gesture Support for mobile devices
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    // Require minimum 50px swipe distance
+    if (diff > 50) {
+      // Swipe left -> Next slide
+      setPosterIndex(prev => (prev + 1) % premiumPosters.length);
+    } else if (diff < -50) {
+      // Swipe right -> Previous slide
+      setPosterIndex(prev => (prev - 1 + premiumPosters.length) % premiumPosters.length);
+    }
+    setTouchStartX(null);
+  };
+
+  const prevSlide = () => {
+    setPosterIndex(prev => (prev - 1 + premiumPosters.length) % premiumPosters.length);
+  };
+
+  const nextSlide = () => {
+    setPosterIndex(prev => (prev + 1) % premiumPosters.length);
+  };
 
   // Exit Intent Popup Checker
   useEffect(() => {
@@ -338,554 +345,96 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
   return (
     <div className="space-y-8 md:space-y-10 pb-16 overflow-x-hidden">
 
-      {/* Top Banner Notice - High-Impact 25% Off Discount Product Spotlight (Replaces Free Shipping Banner) */}
-      {products && products.length > 0 && (() => {
-        const discountProduct = products[1] || products[0];
-        const originalPrice = Math.round(discountProduct.price / 0.75);
-        const savedAmount = originalPrice - discountProduct.price;
 
-        return (
-          <div className="px-4 sm:px-8 mt-4 max-w-7xl mx-auto">
-            <motion.div
-              id="exclusive-discount-spotlight"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="relative overflow-hidden rounded-[24px] bg-gradient-to-r from-emerald-500/15 via-teal-500/5 to-transparent dark:from-emerald-950/25 dark:via-teal-950/10 backdrop-blur-md border border-emerald-500/35 dark:border-emerald-500/20 shadow-[0_12px_40px_rgba(16,185,129,0.08)] p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-6"
-            >
-              {/* Background abstract glowing shapes */}
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none animate-pulse" />
-              <div className="absolute top-1/2 right-12 -translate-y-1/2 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
 
-              {/* Left Column: Product Image & Floating Tag */}
-              <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto relative z-10">
-                <div 
-                  className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-white dark:bg-zinc-950 border border-emerald-500/25 shadow-md flex-shrink-0 cursor-pointer group"
-                  onClick={() => navigate(`/product/${discountProduct._id}`)}
-                >
-                  <img
-                    src={discountProduct.gallery?.[0]}
-                    alt={discountProduct.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute top-1 left-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded shadow-sm">
-                    25% OFF
-                  </div>
-                </div>
 
-                <div className="text-center sm:text-left space-y-1">
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 rounded-full text-[8.5px] font-extrabold tracking-wider uppercase">
-                      <Percent className="w-2.5 h-2.5" />
-                      {lang === 'EN' ? 'HOT SPOTLIGHT DEAL' : 
-                       lang === 'AR' ? 'عرض مذهل' : 
-                       lang === 'FR' ? 'OFFRE CHOC' : 'OFERTA DESTACADA'}
-                    </span>
-                    <span className="text-[8.5px] font-black uppercase text-gray-400 dark:text-gray-500 tracking-widest">
-                      {discountProduct.category}
-                    </span>
-                  </div>
 
-                  <h3 
-                    className="font-display font-extrabold text-sm sm:text-base text-slate-900 dark:text-white hover:text-emerald-600 transition cursor-pointer leading-snug line-clamp-2 max-w-md"
-                    onClick={() => navigate(`/product/${discountProduct._id}`)}
-                  >
-                    {discountProduct.title}
-                  </h3>
 
-                  <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs text-emerald-600">
-                    <div className="flex items-center text-emerald-400">
-                      {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={`w-3 h-3 ${
-                            i < Math.floor(discountProduct.rating) 
-                              ? 'fill-emerald-400 text-emerald-400' 
-                              : 'text-gray-300 dark:text-gray-700'
-                          }`} 
-                        />
-                      ))}
-                    </div>
-                    <span className="text-[10px] font-extrabold text-slate-500 dark:text-slate-400">
-                      ({discountProduct.rating} / 5.0)
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Pricing & Purchase Button */}
-              <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto justify-end relative z-10 border-t border-dashed border-gray-200 dark:border-zinc-800 md:border-0 pt-3 md:pt-0">
-                <div className="text-center sm:text-right space-y-0.5">
-                  <div className="text-[9px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-black">
-                    {lang === 'EN' ? 'LIMITED OFFER PRICE' : 
-                     lang === 'AR' ? 'سعر العرض المحدود' : 
-                     lang === 'FR' ? 'PRIX DE L\'OFFRE' : 'PRECIO DE OFERTA'}
-                  </div>
-                  <div className="flex items-baseline justify-center sm:justify-end gap-2">
-                    <span className="text-xs text-gray-400 line-through font-extrabold">
-                      {formatPrice(originalPrice)}
-                    </span>
-                    <span className="text-xl sm:text-2xl font-display font-black text-emerald-600">
-                      {formatPrice(discountProduct.price)}
-                    </span>
-                  </div>
-                  <div className="text-[9.5px] font-bold text-emerald-600 dark:text-emerald-400">
-                    {lang === 'EN' ? `You save ${formatPrice(savedAmount)} (25% Off)` : 
-                     lang === 'AR' ? `وفرت ${formatPrice(savedAmount)} (خصم ٢٥٪)` : 
-                     lang === 'FR' ? `Économisez ${formatPrice(savedAmount)}` : `Ahorras ${formatPrice(savedAmount)} (25% Dto)`}
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-1.5 w-full sm:w-auto min-w-[140px]">
-                  <button
-                    onClick={() => {
-                      addToCart(discountProduct, 1);
-                    }}
-                    className="w-full px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 active:scale-95 text-white font-black text-[10px] uppercase tracking-wider rounded-lg transition duration-300 flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 cursor-pointer"
-                  >
-                    <ShoppingCart className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-                    {lang === 'EN' ? 'Add To Cart' : 
-                     lang === 'AR' ? 'أضف إلى السلة' : 
-                     lang === 'FR' ? 'Ajouter au panier' : 'Añadir al Carrito'}
-                  </button>
-                  <button
-                    onClick={() => navigate(`/product/${discountProduct._id}`)}
-                    className="w-full px-3 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 font-bold text-[9px] uppercase tracking-wider rounded-md transition text-center cursor-pointer"
-                  >
-                    {lang === 'EN' ? 'View Details' : 
-                     lang === 'AR' ? 'عرض التفاصيل' : 
-                     lang === 'FR' ? 'Voir les détails' : 'Ver Detalles'}
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        );
-      })()}
-
-      {/* HIGH-IMPACT MARKETING HOOK SECTION: HEATS THE HUMAN BRAIN */}
-      <section className="px-4 max-w-4xl mx-auto mb-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98, y: 15 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-lg bg-gradient-to-br from-slate-900 via-[#0B2521] to-zinc-950 text-white border border-teal-500/20 shadow-[0_6px_20px_rgba(0,141,127,0.1)] p-3 md:p-3.5"
-        >
-          {/* Futuristic mesh gradient light circles - smaller */}
-          <div className="absolute -top-16 -left-16 w-32 h-32 bg-[#00B894]/8 rounded-full blur-[40px] pointer-events-none" />
-          <div className="absolute -bottom-16 -right-16 w-40 h-40 bg-[#D4AF37]/5 rounded-full blur-[60px] pointer-events-none" />
-          
-          {/* Dotted grid decorative texture */}
-          <div className="absolute inset-0 opacity-[0.015] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:10px_10px] pointer-events-none" />
-
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
-            
-            {/* Hook Left Copywriting block */}
-            <div className="lg:col-span-9 space-y-1.5 text-left">
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-gradient-to-r from-teal-500/15 to-emerald-500/15 border border-teal-500/30 text-teal-300/90 rounded-full text-[6.5px] md:text-[7px] font-black tracking-wider uppercase">
-                <Flame className="w-1.5 h-1.5 fill-amber-400 text-amber-400 animate-bounce shrink-0" />
-                {t.hookBadge}
-              </span>
-              
-              <h2 className="font-display text-sm sm:text-base font-extrabold text-white leading-tight tracking-tight">
-                {t.hookHeading.split('.').slice(0, 1).join('')}.
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-emerald-400 to-[#D4AF37]">
-                  {t.hookHeading.split('.').slice(1).join('')}
-                </span>
-              </h2>
-
-              <p className="text-gray-400 text-[10px] leading-relaxed max-w-2xl">
-                {t.hookParagraph}
-              </p>
-
-              <div className="pt-0.5 flex flex-wrap gap-1.5 items-center">
-                <button
-                  onClick={() => navigate('/shop')}
-                  className="px-2.5 py-1.5 bg-gradient-to-r from-teal-400 via-[#00B894] to-emerald-500 hover:opacity-95 text-slate-950 font-black text-[8px] uppercase tracking-wider rounded transition duration-300 flex items-center gap-1 shadow-md shadow-teal-500/20 hover:scale-[1.01] transform cursor-pointer"
-                >
-                  {t.hookCTA}
-                  <ArrowRight className="w-2.5 h-2.5 text-slate-950 stroke-[3]" />
-                </button>
-                <button
-                  onClick={() => navigate('/about')}
-                  className="px-2.5 py-1.5 bg-white/5 hover:bg-white/10 text-teal-300 border border-white/10 hover:border-teal-500/30 text-[8px] font-bold uppercase tracking-wider rounded transition cursor-pointer"
-                >
-                  {lang === 'EN' ? 'Explore Manifesto' : 
-                   lang === 'AR' ? 'استكشف المانيفستو' : 
-                   lang === 'FR' ? 'Explorer le Manifeste' : 'Explorar Manifiesto'}
-                </button>
-              </div>
-            </div>
-
-            {/* Hook Right Featured Product Showcase */}
-            <div className="lg:col-span-3">
-              {(() => {
-                const sliderProducts = products.slice(0, 6);
-                if (sliderProducts.length === 0) return null;
-                const featuredProduct = sliderProducts[featuredIndex] || sliderProducts[0];
-                return (
-                  <div className="relative group max-w-[200px] ml-auto space-y-1">
-                    <AnimatePresence mode="wait">
-                      <motion.div 
-                        key={featuredProduct._id}
-                        initial={{ x: 20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: -20, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        whileHover={{ y: -1, scale: 1.01 }}
-                        className="backdrop-blur-md bg-white/5 dark:bg-zinc-900/25 border border-white/10 rounded-lg p-2 text-left hover:border-emerald-500/40 hover:bg-white/10 transition-all duration-300 shadow-md relative overflow-hidden cursor-pointer flex flex-col space-y-1.5"
-                        onClick={() => navigate(`/product/${featuredProduct._id}`)}
-                      >
-                        {/* Glowing background accent */}
-                        <div className="absolute -right-6 -top-6 w-10 h-10 bg-[#008D7F]/5 rounded-full blur-md pointer-events-none" />
-                        
-                        {/* 1. Product Image & Discount Badge */}
-                        <div className="relative w-full h-20 rounded overflow-hidden bg-slate-950/40 border border-white/10 shrink-0 shadow-inner group">
-                          <img 
-                            src={featuredProduct.gallery?.[0]} 
-                            alt={featuredProduct.title} 
-                            className="w-full h-full object-cover"
-                          />
-                          <span className="absolute top-0.5 left-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-[6.5px] uppercase tracking-wider px-1 py-0.5 rounded shadow-sm z-10">
-                            25% OFF
-                          </span>
-                        </div>
-
-                        {/* 2. Category & Title */}
-                        <div className="space-y-0.5">
-                          <span className="text-[6.5px] font-black uppercase text-emerald-400 tracking-wider">
-                            {featuredProduct.category}
-                          </span>
-                          <h4 className="font-display font-extrabold text-[9.5px] leading-tight text-white group-hover:text-emerald-400 transition line-clamp-1">
-                            {featuredProduct.title}
-                          </h4>
-                        </div>
-
-                        {/* 3. Rating */}
-                        <div className="flex items-center gap-0.5">
-                          <div className="flex items-center text-emerald-400">
-                            {[...Array(5)].map((_, i) => (
-                              <Star 
-                                key={i} 
-                                className={`w-1.5 h-1.5 ${
-                                  i < Math.floor(featuredProduct.rating || 5) 
-                                    ? 'fill-emerald-400 text-emerald-400' 
-                                    : 'text-white/20'
-                                  }`} 
-                              />
-                            ))}
-                          </div>
-                          <span className="text-[7.5px] font-extrabold text-white/60">
-                            ({featuredProduct.rating || "4.8"})
-                          </span>
-                        </div>
-
-                        {/* 4. Price Breakdown */}
-                        {(() => {
-                          const origPrice = Math.round(featuredProduct.price / 0.75);
-                          return (
-                            <div className="pt-0.5 border-t border-white/5 flex flex-col">
-                              <div className="flex items-baseline gap-1">
-                                <span className="text-[7.5px] text-white/40 line-through font-extrabold">
-                                  {formatPrice(origPrice)}
-                                </span>
-                                <span className="font-display font-black text-[10px] text-[#008D7F]">
-                                  {formatPrice(featuredProduct.price)}
-                                </span>
-                                <span className="text-[6.5px] font-bold text-emerald-400">
-                                  -25%
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        })()}
-
-                        {/* 5. Call-To-Action Buttons */}
-                        <div className="pt-0.5 flex gap-1">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              addToCart(featuredProduct, 1);
-                            }}
-                            className="flex-1 px-1.5 py-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 active:scale-95 text-white font-black text-[7.5px] uppercase tracking-wider rounded transition duration-300 flex items-center justify-center gap-0.5 cursor-pointer"
-                          >
-                            <ShoppingCart className="w-2 h-2 text-white" />
-                            {lang === 'EN' ? 'Add' : 
-                             lang === 'AR' ? 'أضف' : 
-                             lang === 'FR' ? 'Ajouter' : 'Añadir'}
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(`/product/${featuredProduct._id}`);
-                            }}
-                            className="px-1.5 py-0.5 bg-white/5 hover:bg-white/10 text-white border border-white/10 font-bold text-[7.5px] uppercase tracking-wider rounded transition text-center cursor-pointer"
-                          >
-                            {lang === 'EN' ? 'Details' : 
-                             lang === 'AR' ? 'تفاصيل' : 
-                             lang === 'FR' ? 'Détails' : 'Detalles'}
-                          </button>
-                        </div>
-                      </motion.div>
-                    </AnimatePresence>
-
-                    {/* Auto-scrolling Indicators & Arrows */}
-                    <div className="flex items-center justify-between px-0.5">
-                      <div className="flex items-center gap-0.5">
-                        {sliderProducts.map((p, idx) => (
-                          <button
-                            key={p._id}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setFeaturedIndex(idx);
-                            }}
-                            className={`w-0.5 h-0.5 rounded-full transition-all duration-300 ${
-                              featuredIndex === idx 
-                                ? 'bg-[#008D7F] w-1.5' 
-                                : 'bg-white/20'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      
-                      <div className="flex items-center gap-0.5">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setFeaturedIndex(prev => (prev - 1 + sliderProducts.length) % sliderProducts.length);
-                          }}
-                          className="w-3.5 h-3.5 rounded bg-white/5 border border-white/10 text-white flex items-center justify-center transition cursor-pointer"
-                        >
-                          <ChevronLeft className="w-2 h-2" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setFeaturedIndex(prev => (prev + 1) % sliderProducts.length);
-                          }}
-                          className="w-3.5 h-3.5 rounded bg-white/5 border border-white/10 text-white flex items-center justify-center transition cursor-pointer"
-                        >
-                          <ChevronRight className="w-2 h-2" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-
-          </div>
-        </motion.div>
-      </section>
 
       {/* Hero Section */}
-      <section className="premium-hero relative bg-gradient-to-br from-slate-50 to-emerald-50/30 rounded-2xl overflow-hidden shadow-sm mx-4 sm:mx-8 mt-3 border border-slate-100">
-        <div className="absolute inset-0 opacity-[0.04] bg-[radial-gradient(#00B894_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div className="absolute top-10 right-10 w-48 h-48 bg-[#00B894]/10 rounded-full blur-[60px] pointer-events-none"></div>
-        <div className="absolute bottom-5 left-5 w-36 h-36 bg-[#D4AF37]/5 rounded-full blur-[50px] pointer-events-none"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center relative z-10">
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-7 space-y-4 text-left"
-          >
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-950/20 dark:to-emerald-900/15 text-[#008D7F] border border-emerald-200/50 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider">
-              <Zap className="w-3.5 h-3.5 fill-[#008D7F] animate-bounce text-[#008D7F]" /> {t.flashSale}
-            </div>
-            
-            <h1 className="hero-catalog-heading font-display text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#1E293B] dark:text-white leading-tight tracking-tight">
-              {t.headline.split(' ').slice(0, 3).join(' ')} <br />
-              <span className="text-[#008D7F]">
-                {t.headline.split(' ').slice(3).join(' ')}
-              </span>
-            </h1>
-
-            <p className="text-[#1E293B]/70 dark:text-gray-300 text-xs sm:text-sm max-w-lg font-medium leading-relaxed">
-              {t.subheadline}
-            </p>
-
-            {/* Shoppers Proof */}
-            <div className="flex items-center gap-2 py-0.5 text-slate-600 dark:text-slate-300 font-semibold text-[10px] sm:text-xs">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-              </span>
-              <span><strong className="text-rose-600">{visitorCount} global buyers</strong> active on this terminal</span>
-            </div>
-
-            <div className="pt-2 flex flex-wrap gap-2.5">
-              <button
-                onClick={() => navigate('/shop')}
-                className="px-5 py-2.5 bg-gradient-to-r from-[#008D7F] to-[#00B894] hover:opacity-95 text-white font-extrabold text-xs rounded-xl shadow-md transition-all duration-300 flex items-center gap-1.5 transform hover:-translate-y-0.5 cursor-pointer"
-              >
-                {t.shopNow}
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={() => {
-                  const targetEl = document.getElementById('best-sellers-section');
-                  if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="px-5 py-2.5 bg-white hover:bg-slate-50 text-[#1E293B] font-extrabold text-xs rounded-xl border border-slate-200 hover:border-slate-300 shadow-sm transition-all duration-300 transform hover:-translate-y-0.5"
-              >
-                {t.bestSellers}
-              </button>
-            </div>
-          </motion.div>
-
-          {/* HIGH-CLASS DYNAMIC POSTER FRAME WITH AUTO-SCROLL */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-5 relative w-full flex flex-col items-center justify-center py-2"
-          >
-            {/* Museum-Grade Dual Bezel Luxury Frame */}
-            <div 
-              className="relative w-full max-w-[310px] rounded-2xl bg-zinc-950 p-[8px] shadow-[0_15px_40px_-15px_rgba(0,0,0,0.5)] border border-zinc-850"
-              onMouseEnter={() => setIsPosterAutoplay(false)}
-              onMouseLeave={() => setIsPosterAutoplay(true)}
-            >
-              {/* Gold Inner Gilded Bezel Bevel Accent */}
-              <div className="relative rounded-xl border-[2px] border-[#D4AF37] p-[2px] bg-[#1a140a] overflow-hidden">
-                
-                {/* Poster Canvas */}
-                <div className="relative h-[250px] rounded-lg overflow-hidden bg-zinc-900 flex flex-col justify-between">
-                  
-                  {/* Poster Image Background Carousel */}
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={posterIndex}
-                      initial={{ opacity: 0, scale: 1.02 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.98 }}
-                      transition={{ duration: 0.4, ease: "easeInOut" }}
-                      className="absolute inset-0 z-0"
-                    >
-                      <img 
-                        src={premiumPosters[posterIndex].image} 
-                        alt={premiumPosters[posterIndex].title} 
-                        className="w-full h-full object-cover select-none"
-                        referrerPolicy="no-referrer"
-                      />
-                      {/* Elite Matte Overlay Gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-black/25 z-10" />
-                    </motion.div>
-                  </AnimatePresence>
-
-                  {/* Header overlay for high class authenticity (museum tag & details) */}
-                  <div className="relative z-20 p-3 flex justify-between items-start">
-                    <div className="px-2 py-0.5 bg-black/60 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-1 shadow-md">
-                      <Sparkles className="w-2.5 h-2.5 text-[#D4AF37] animate-pulse" />
-                      <span className="text-[8px] font-black tracking-widest text-[#D4AF37] uppercase font-mono">
-                        {premiumPosters[posterIndex].tag}
-                      </span>
-                    </div>
-                    
-                    <div className="px-2 py-0.5 bg-[#D4AF37] text-zinc-950 text-[7.5px] font-black rounded shadow shadow-yellow-500/20 uppercase tracking-wider font-mono">
-                      {premiumPosters[posterIndex].badge}
-                    </div>
-                  </div>
-
-                  {/* Gold Foil Seal Stamp overlay - elegant branding details */}
-                  <div className="absolute top-[45px] right-[15px] z-20 flex justify-center items-center pointer-events-none">
-                    <div className="w-10 h-10 bg-gradient-to-br from-[#D4AF37] via-[#AA7C11] to-[#D4AF37] text-white flex flex-col items-center justify-center rounded-full text-[6px] font-black text-center uppercase tracking-widest border border-yellow-200/40 shadow-lg opacity-85 rotate-12 scale-90">
-                      <span className="leading-tight">ESTD</span>
-                      <span className="text-[7.5px] tracking-tighter leading-none text-zinc-950 font-extrabold">2026</span>
-                      <span className="text-[5.5px] leading-none opacity-80">DHAKA</span>
-                    </div>
-                  </div>
-
-                  {/* Main Typographic Content and CTAs */}
-                  <div className="relative z-20 p-4 pt-0 space-y-2 text-left">
-                    <div className="space-y-0.5">
-                      <p className="text-[8.5px] text-[#D4AF37] font-bold uppercase tracking-widest font-mono">
-                        {premiumPosters[posterIndex].subtitle}
-                      </p>
-                      <h3 className="font-display text-lg sm:text-xl font-black text-white leading-tight tracking-tight drop-shadow-md">
-                        {premiumPosters[posterIndex].title}
-                      </h3>
-                      <p className="text-gray-300 text-[10px] font-medium leading-snug max-w-[240px] line-clamp-1">
-                        {premiumPosters[posterIndex].desc}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-1 border-t border-white/10">
-                      {/* Play/Pause Autoplay Indicator Badge */}
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsPosterAutoplay(!isPosterAutoplay);
-                        }}
-                        className="px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border border-white/10 text-[7.5px] font-extrabold uppercase tracking-widest font-mono transition flex items-center gap-1 cursor-pointer"
-                      >
-                        <span className={`w-1 h-1 rounded-full ${isPosterAutoplay ? 'bg-[#00B894] animate-pulse' : 'bg-rose-400'}`}></span>
-                        {isPosterAutoplay ? 'Live Scroll' : 'Paused'}
-                      </button>
-
-                      <button
-                        onClick={() => navigate(premiumPosters[posterIndex].target)}
-                        className="px-2.5 py-1 bg-[#008D7F] hover:bg-[#00B894] active:scale-95 text-white text-[8px] font-black uppercase tracking-wider rounded transition-all duration-300 flex items-center gap-0.5 cursor-pointer shadow-md shadow-[#008D7F]/20"
-                      >
-                        <span>View Collection</span>
-                        <ArrowRight className="w-2.5 h-2.5 stroke-[3]" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Glare Glass Overlay Effect for Premium Physical Vibe */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/[0.03] to-white/[0.06] pointer-events-none z-15" />
-
-                  {/* Auto-scrolling running duration timer progress bar */}
-                  {isPosterAutoplay && (
-                    <motion.div
-                      key={posterIndex}
-                      initial={{ width: "0%" }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 4.5, ease: "linear" }}
-                      className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] z-30 shadow-[0_0_8px_#D4AF37]"
-                    />
-                  )}
-                </div>
-
-              </div>
-
-              {/* Dynamic Glassmorphism Nav Controls */}
-              <div className="absolute -bottom-3.5 left-1/2 transform -translate-x-1/2 bg-zinc-900/95 dark:bg-zinc-950/95 border border-zinc-800 rounded-full px-3 py-1 flex items-center gap-3 shadow-lg z-30">
-                <button
-                  onClick={() => setPosterIndex(prev => (prev - 1 + premiumPosters.length) % premiumPosters.length)}
-                  className="w-5 h-5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition cursor-pointer"
-                >
-                  <ChevronLeft className="w-3 h-3" />
-                </button>
-
-                <div className="flex items-center gap-1.5">
-                  {premiumPosters.map((_, idx) => (
+      {/* Premium Full-Width Auto-Scrolling Carousel Hero */}
+      <section 
+        id="premium-carousel-hero"
+        className="relative w-screen left-1/2 -translate-x-1/2 h-[200px] aspect-[21/9] sm:h-[300px] sm:aspect-auto lg:h-[480px] overflow-hidden bg-slate-950 group m-0 p-0"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Slides Container */}
+        <div 
+          className="flex w-full h-full"
+          style={{ transform: `translateX(-${posterIndex * 100}%)`, transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+        >
+          {premiumPosters.map((poster, idx) => (
+            <div key={idx} className="w-full h-full shrink-0 relative">
+              <img 
+                src={poster.image} 
+                alt={poster.title} 
+                className="w-full h-full object-cover object-center select-none"
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
+              />
+              {/* Premium dark vignette gradient overlay for high text legibility */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-transparent" />
+              
+              {/* Overlay Content */}
+              <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-12 md:px-16 lg:px-24 text-white text-left">
+                <div className="max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl space-y-1 sm:space-y-2 md:space-y-4">
+                  <span className="inline-block px-2 py-0.5 sm:px-3 sm:py-1 bg-[#1ABC9C]/90 backdrop-blur-sm border border-teal-500/30 rounded-full text-[8px] sm:text-[10px] md:text-xs font-black tracking-widest text-[#00B894] uppercase shadow-sm">
+                    {poster.tag}
+                  </span>
+                  <h1 className="font-display text-base sm:text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight drop-shadow-md">
+                    {poster.title}
+                  </h1>
+                  <p className="text-gray-200 text-[10px] sm:text-xs md:text-sm lg:text-base font-medium leading-relaxed drop-shadow-sm line-clamp-2 max-w-sm sm:max-w-md md:max-w-lg">
+                    {poster.desc}
+                  </p>
+                  <div className="pt-1 sm:pt-2">
                     <button
-                      key={idx}
-                      onClick={() => setPosterIndex(idx)}
-                      className={`w-1 h-1 rounded-full transition-all duration-300 ${
-                        posterIndex === idx 
-                          ? 'bg-[#D4AF37] w-2.5' 
-                          : 'bg-white/30 hover:bg-white/50'
-                      }`}
-                    />
-                  ))}
+                      onClick={() => navigate(poster.target)}
+                      className="px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 lg:px-6 lg:py-3 bg-gradient-to-r from-[#008D7F] to-[#1ABC9C] hover:opacity-95 text-white font-extrabold text-[9px] sm:text-[11px] md:text-xs rounded-lg shadow-lg transition-transform duration-300 transform hover:-translate-y-0.5 cursor-pointer flex items-center gap-1.5 md:gap-2 uppercase tracking-wider"
+                    >
+                      <span>View Collection</span>
+                      <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 stroke-[3]" />
+                    </button>
+                  </div>
                 </div>
-
-                <button
-                  onClick={() => setPosterIndex(prev => (prev + 1) % premiumPosters.length)}
-                  className="w-5 h-5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition cursor-pointer"
-                >
-                  <ChevronRight className="w-3 h-3" />
-                </button>
               </div>
             </div>
-          </motion.div>
+          ))}
+        </div>
 
+        {/* Left Arrow Button (44x44px teal circle, visible on desktop, hidden on mobile) */}
+        <button
+          onClick={() => setPosterIndex(prev => (prev - 1 + premiumPosters.length) % premiumPosters.length)}
+          className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#1ABC9C]/20 hover:bg-[#1ABC9C] border border-[#1ABC9C]/40 text-white items-center justify-center transition-all duration-300 backdrop-blur-md shadow-lg cursor-pointer hover:scale-105 z-20"
+          aria-label="Previous Slide"
+        >
+          <ChevronLeft className="w-6 h-6 stroke-[2.5]" />
+        </button>
+
+        {/* Right Arrow Button (44x44px teal circle, visible on desktop, hidden on mobile) */}
+        <button
+          onClick={() => setPosterIndex(prev => (prev + 1) % premiumPosters.length)}
+          className="hidden lg:flex absolute right-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#1ABC9C]/20 hover:bg-[#1ABC9C] border border-[#1ABC9C]/40 text-white items-center justify-center transition-all duration-300 backdrop-blur-md shadow-lg cursor-pointer hover:scale-105 z-20"
+          aria-label="Next Slide"
+        >
+          <ChevronRight className="w-6 h-6 stroke-[2.5]" />
+        </button>
+
+        {/* Teal Dot Indicators at the bottom center */}
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-25">
+          {premiumPosters.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setPosterIndex(idx)}
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                posterIndex === idx 
+                  ? 'bg-[#1ABC9C] w-6' 
+                  : 'bg-[#1ABC9C]/40 hover:bg-[#1ABC9C]/60 w-2'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
         </div>
       </section>
 
@@ -916,7 +465,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       </section>
 
       {/* Categories Showcase Grid */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-12 space-y-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-12 space-y-8">
         <div className="text-center max-w-xl mx-auto space-y-1.5">
           <h2 className="font-display text-base sm:text-lg md:text-xl font-extrabold text-[#1E293B] dark:text-gray-150 uppercase tracking-wider">
             {t.categoriesHeading}
@@ -965,7 +514,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       </section>
 
       {/* Best Sellers Section */}
-      <section id="best-sellers-section" className="max-w-7xl mx-auto px-6 sm:px-12 space-y-6">
+      <section id="best-sellers-section" className="max-w-7xl mx-auto px-4 sm:px-12 space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 border-b border-slate-100 dark:border-zinc-800 pb-4">
           <div className="text-left space-y-1">
             <h2 className="font-display text-base sm:text-lg md:text-xl font-extrabold text-[#1E293B] dark:text-gray-150 uppercase tracking-wider flex items-center gap-1.5">
@@ -1078,22 +627,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
                   </div>
 
                   {/* 4. Rating */}
-                  <div className="flex items-center gap-1">
-                    <div className="flex items-center text-emerald-400">
-                      {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={`w-3 h-3 ${
-                            i < Math.floor(p.rating || 5) 
-                              ? 'fill-emerald-400 text-emerald-400' 
-                              : 'text-gray-200'
-                          }`} 
-                        />
-                      ))}
-                    </div>
-                    <span className="text-[10px] font-extrabold text-slate-500">
-                      ({p.rating || "4.8"} / 5.0)
-                    </span>
+                  <div className="pt-1">
+                    <AmazonStarRating
+                      productId={p._id}
+                      rating={p.rating || 4.8}
+                      price={p.price}
+                      size="md"
+                    />
                   </div>
 
                   {/* 5. Price Breakdown */}
@@ -1136,7 +676,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       </section>
 
       {/* Elegant Branding Banner (High Design Aesthetic) */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-12">
         <div className="bg-gradient-to-r from-slate-900 to-slate-850 rounded-[32px] overflow-hidden p-8 sm:p-16 text-left relative shadow-xl border border-slate-800">
           <div className="absolute inset-0 opacity-[0.04] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]"></div>
           <div className="absolute -right-16 -top-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-[85px] pointer-events-none"></div>
@@ -1170,7 +710,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       </section>
 
       {/* Customer Review Section */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-12 space-y-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-12 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <h2 className="font-display text-3xl font-extrabold text-[#1E293B] uppercase tracking-wide">
             Loved By Shoppers Worldwide
@@ -1258,7 +798,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ navigate }) => {
       </section>
 
       {/* Latest Editorial Stories / Blog Catalog */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-12 space-y-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-12 space-y-12">
         <div className="flex justify-between items-end border-b border-slate-150 pb-5">
           <div className="text-left space-y-2">
             <h2 className="font-display text-3xl font-extrabold text-[#1E293B] uppercase tracking-wide">

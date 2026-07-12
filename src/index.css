@@ -1,22 +1,66 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Poppins", sans-serif;
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Montserrat", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  --color-primary: #00B894;
+  --color-primary: #1ABC9C;
+  --color-teal-brand: #1ABC9C;
   --color-gold: #D4AF37;
+  --color-dark: #0A0A0A;
   --color-charcoal: #1E293B;
+
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 414px;
+  --breakpoint-lg: 640px;
+  --breakpoint-xl: 768px;
+  --breakpoint-2xl: 1024px;
+  --breakpoint-3xl: 1440px;
+}
+
+html {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 @variant dark (&:where(.dark, .dark *));
 
+:root {
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 32px;
+  --text-4xl: 48px;
+
+  /* Spacing & padding */
+  --space-xs  : 4px;
+  --space-sm  : 8px;
+  --space-md  : 16px;
+  --space-lg  : 24px;
+  --space-xl  : 40px;
+  --space-2xl : 64px;
+
+  /* Mobile overrides */
+  --page-padding-mobile : 16px;
+  --page-padding-desktop: 40px;
+  --section-gap-mobile  : 24px;
+  --section-gap-desktop : 48px;
+}
+
 body {
-  font-family: var(--font-sans);
+  font-family: 'Montserrat', sans-serif !important;
   background-color: #ebf6f2; /* Beautiful premium sage green */
-  color: #111827;
+  color: #374151;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* Smooth transitions for a polished feel during theme switching */
@@ -57,11 +101,13 @@ html.dark section:nth-of-type(odd) {
   background-color: #0D0D0D !important;
 }
 
-/* Navbar background becomes #0A0A0A with border-bottom 1px solid rgba(255,255,255,0.08) */
+/* Navbar background becomes rgba(10,10,10,0.95) with border-bottom 1px solid rgba(255,255,255,0.08) and backdrop-filter blur(20px) */
 html.dark header,
 html.dark .header,
 html.dark nav {
-  background-color: #0A0A0A !important;
+  background: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   border-bottom: 1px solid rgba(255,255,255,0.08) !important;
 }
 
@@ -233,57 +279,104 @@ html.dark [class*="text-[#D4AF37]"] {
   --section-gap-desktop : 48px;
 }
 
-/* Fix 1: Fluid Typography Utility Classes using clamp() */
-.fluid-h1 {
-  font-size: clamp(22px, 5vw, 48px) !important;
+/* Custom Typography Engine using the defined Font Scale variables */
+h1, .hero-headline, .page-hero-heading, .fluid-h1 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: var(--text-4xl) !important;
   font-weight: 800 !important;
-  line-height: 1.15 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.5px !important;
 }
 
-.fluid-h2 {
-  font-size: clamp(18px, 4vw, 32px) !important;
+h2, .section-heading, .section-title, .fluid-h2 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: var(--text-3xl) !important;
   font-weight: 700 !important;
-  line-height: 1.25 !important;
-}
-
-.fluid-h3 {
-  font-size: clamp(13px, 3vw, 18px) !important;
-  font-weight: 600 !important;
   line-height: 1.3 !important;
 }
 
-.fluid-body {
-  font-size: clamp(13px, 2.8vw, 16px) !important;
-  font-weight: 400 !important;
-  line-height: 1.6 !important;
+h3, .card-title, [class*="card-title"], .fluid-h3 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: var(--text-lg) !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
 }
 
-.fluid-badge {
-  font-size: clamp(10px, 2.2vw, 12px) !important;
+p, .body-text, .description, .fluid-body {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: var(--text-base) !important;
+  font-weight: 400 !important;
+  line-height: 1.7 !important;
+  color: #374151; /* Light mode default body text */
+}
+html.dark p, html.dark .body-text, html.dark .description, html.dark .fluid-body {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* Prices */
+.price-text, .product-price, .fluid-price {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: var(--text-xl) !important;
+  font-weight: 700 !important;
+  color: #1ABC9C !important;
+}
+
+/* Buttons */
+button, .btn, .button-text {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+/* Badges & Labels */
+label, .label-text, .badge, .badge-text, .fluid-badge {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: var(--text-xs) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* Input Placeholder */
+input::placeholder, textarea::placeholder {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #9CA3AF !important;
+}
+html.dark input::placeholder, html.dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Navigation Links */
+.nav-link, nav a {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
 }
 
-.fluid-price {
-  font-size: clamp(15px, 3.5vw, 18px) !important;
-  font-weight: 700 !important;
+/* Footer text */
+footer, .footer-text {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: var(--text-sm) !important;
+  font-weight: 400 !important;
+  line-height: 1.8 !important;
 }
 
-/* Base typography elements scaling */
-h1, .hero-headline {
-  font-size: clamp(22px, 5vw, 48px) !important;
+/* Meta Information */
+.meta-text, .post-meta, .meta-info {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
 }
-h2, .section-heading {
-  font-size: clamp(18px, 4vw, 32px) !important;
-}
-h3, .card-title, [class*="card-title"] {
-  font-size: clamp(13px, 3vw, 18px) !important;
-}
-p, .body-text {
-  font-size: clamp(13px, 2.8vw, 16px) !important;
-}
-label, .label-text {
-  font-size: clamp(10px, 2.2vw, 12px) !important;
+html.dark .meta-text, html.dark .post-meta, html.dark .meta-info {
+  color: rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Touch & responsive CSS system properties */
@@ -563,11 +656,7 @@ html.dark {
     object-fit: cover !important;
   }
 
-  /* Hero Catalog Heading */
-  .hero-catalog-heading {
-    font-size: clamp(28px, 4vw, 40px) !important;
-    line-height: 1.15 !important;
-  }
+  /* Hero Catalog Heading controlled by Tailwind */
 
   /* Sidebar Filter Panel */
   .shop-layout-container {

@@ -13,7 +13,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({ navigate }) => {
   return (
     <div 
       id="global-toast-container" 
-      className="fixed bottom-6 right-6 z-[100] flex flex-col gap-3 w-full max-w-sm px-4 sm:px-0"
+      className="fixed bottom-20 sm:bottom-6 right-6 z-[100] flex flex-col gap-3 w-full max-w-sm px-4 sm:px-0"
     >
       <AnimatePresence mode="popLayout">
         {toasts.map((toast) => {

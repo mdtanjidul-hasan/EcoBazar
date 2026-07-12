@@ -227,7 +227,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
 
         {/* Footer Bottom */}
         <div className="flex flex-col sm:flex-row justify-between items-center pt-8 text-xs text-gray-500 gap-4">
-          <p>© 2026 Temu Global Marketplace. All rights reserved.</p>
+          <p>© 2026 EcoBazar. All rights reserved.</p>
           <p className="flex items-center gap-1">
             Engineered with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 animate-pulse" /> in Bangladesh
           </p>

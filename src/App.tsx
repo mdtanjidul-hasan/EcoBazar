@@ -7,6 +7,9 @@ import { CartDrawer } from './components/CartDrawer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { NewsletterModal } from './components/NewsletterModal';
 import { ToastContainer } from './components/ToastContainer';
+import { BackToTop } from './components/BackToTop';
+import { CookieBanner } from './components/CookieBanner';
+import { MobileNavBar } from './components/MobileNavBar';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Views
@@ -25,6 +28,7 @@ import { ContactView } from './views/ContactView';
 import { ThankYouView } from './views/ThankYouView';
 import { AuthView } from './views/AuthView';
 import { DashboardView } from './views/DashboardView';
+import { NotFoundView } from './views/NotFoundView';
 
 function AppContent() {
   const router = useRouter();
@@ -72,6 +76,11 @@ function AppContent() {
       return bId ? <BlogDetailView blogId={bId} navigate={navigate} /> : <BlogListView navigate={navigate} />;
     }
 
+    if (currentPath.startsWith('/blog/')) {
+      const bSlug = getParam('/blog/:slug');
+      return bSlug ? <BlogDetailView blogId={bSlug} navigate={navigate} /> : <BlogListView navigate={navigate} />;
+    }
+
     if (currentPath === '/about') {
       return <AboutView navigate={navigate} />;
     }
@@ -80,7 +89,7 @@ function AppContent() {
       return <CompareView navigate={navigate} />;
     }
 
-    if (currentPath === '/track') {
+    if (currentPath === '/track' || currentPath === '/track-order') {
       return <OrderTrackingView navigate={navigate} />;
     }
 
@@ -104,17 +113,17 @@ function AppContent() {
       return <DashboardView navigate={navigate} />;
     }
 
-    // Default fallback to Home
-    return <HomeView navigate={navigate} />;
+    // Default fallback - render NotFoundView instead of silently defaulting to Home
+    return <NotFoundView navigate={navigate} />;
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#ebf6f2] dark:bg-black text-gray-800 dark:text-white selection:bg-emerald-600 selection:text-white transition-colors duration-200">
+    <div className="min-h-screen flex flex-col bg-[#ebf6f2] dark:bg-black text-gray-800 dark:text-white selection:bg-emerald-600 selection:text-white transition-colors duration-200 overflow-x-hidden w-full">
       {/* Navigation Top bar */}
       <Navbar currentPath={currentPath} navigate={navigate} />
 
       {/* Main Container Stage */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 md:pt-4 pb-12">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 pt-2 md:pt-4 pb-16 sm:pb-12">
         <ErrorBoundary>
           <AnimatePresence mode="wait">
             <motion.div
@@ -142,6 +151,11 @@ function AppContent() {
 
       {/* Global Toast Notification System */}
       <ToastContainer navigate={navigate} />
+
+      {/* Interactive Back to Top & Cookie Banner */}
+      <BackToTop />
+      <CookieBanner />
+      <MobileNavBar currentPath={currentPath} navigate={navigate} />
     </div>
   );
 }

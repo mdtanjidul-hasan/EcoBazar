@@ -32,6 +32,7 @@ export const getProductGroup = (p: Product): 'jewelry' | 'gadgets' => {
 };
 
 import QuickViewModal from '../components/QuickViewModal';
+import { PriceRangeSlider } from '../components/PriceRangeSlider';
 
 export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
   const { products, addToCart, addToWishlist, removeFromWishlist, wishlist, searchQuery, setSearchQuery, theme, lang, currency, compareList, addToCompare, removeFromCompare } = useStore();
@@ -136,9 +137,9 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
     <div className="space-y-6 pb-20">
       
       {/* Main Shop View grid with Sidebar */}
-      <div className="shop-layout-container grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="shop-layout-container grid grid-cols-1 xl:grid-cols-4 gap-8">
                {/* Sidebar Space */}
-        <aside className="shop-sidebar-aside hidden lg:block lg:col-span-1 space-y-6">
+        <aside className="shop-sidebar-aside hidden xl:block xl:col-span-1 space-y-6">
           <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-6 text-left">
             
             {/* Search Filter */}
@@ -329,14 +330,12 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                   <span>Max: {convertPrice(maxPrice)}</span>
                 </div>
                 
-                <input
-                  type="range"
-                  min="0"
-                  max={maxPossiblePrice}
-                  step="10"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(Number(e.target.value))}
-                  className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#008D7F]"
+                <PriceRangeSlider
+                  minPrice={minPrice}
+                  maxPrice={maxPrice}
+                  maxPossiblePrice={maxPossiblePrice}
+                  setMinPrice={setMinPrice}
+                  setMaxPrice={setMaxPrice}
                 />
 
                 <div className="grid grid-cols-2 gap-2">
@@ -392,7 +391,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
         </aside>
 
         {/* Product Listing Area */}
-        <div className="shop-products-area lg:col-span-3 space-y-6">
+        <div className="shop-products-area xl:col-span-3 space-y-6">
           
           {/* Sorting / Meta Header */}
           <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl px-3 py-3 sm:px-5 sm:py-3 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -404,7 +403,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
               <button
                 onClick={() => setIsMobileFiltersOpen(true)}
                 style={{ touchAction: 'manipulation' }}
-                className="lg:hidden px-3.5 py-2 bg-emerald-50 dark:bg-emerald-950/30 text-[#008D7F] hover:bg-emerald-100 dark:hover:bg-emerald-900/20 rounded-lg text-[10px] font-black transition flex items-center justify-center gap-1.5 cursor-pointer border border-emerald-100/45 h-[38px] flex-1 sm:flex-initial uppercase tracking-wider"
+                className="xl:hidden px-3.5 py-2 bg-emerald-50 dark:bg-emerald-950/30 text-[#008D7F] hover:bg-emerald-100 dark:hover:bg-emerald-900/20 rounded-lg text-[10px] font-black transition flex items-center justify-center gap-1.5 cursor-pointer border border-emerald-100/45 h-[38px] flex-1 sm:flex-initial uppercase tracking-wider"
                 title="Filters and Sorting"
               >
                 <SlidersHorizontal className="w-4 h-4 text-[#008D7F]" />
@@ -412,7 +411,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
               </button>
 
               <div className="flex items-center justify-end gap-2 flex-1 sm:flex-initial">
-                <SlidersHorizontal className="w-4 h-4 text-gray-400 hidden lg:inline" />
+                <SlidersHorizontal className="w-4 h-4 text-gray-400 hidden xl:inline" />
                 <span className="text-[10px] sm:text-xs font-bold text-gray-450 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">Sort</span>
                 <select
                   value={sortBy}
@@ -1133,14 +1132,12 @@ export const ShopView: React.FC<ShopViewProps> = ({ navigate }) => {
                   <span>Min: {convertPrice(minPrice)}</span>
                   <span>Max: {convertPrice(maxPrice)}</span>
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max={maxPossiblePrice}
-                  step="10"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(Number(e.target.value))}
-                  className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#008D7F]"
+                <PriceRangeSlider
+                  minPrice={minPrice}
+                  maxPrice={maxPrice}
+                  maxPossiblePrice={maxPossiblePrice}
+                  setMinPrice={setMinPrice}
+                  setMaxPrice={setMaxPrice}
                 />
               </div>
             </div>
