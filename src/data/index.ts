@@ -1,8 +1,8 @@
 import { Product, Blog } from '../types';
 
-const petFeederImg = new URL('../assets/images/pet_feeder_1782500704020.jpg', import.meta.url).href;
-const petBedImg = new URL('../assets/images/pet_bed_1782500716368.jpg', import.meta.url).href;
-const massageGunImg = new URL('../assets/images/massage_gun_1782501229411.jpg', import.meta.url).href;
+const petFeederImg = '/assets/images/pet_feeder_1782500704020.jpg';
+const petBedImg = '/assets/images/pet_bed_1782500716368.jpg';
+const massageGunImg = '/assets/images/massage_gun_1782501229411.jpg';
 
 export const INITIAL_PRODUCTS: Product[] = [
   {

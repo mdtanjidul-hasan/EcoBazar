@@ -12,11 +12,19 @@ export const connectDB = async () => {
       fs.mkdirSync(dbPath, { recursive: true });
     }
 
+    const lockFile = path.join(dbPath, 'mongod.lock');
+    if (fs.existsSync(lockFile)) {
+      try { fs.unlinkSync(lockFile); } catch (e) {}
+    }
+
     mongod = await MongoMemoryServer.create({
       instance: {
         port: 27017,
         dbPath: dbPath,
-        storageEngine: 'wiredTiger'
+        storageEngine: 'wiredTiger',
+      },
+      spawnOpts: {
+        timeout: 60000
       }
     });
 

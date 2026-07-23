@@ -3,6 +3,9 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
+import { connectDB } from "./server_db";
+import { setupAPI } from "./server_api";
+import { seedDB } from "./server_seed";
 
 dotenv.config();
 
@@ -10,6 +13,9 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+
+// Setup API routes
+setupAPI(app);
 
 // Initialize Gemini Client
 const getGeminiClient = () => {
@@ -704,6 +710,10 @@ async function bootstrap() {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
+
+  // Connect to DB and seed
+  await connectDB();
+  await seedDB();
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);
